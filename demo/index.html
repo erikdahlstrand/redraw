@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>sample</title>
+  <link rel="stylesheet" type="text/css" href="../src/css/page.css">
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.css">
+</head>
+<body>
+  <h1>Demo</h1>
+
+  <div id="actionArea">
+    <div id="canvasArea"></div>
+  </div>
+
+  <pre>
+    <div id="dumpArea">
+    </div>
+  </pre>
+
+  <script src="../bower_components/fabric/dist/fabric.js"></script>
+  <script src="../dist/rechart.js"></script>
+
+  <script type="text/javascript">
+    var rechart1 = new RechartJs('canvasArea', 'chart.png');
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "rechart.js",
+  "description": "Rechart.js is a JavaScript library which provides basic chart editing tools in your browser",
+  "main": [
+    "dist/rechart.js",
+    "dist/rechart.css"
+  ],
+  "dependencies": {
+    "fabric": "^v1.5.0",
+    "font-awesome": "^v4.4.0"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "package.json",
+    "demo/*",
+    "node_modules/*",
+    "src/*",
+    "test/*",
+    "tmp/*"
+  ]
+}
