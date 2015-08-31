@@ -10,6 +10,10 @@
     "font-awesome": "^v4.4.0"
   },
   "license": "MIT",
+  "moduleType": [
+    "globals",
+    "es6"
+  ],
   "ignore": [
     "**/.*",
     "package.json",
