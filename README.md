@@ -23,6 +23,7 @@ webpack --progress --colors
 * [Webpack, getting started](http://webpack.github.io/docs/tutorials/getting-started/)
 * [ES2015, by Babel](https://babeljs.io/docs/learn-es2015/)
 * [EventEmitter](https://www.npmjs.com/package/event-emitter)
+* [Rewire](https://github.com/jhnns/rewire)
 
 ### Settings
 * [Configuring ESLint](http://eslint.org/docs/user-guide/configuring.html)
