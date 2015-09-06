@@ -21,6 +21,7 @@ webpack --progress --colors
 ## Technology
 ### Development
 * [Webpack, getting started](http://webpack.github.io/docs/tutorials/getting-started/)
+* https://github.com/petehunt/webpack-howto
 * [ES2015, by Babel](https://babeljs.io/docs/learn-es2015/)
 * [EventEmitter](https://www.npmjs.com/package/event-emitter)
 * [Rewire](https://github.com/jhnns/rewire)

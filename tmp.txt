@@ -1,0 +1,12 @@
+"scripts": {
+    "test": "mocha --compilers js:babel/register"
+  },
+"dependencies": {
+    "canvas": "1.2.8",
+    "jsdom": "1.1.x",
+    "xmldom": "0.1.x"
+  },
+
+  "testPathDirs": [
+      "<rootDir>/test/"
+    ],

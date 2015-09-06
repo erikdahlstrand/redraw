@@ -1,3 +1,4 @@
+var webpack = require('webpack');
 var path = require('path');
 var RewirePlugin = require("rewire-webpack");
 
@@ -8,16 +9,14 @@ module.exports = {
         filename: './dist/rechart.js'
     },
     plugins: [
-        new RewirePlugin()
+        new RewirePlugin(),
+        new webpack.dependencies.LabeledModulesPlugin()
     ],
-    // resolveLoader: {
-    //     root: __dirname
-    // },
-    // resolve: {
-    //     root: __dirname,
-    //     modulesDirectories: ['node_modules'],
-    //     extensions: ['.js']
-    // },
+    resolve: {
+        // root: '/Users/swanmo/Documents/javascript/rechart.js/',
+        modulesDirectories: ['bower_components', 'node_modules'],
+        //extensions: ['.js']
+    },
     module: {
         loaders: [
             {
@@ -28,7 +27,8 @@ module.exports = {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/
-            }
+            },
+            { test: /\.json$/, loader: "json" }
         ]
     }
 };

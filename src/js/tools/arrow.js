@@ -1,4 +1,7 @@
 import CONST from '../canvas-const.js';
+import FabricProvider from './sample.js';
+var f = require('fabric').fabric;
+// var w = require('window');
 
 var circleMarkerRadius = 8;
 var indicationLength = 20;
@@ -6,16 +9,18 @@ var arrowColor = '#444';
 var dragArrowColor = '#888';
 var arrow,canvas;
 
-var circleMarker, line, start, end;;
+var circleMarker, line, start, end;
 
 class ArrowTool {
     constructor(canvasWrapper, eventAggregator) {
         this.eventAggregator = eventAggregator;
         this.canvasWrapper = canvasWrapper;
         var callee = this;
+
         this.eventAggregator.subscribeTo(
             CONST.TOOL.ARROW,
             'ArrowTool', function() {
+                console.log('tool callback', this);
                 callee.startArrow();
             });
         canvas = canvasWrapper.canvas;
@@ -26,11 +31,13 @@ class ArrowTool {
         this.upFn = function(options) {
             callee.onMUP(options);
         };
+        this.notify = function(message) {console.log('notify', this);
+            this.eventAggregator.notify('TOOL_USAGE', CONST.TOOL.ARROW, message);
+        }
     }
 
-    notify(message) {
-        this.eventAggregator.notify('TOOL_USAGE', CONST.TOOL.ARROW, message);
-    }
+
+    
 
         // Cred till http://stackoverflow.com/questions/29890294/arrow-shape-using-fabricjs
     moveArrowIndicator(points) {
@@ -49,7 +56,7 @@ class ArrowTool {
         if (arrow) {
             canvas.remove(arrow);
         }
-        arrow = new fabric.Triangle({
+        arrow = new f.Triangle({
             angle: angle,
             fill: dragArrowColor,
             top: y2,
@@ -141,7 +148,7 @@ class ArrowTool {
             };
             this.detachArrowListeners();
             arrow.fill = arrowColor;
-            var group = new fabric.Group([line, arrow], {
+            var group = new f.Group([line, arrow], {
                 hasControls: false,
                 hasBorders: true,
                 selectable: true
@@ -170,7 +177,8 @@ class ArrowTool {
         });
         start = end = undefined;
         this.notify('active');
-        circleMarker = new fabric.Circle({
+        console.log('required', FabricProvider.fabric);
+        circleMarker = new f.Circle({
             radius: circleMarkerRadius,
             fill: arrowColor,
             opacity: 0.7,
@@ -182,7 +190,7 @@ class ArrowTool {
         });
         canvas.add(circleMarker);
 
-        line = new fabric.Line([0, 0, 300, 300], {
+        line = new f.Line([0, 0, 300, 300], {
             strokeWidth: 5,
             stroke: dragArrowColor,
             originX: 'center',
