@@ -20,7 +20,6 @@ class ArrowTool {
         this.eventAggregator.subscribeTo(
             CONST.TOOL.ARROW,
             'ArrowTool', function() {
-                console.log('tool callback', this);
                 callee.startArrow();
             });
         canvas = canvasWrapper.canvas;
@@ -31,7 +30,7 @@ class ArrowTool {
         this.upFn = function(options) {
             callee.onMUP(options);
         };
-        this.notify = function(message) {console.log('notify', this);
+        this.notify = function(message) {
             this.eventAggregator.notify('TOOL_USAGE', CONST.TOOL.ARROW, message);
         }
     }
@@ -177,7 +176,7 @@ class ArrowTool {
         });
         start = end = undefined;
         this.notify('active');
-        console.log('required', FabricProvider.fabric);
+
         circleMarker = new f.Circle({
             radius: circleMarkerRadius,
             fill: arrowColor,
