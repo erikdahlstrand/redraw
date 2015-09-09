@@ -1,7 +1,6 @@
 import CONST from '../canvas-const.js';
 import FabricProvider from './sample.js';
 var f = require('fabric').fabric;
-// var w = require('window');
 
 var circleMarkerRadius = 8;
 var indicationLength = 20;
@@ -20,25 +19,32 @@ class ArrowTool {
         this.eventAggregator.subscribeTo(
             CONST.TOOL.ARROW,
             'ArrowTool', function() {
-                callee.startArrow();
+                callee.initListeners.apply(callee, arguments);
             });
+
         canvas = canvasWrapper.canvas;
 
         this.moveFn = function(options) {
             callee.onMove(options);
+        };
+        this.downFn = function(options) {
+            callee.onMouseDown(options);
         };
         this.upFn = function(options) {
             callee.onMUP(options);
         };
         this.notify = function(message) {
             this.eventAggregator.notify('TOOL_USAGE', CONST.TOOL.ARROW, message);
-        }
+        };
+
+        this.done = function() {
+            this.canvasWrapper.enableSelection(true);
+            this.removeCanvasListeners();
+            this.notify('inactive');
+        };
     }
 
-
-    
-
-        // Cred till http://stackoverflow.com/questions/29890294/arrow-shape-using-fabricjs
+    // Cred till http://stackoverflow.com/questions/29890294/arrow-shape-using-fabricjs
     moveArrowIndicator(points) {
         var x1 = points[0],
             y1 = points[1],
@@ -70,41 +76,24 @@ class ArrowTool {
         canvas.add(arrow);
     }
 
-
     abort() {
-
-        if (circleMarker) {
-            canvas.remove(circleMarker);
-            circleMarker = undefined;
-        }
+        console.log('ARROW abort');
         if (arrow) {
             canvas.remove(arrow);
             arrow = undefined;    
         }
         if (line) {
             canvas.remove(line);
-            arrow = line = undefined;    
+            line = undefined;    
         }
-        this.detachArrowListeners();
         this.eventAggregator.unsubscribeTo('keydown', 'ArrowTool');
-        this.notify('inactive');
-    }
-    detachArrowListeners() {
-        canvas.off('mouse:move', this.moveFn);
-        canvas.off('mouse:up', this.upFn);
+        this.done();
     }
 
     onMove(options) {
-        if (circleMarker) {
-            circleMarker.set({
-                'top': (options.e.clientY - this.canvasWrapper.getOffsetTop())
-            });
-            circleMarker.set({
-                'left': options.e.clientX - this.canvasWrapper.getOffsetLeft()
-            });
-            circleMarker.setCoords();
-        }
-        if (start) {
+
+        if (start && !end) {
+            
             let _x2 = options.e.clientX - this.canvasWrapper.getOffsetLeft();
             let _y2 = options.e.clientY - this.canvasWrapper.getOffsetTop();
             line.set({
@@ -118,78 +107,44 @@ class ArrowTool {
         }
 
         canvas.renderAll();
-    };
+    }
+
     onMUP(options) {
-        if (!start) {
-            start = {
-                top: circleMarker.get('top'),
-                left: circleMarker.get('left')
-            };
-            line.set({
-                'x1': start.left
-            });
-            line.set({
-                'y1': start.top
-            });
-            line.set({
-                'x2': start.left
-            });
-            line.set({
-                'y2': start.top
-            });
-            canvas.add(line);
-            canvas.remove(circleMarker);
-            circleMarker = undefined;
-        } else if (!end) {
-            end = {
-                top: options.e.clientY - this.canvasWrapper.getOffsetTop(),
-                left: options.e.clientX - this.canvasWrapper.getOffsetLeft()
-            };
-            this.detachArrowListeners();
-            arrow.fill = arrowColor;
+        end = {
+            top: options.e.clientY - this.canvasWrapper.getOffsetTop(),
+            left: options.e.clientX - this.canvasWrapper.getOffsetLeft()
+        };
+
+        var perimeter = Math.abs(end.top - start.top) + Math.abs(end.left - start.left);
+
+        if (perimeter > 10) {
+            if (arrow) {
+                arrow.fill = arrowColor;
+            }
             var group = new f.Group([line, arrow], {
                 hasControls: false,
                 hasBorders: true,
-                selectable: true
+                selectable: false
             });
             line.stroke = arrowColor;
 
             canvas.add(group);
-            canvas.remove(line);
-            canvas.remove(arrow);
-            arrow = line = undefined;
-            this.notify('inactive');
         }
+        
+        canvas.remove(line);
+        canvas.remove(arrow);
+        arrow = line = start = end = undefined;
         canvas.renderAll();
     }
 
-    startArrow(topic, sender, payload) {
-        if (payload === 'toolbar-deactivate'){
-            this.abort();
-            return;
-        }
-        var callee = this;
-        this.eventAggregator.subscribeTo('keydown', 'ArrowTool', function(topic, sender, keyCode) {
-            if (keyCode === 27) {
-                callee.abort();
-            }
-        });
-        start = end = undefined;
-        this.notify('active');
+    onMouseDown(options) {
+        start = {
+            top: options.e.clientY - this.canvasWrapper.getOffsetTop(),
+            left: options.e.clientX - this.canvasWrapper.getOffsetLeft()
+        };
+        
 
-        circleMarker = new f.Circle({
-            radius: circleMarkerRadius,
-            fill: arrowColor,
-            opacity: 0.7,
-            left: 100,
-            top: 0,
-            selectable: false,
-            originX: 'center',
-            originY: 'center'
-        });
-        canvas.add(circleMarker);
-
-        line = new f.Line([0, 0, 300, 300], {
+        line = new f.Line([start.left, start.top, start.left, start.top], {
             strokeWidth: 5,
             stroke: dragArrowColor,
             originX: 'center',
@@ -198,9 +153,36 @@ class ArrowTool {
             hasBorders: true,
             selectable: true
         });
-        
+
+        canvas.add(line);
+    }
+
+    initListeners(topic, sender, payload) {
+        console.log('ARROW init', payload);
+        if (payload === 'toolbar-deactivate'){
+            this.abort();
+            return;
+        }
+        var me = this;
+        this.eventAggregator.subscribeTo('keydown', 'ArrowTool', function(topic, sender, keyCode) {
+            if (keyCode === 27) {
+                me.abort.apply(me);
+            }
+        });
+        start = end = undefined;
+
+        this.canvasWrapper.enableSelection(false);
+
+        this.notify('active');
+
+        canvas.on('mouse:down', this.downFn);
         canvas.on('mouse:move', this.moveFn);
         canvas.on('mouse:up', this.upFn);
+    }
+    removeCanvasListeners() {
+        canvas.off('mouse:down', this.downFn);
+        canvas.off('mouse:move', this.moveFn);
+        canvas.off('mouse:up', this.upFn);
     }
 }
 export default ArrowTool;

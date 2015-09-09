@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
-var RewirePlugin = require("rewire-webpack");
+// var RewirePlugin = require("rewire-webpack");
 
 module.exports = {
     entry: './src/js/rechartjs.js',
@@ -9,7 +9,7 @@ module.exports = {
         filename: './dist/rechart.js'
     },
     plugins: [
-        new RewirePlugin(),
+        // new RewirePlugin(),
         new webpack.dependencies.LabeledModulesPlugin()
     ],
     resolve: {

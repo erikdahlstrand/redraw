@@ -48,9 +48,6 @@ class Canvas {
 	initFabricjsCanvas(canvasElem) {
 		var fabricCanvas = new fabric.Canvas(canvasElem);
 
-		/* fabric.Image.fromURL('demo/chart.png', function(oImg) {
-		  canvas.add(oImg);
-		});/*/
 		fabricCanvas.setDimensions({width:CANVAS_WIDTH, height:CANVAS_HEIGHT});
 
 		fabricCanvas.setBackgroundImage(this.imagePath, fabricCanvas.renderAll.bind(fabricCanvas), {
@@ -62,7 +59,12 @@ class Canvas {
 		});
 		return fabricCanvas;
 	}
-
+	enableSelection(isEnabled) {
+		this.canvas.selection = isEnabled; // Restore fabricjs selection-box
+        this.canvas.forEachObject(function(o) {
+          o.selectable = isEnabled;
+        });
+	}
 	getWidth() {
 		return CANVAS_WIDTH;
 	}

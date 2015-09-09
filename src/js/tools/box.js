@@ -11,14 +11,11 @@ class BoxTool {
         }
 
         function done() {
-            if (rect) {
-                notify('inactive');
-                detachBoxListener();
-                canvas.selection = true; // Restore fabricjs selection-box
-                canvas.forEachObject(function(o) {
-                  o.selectable = true;
-                });
-            }
+            console.log('box done', rect);
+        
+            notify('inactive');
+            detachBoxListener();
+            canvasWrapper.enableSelection(true);
         }
 
         function detachBoxListener() {
@@ -90,11 +87,6 @@ class BoxTool {
             canvas.on('mouse:up', drawBoxDone);
         }
 
-        function mouseClick(options) {
-            notify('inactive');
-            detachBoxListener();
-        }
-
         function attachBoxListener(topic, sender, payload) {
             if (payload === 'toolbar-deactivate'){
                 done();
@@ -105,10 +97,7 @@ class BoxTool {
                     done();
                 }
             });
-            canvas.selection = false; // Disable fabricjs selection-box
-            canvas.forEachObject(function(o) {
-              o.selectable = false;
-            });
+            canvasWrapper.enableSelection(false);
             notify('active');
             
             canvas.on('mouse:down', mouseDown);

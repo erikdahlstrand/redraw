@@ -4,13 +4,19 @@ jest.dontMock(__path__);
 
 describe('ArrowTool', function() {
 
-  let canvasWrapper = {canvas:{add:function() {}, on:function() {}}}, eventAggregator = {};
-  let subscriptionTopic, subscriberId, toolbarSubscriptionFn, arrowTool, notificationTopic;;	var ArrowTool;
+	let canvasWrapper = {
+		enableSelection:function() {},
+		canvas:{
+			add:function() {},
+			on:function() {}},
+		},
+		eventAggregator = {};
 
-  beforeEach(function() {
-    ArrowTool = require(__path__);
-  });
-  
+	let subscriptionTopic, subscriberId, toolbarSubscriptionFn, arrowTool, notificationTopic;;	var ArrowTool;
+
+	beforeEach(function() {
+		ArrowTool = require(__path__);
+	});
 
 
 	eventAggregator.subscribeTo = function(topic, _subscriberId, callback) {

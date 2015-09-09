@@ -16,9 +16,9 @@ function setupTool(domId, toolResource, canvasTool, eventAggregator) {
     var toolInstance = new toolResource(canvasTool, eventAggregator);
 
     if (!toolInstance.init) {
-        console.log('Tool ' + domId + ' has no init function!');
+        // console.log('Tool ' + domId + ' has no init function!');
     } else {
-        toolInstance.init();
+        // toolInstance.init();
     }
     return toolInstance;
 }
