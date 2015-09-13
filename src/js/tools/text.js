@@ -1,12 +1,11 @@
-
 import CONST from '../canvas-const.js';
 
 var editorHeight = 30;
-var editor, canvas;
 
 class TextTool {
     constructor(canvasWrapper, eventAggregator) {
-        canvas = canvasWrapper.canvas;
+        var canvas = canvasWrapper.canvas;
+        var editor;
         eventAggregator.subscribeTo(CONST.TOOL.TEXT, 'TextTool', textTool);
         eventAggregator.subscribeTo('keydown', 'TextTool', function(topic, sender, keyCode) {
             if (keyCode === 27) {
