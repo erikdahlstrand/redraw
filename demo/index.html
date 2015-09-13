@@ -7,10 +7,20 @@
   <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.css">
 </head>
 <body>
-  <h1>Demo</h1>
+  <h1>Demo 1</h1>
+
+  <img src="chart.png" id="srcImage" />
 
   <div id="actionArea">
     <div id="canvasArea"></div>
+  </div>
+
+  <h1>Demo 2</h1>
+
+  <img src="candlestick-chart.png" id="srcImage2" />
+
+  <div id="actionArea">
+    <div id="canvasArea2"></div>
   </div>
 
   <pre>
@@ -22,7 +32,9 @@
   <script src="../dist/rechart.js"></script>
 
   <script type="text/javascript">
-    var rechart1 = new RechartJs('canvasArea', 'chart.png');
+
+    var rechart1 = new RechartJs('canvasArea', document.getElementById('srcImage'));
+    var rechart2 = new RechartJs('canvasArea2', document.getElementById('srcImage2'));
   </script>
 
 </body>

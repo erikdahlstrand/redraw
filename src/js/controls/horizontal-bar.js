@@ -9,17 +9,11 @@ const tools = [
     {id: 'action_dump', content:'<i class="fa fa-floppy-o"></i>', address: CONST.TOOL.DUMP}
 ];
 
-function findTool(_address) {
-    for (var i in tools) {
-        if (tools[i].address === _address) {
-            return tools[i];
-        }
-    }
-}
 
 export default class HorizontalBar {
-    constructor(eventAggregator, rootNode) {
+    constructor(idPrefix, eventAggregator, rootNode) {
         var activeTool;
+        var toolsInUse = {};
         function notifyActive(topic) {
             return function() {
                 if (activeTool) {
@@ -42,30 +36,33 @@ export default class HorizontalBar {
         div.appendChild(ul);
         for (var i in tools) {
             var t = document.createElement('li');
-            t.id = tools[i].id;
+            t.id = idPrefix + tools[i].id;
             t.innerHTML = tools[i].content;
             t.onclick = notifyActive(tools[i].address);
-
+            toolsInUse[tools[i].address] = t;
             ul.appendChild(t);
         }
 
         eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function(subscriptionId, sender, status) {
-            var currTool = findTool(sender);
+            console.log(eventAggregator.id, 'BAR TOOL_USAGE', subscriptionId, sender, status);
+            var currTool = toolsInUse[sender];
+            console.log(sender, '->', toolsInUse);
 
             if (status !== 'active') {
                 if(sender === activeTool) {
                     activeTool = undefined;
                 }
-                document.getElementById(currTool.id).className = '';
+                currTool.className = '';
             } else {
-                document.getElementById(currTool.id).className = 'active';
+                currTool.className = 'active';
             }
         });
-
-        document.onkeydown = function(e) {
+        var manageKeys = function(e) {
             if (e.keyCode === 46 || e.keyCode === 27) {
+                
                 eventAggregator.notify('keydown', 'toolbar', e.keyCode);
             }
         };
+        window.addEventListener('keydown', manageKeys, false);
     }
 }

@@ -6,7 +6,7 @@ describe('ArrowTool', function() {
 
 	let canvasWrapper = {
 		enableSelection:function() {},
-		canvas:{
+		canvas: {
 			add:function() {},
 			on:function() {}},
 		},

@@ -1,5 +1,4 @@
-var CANVAS_WIDTH = 582; 
-var CANVAS_HEIGHT = 345;
+
 var functionRepository = {}, serviceRepository = {};
 
 function scrollPosition(elem) {
@@ -15,7 +14,7 @@ function scrollPosition(elem) {
 }
 
 class Canvas {
-    constructor(domId, imagePath) {
+    constructor(domId, imgElement) {
 		var canvasElem = document.createElement("canvas");
 		var innerDiv = document.createElement("div");
 
@@ -23,20 +22,22 @@ class Canvas {
 
 		canvasWrapper.appendChild(innerDiv);
 		innerDiv.appendChild(canvasElem);
-		this.setCanvasProps(canvasElem, canvasWrapper, innerDiv, imagePath);
+		this.setCanvasProps(canvasElem, canvasWrapper, innerDiv, imgElement);
     }
 
-	setCanvasProps(_canvasElem, overallWrapper, canvasContainer, _imagePath) {
-		
+	setCanvasProps(_canvasElem, overallWrapper, canvasContainer, imgElement) {
 		this.canvasElem = _canvasElem;
-		
+
+		this.width = imgElement.width;
+		this.height = imgElement.height;
+
 		this.overallWrapper = overallWrapper;
 		this.canvasTop = this.canvasElem.offsetTop;
 		this.canvasContainer = canvasContainer;
 
 		this.canvasLeft = _canvasElem.offsetLeft;
 
-		this.imagePath = _imagePath;
+		this.imageElement = imgElement;
 
 		this.canvas = this.initFabricjsCanvas(this.canvasElem);		
 	}
@@ -48,15 +49,13 @@ class Canvas {
 	initFabricjsCanvas(canvasElem) {
 		var fabricCanvas = new fabric.Canvas(canvasElem);
 
-		fabricCanvas.setDimensions({width:CANVAS_WIDTH, height:CANVAS_HEIGHT});
+		fabricCanvas.setDimensions({width:this.width, height:this.height});
 
-		fabricCanvas.setBackgroundImage(this.imagePath, fabricCanvas.renderAll.bind(fabricCanvas), {
-		  width: fabricCanvas.width,
-		  height: fabricCanvas.height,
-		  // Needed to position backgroundImage at 0/0
-		  originX: 'left',
-		  originY: 'top'
+		fabricCanvas.setBackgroundImage(this.imageElement,fabricCanvas.renderAll.bind(fabricCanvas), {
+		    backgroundImageOpacity: 0.5,
+		    backgroundImageStretch: false
 		});
+
 		return fabricCanvas;
 	}
 	enableSelection(isEnabled) {
@@ -66,7 +65,7 @@ class Canvas {
         });
 	}
 	getWidth() {
-		return CANVAS_WIDTH;
+		return this.width;
 	}
 	getOffsetLeft() {
 		return this.canvasLeft  - scrollPosition(this.canvasElem)[0];

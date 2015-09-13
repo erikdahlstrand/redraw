@@ -2,18 +2,19 @@ import CONST from '../canvas-const.js';
 import FabricProvider from './sample.js';
 var f = require('fabric').fabric;
 
-var circleMarkerRadius = 8;
 var indicationLength = 20;
 var arrowColor = '#444';
 var dragArrowColor = '#888';
-var arrow,canvas;
 
-var circleMarker, line, start, end;
+
+var circleMarker, line;
 
 class ArrowTool {
     constructor(canvasWrapper, eventAggregator) {
         this.eventAggregator = eventAggregator;
         this.canvasWrapper = canvasWrapper;
+        this.arrow = this.canvas = this.start = this.end = undefined;
+
         var callee = this;
 
         this.eventAggregator.subscribeTo(
@@ -22,7 +23,7 @@ class ArrowTool {
                 callee.initListeners.apply(callee, arguments);
             });
 
-        canvas = canvasWrapper.canvas;
+        this.canvas = canvasWrapper.canvas;
 
         this.moveFn = function(options) {
             callee.onMove(options);
@@ -34,6 +35,7 @@ class ArrowTool {
             callee.onMUP(options);
         };
         this.notify = function(message) {
+            console.log(this.eventAggregator.id, 'notify', message);
             this.eventAggregator.notify('TOOL_USAGE', CONST.TOOL.ARROW, message);
         };
 
@@ -58,10 +60,10 @@ class ArrowTool {
 
         angle *= 180 / Math.PI;
         angle += 90;
-        if (arrow) {
-            canvas.remove(arrow);
+        if (this.arrow) {
+            this.canvas.remove(this.arrow);
         }
-        arrow = new f.Triangle({
+        this.arrow = new f.Triangle({
             angle: angle,
             fill: dragArrowColor,
             top: y2,
@@ -73,17 +75,17 @@ class ArrowTool {
             selectable: false
         });
 
-        canvas.add(arrow);
+        this.canvas.add(this.arrow);
     }
 
     abort() {
         console.log('ARROW abort');
-        if (arrow) {
-            canvas.remove(arrow);
-            arrow = undefined;    
+        if (this.arrow) {
+            this.canvas.remove(this.arrow);
+            this.arrow = undefined;    
         }
         if (line) {
-            canvas.remove(line);
+            this.canvas.remove(line);
             line = undefined;    
         }
         this.eventAggregator.unsubscribeTo('keydown', 'ArrowTool');
@@ -92,7 +94,7 @@ class ArrowTool {
 
     onMove(options) {
 
-        if (start && !end) {
+        if (this.start && !this.end) {
             
             let _x2 = options.e.clientX - this.canvasWrapper.getOffsetLeft();
             let _y2 = options.e.clientY - this.canvasWrapper.getOffsetTop();
@@ -103,48 +105,48 @@ class ArrowTool {
                 'y2': _y2
             });
 
-            this.moveArrowIndicator([start.left, start.top, _x2, _y2]);
+            this.moveArrowIndicator([this.start.left, this.start.top, _x2, _y2]);
         }
 
-        canvas.renderAll();
+        this.canvas.renderAll();
     }
 
     onMUP(options) {
-        end = {
+        this.end = {
             top: options.e.clientY - this.canvasWrapper.getOffsetTop(),
             left: options.e.clientX - this.canvasWrapper.getOffsetLeft()
         };
 
-        var perimeter = Math.abs(end.top - start.top) + Math.abs(end.left - start.left);
+        var perimeter = Math.abs(this.end.top - this.start.top) + Math.abs(this.end.left - this.start.left);
 
         if (perimeter > 10) {
-            if (arrow) {
-                arrow.fill = arrowColor;
+            if (this.arrow) {
+                this.arrow.fill = arrowColor;
             }
-            var group = new f.Group([line, arrow], {
+            var group = new f.Group([line, this.arrow], {
                 hasControls: false,
                 hasBorders: true,
                 selectable: false
             });
             line.stroke = arrowColor;
 
-            canvas.add(group);
+            this.canvas.add(group);
         }
         
-        canvas.remove(line);
-        canvas.remove(arrow);
-        arrow = line = start = end = undefined;
-        canvas.renderAll();
+        this.canvas.remove(line);
+        this.canvas.remove(this.arrow);
+        this.arrow = line = this.start = this.end = undefined;
+        this.canvas.renderAll();
     }
 
     onMouseDown(options) {
-        start = {
+        this.start = {
             top: options.e.clientY - this.canvasWrapper.getOffsetTop(),
             left: options.e.clientX - this.canvasWrapper.getOffsetLeft()
         };
         
 
-        line = new f.Line([start.left, start.top, start.left, start.top], {
+        line = new f.Line([this.start.left, this.start.top, this.start.left, this.start.top], {
             strokeWidth: 5,
             stroke: dragArrowColor,
             originX: 'center',
@@ -154,35 +156,40 @@ class ArrowTool {
             selectable: true
         });
 
-        canvas.add(line);
+        this.canvas.add(line);
     }
 
     initListeners(topic, sender, payload) {
-        console.log('ARROW init', payload);
+        console.log(this.eventAggregator.id, 'ARROW init', this.eventAggregator);
         if (payload === 'toolbar-deactivate'){
             this.abort();
             return;
         }
         var me = this;
-        this.eventAggregator.subscribeTo('keydown', 'ArrowTool', function(topic, sender, keyCode) {
-            if (keyCode === 27) {
-                me.abort.apply(me);
-            }
-        });
-        start = end = undefined;
+
+
+        this.eventAggregator.subscribeTo('keydown', 'ArrowTool',
+            function(topic, sender, keyCode) {
+                console.log(me.eventAggregator.id, 'ARROW keydown');
+
+                if (keyCode === 27) {
+                    me.abort.apply(me);
+                }
+            });
+        this.start = this.end = undefined;
 
         this.canvasWrapper.enableSelection(false);
 
         this.notify('active');
 
-        canvas.on('mouse:down', this.downFn);
-        canvas.on('mouse:move', this.moveFn);
-        canvas.on('mouse:up', this.upFn);
+        this.canvas.on('mouse:down', this.downFn);
+        this.canvas.on('mouse:move', this.moveFn);
+        this.canvas.on('mouse:up', this.upFn);
     }
     removeCanvasListeners() {
-        canvas.off('mouse:down', this.downFn);
-        canvas.off('mouse:move', this.moveFn);
-        canvas.off('mouse:up', this.upFn);
+        this.canvas.off('mouse:down', this.downFn);
+        this.canvas.off('mouse:move', this.moveFn);
+        this.canvas.off('mouse:up', this.upFn);
     }
 }
 export default ArrowTool;

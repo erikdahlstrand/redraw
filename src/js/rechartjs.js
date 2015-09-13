@@ -12,27 +12,26 @@ import TextTool from './tools/text.js';
 import HorizontalBar from './controls/horizontal-bar.js';
 
 
-function setupTool(domId, toolResource, canvasTool, eventAggregator) {    
+function setupTool(domId, toolResource, canvasTool, eventAggregator) {
     var toolInstance = new toolResource(canvasTool, eventAggregator);
 
-    if (!toolInstance.init) {
-        // console.log('Tool ' + domId + ' has no init function!');
-    } else {
-        // toolInstance.init();
-    }
     return toolInstance;
 }
 
 class RechartJs {
 
-    constructor(domId, imagePath, options) {
-        var events = new EventAggregator();
+    constructor(domId, imgElement, options) {
+        var events = new EventAggregator(domId);
         
-        var canvas = new Canvas(domId, imagePath);
+        var imgInstance = new fabric.Image(imgElement, {
+          left: 0,
+          top: 0
+        });
+
+        var canvas = new Canvas(domId, imgInstance);
 
         var c = canvas.canvas;
-        var toolbar = new HorizontalBar(events, document.getElementById(domId));
-
+        var toolbar = new HorizontalBar(domId, events, document.getElementById(domId));
 
         var hasToolsDef = !!options && !!options.tools;
 
@@ -57,6 +56,8 @@ class RechartJs {
         //     oRemoveBtn.className = c.getActiveObject() ? '' : 'inactive';
         // };
         // c.on('object:selected', onSelect).on('selection:cleared', onSelect);
+        
+        imgElement.parentNode.removeChild(imgElement);
 
     }
 }
