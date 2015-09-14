@@ -11,8 +11,6 @@ class BoxTool {
         }
 
         function done() {
-            console.log('box done', rect);
-        
             notify('inactive');
             detachBoxListener();
             canvasWrapper.enableSelection(true);

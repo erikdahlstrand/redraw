@@ -9,7 +9,7 @@ class EventAggregator {
         this.subscriptions[subscriber] = onNotifyFn;
     }
     subscribeTo(topic, subscriberId, onNotifyFn) {
-        console.log(this.id, 'EN subscribeTo',topic, subscriberId);
+        //console.log(this.id, 'EN subscribeTo',topic, subscriberId);
         if (!this.subscriptionsByTopic[topic]) {
             this.subscriptionsByTopic[topic] = [];
         }

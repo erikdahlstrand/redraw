@@ -1,5 +1,5 @@
 import CONST from '../canvas-const.js';
-import FabricProvider from './sample.js';
+
 var f = require('fabric').fabric;
 
 var indicationLength = 20;
