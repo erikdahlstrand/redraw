@@ -34,6 +34,7 @@ export default class HorizontalBar {
 
         var ul = document.createElement('ul');
         div.appendChild(ul);
+        var delBtn;
         for (var i in tools) {
             var t = document.createElement('li');
             t.id = idPrefix + tools[i].id;
@@ -41,6 +42,9 @@ export default class HorizontalBar {
             t.onclick = notifyActive(tools[i].address);
             toolsInUse[tools[i].address] = t;
             ul.appendChild(t);
+            if (CONST.TOOL.REMOVE === tools[i].address) {
+                delBtn = t;
+            }
         }
 
         eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function(subscriptionId, sender, status) {
@@ -57,6 +61,13 @@ export default class HorizontalBar {
                 currTool.className = 'active';
             }
         });
+
+        eventAggregator.subscribeTo('canvas-selection', 'toolbar', function(subscriptionId, sender, status) {
+            console.log(eventAggregator.id, 'BAR canvas-selection', subscriptionId, sender, status);
+            delBtn.className = status === 'selected' ? '' : 'inactive';
+        });
+
+
         var manageKeys = function(e) {
             if (e.keyCode === 46 || e.keyCode === 27) {
                 
@@ -64,5 +75,6 @@ export default class HorizontalBar {
             }
         };
         window.addEventListener('keydown', manageKeys, false);
+
     }
 }

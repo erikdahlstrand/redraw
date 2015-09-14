@@ -56,6 +56,8 @@ class Canvas {
 		    backgroundImageStretch: false
 		});
 
+
+
 		return fabricCanvas;
 	}
 	enableSelection(isEnabled) {

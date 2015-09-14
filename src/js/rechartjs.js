@@ -55,7 +55,12 @@ class RechartJs {
         // var onSelect = function(options) {
         //     oRemoveBtn.className = c.getActiveObject() ? '' : 'inactive';
         // };
-        // c.on('object:selected', onSelect).on('selection:cleared', onSelect);
+
+        var onSelect = function() {
+            events.notify('canvas-selection', 'canvas', c.getActiveObject() ? 'selected' : 'cleared');
+        };
+        c.on('object:selected', onSelect).on('selection:cleared', onSelect);
+        
         
         imgElement.parentNode.removeChild(imgElement);
 
