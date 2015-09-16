@@ -21,6 +21,8 @@
     "node_modules/*",
     "src/*",
     "test/*",
-    "tmp/*"
+    "tmp/*",
+    "testBundle.js",
+    "webpack.config.js"
   ]
 }
