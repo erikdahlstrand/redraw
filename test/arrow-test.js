@@ -30,9 +30,9 @@ describe('ArrowTool', function() {
 	};	
 
 	describe('should register for toolbar event', function () {
-		it('with parameter topicName "arr_t"', function () {
+		it('with parameter topicName "arrow"', function () {
 			arrowTool = new ArrowTool(canvasWrapper, eventAggregator);
-			expect(subscriptionTopic).toBe('arr_t');
+			expect(subscriptionTopic).toBe('arrow');
 		});
 	
 
