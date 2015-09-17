@@ -18,7 +18,6 @@ describe('ArrowTool', function() {
 		ArrowTool = require(__path__);
 	});
 
-
 	eventAggregator.subscribeTo = function(topic, _subscriberId, callback) {
 		subscriptionTopic = topic;
 		subscriberId = _subscriberId;

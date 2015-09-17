@@ -51,7 +51,16 @@ class BoxTool {
                 canvas.remove(rect);
                 return;
             }
-            rect.set({opacity: 0.2})
+            var filter = new fabric.Image.filters.Convolute({
+              matrix: [ 0, -1,  0,
+                       -1,  5, -1,
+                        0, -1,  0 ]
+            });
+            rect.filters.push(filter);
+            rect.applyFilters(canvas.renderAll.bind(canvas));
+
+
+            rect.set({opacity: 0.5});
             canvas.renderAll();
         }
 
