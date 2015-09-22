@@ -1,5 +1,4 @@
 import CONST from './canvas-const.js';
-import Browser from './browser-api.js';
 import Canvas from './canvas-wrapper.js';
 import EventAggregator from './event-aggregator.js';
 
@@ -19,7 +18,7 @@ function setupTool(domId, toolResource, canvasTool, eventAggregator) {
     return toolInstance;
 }
 
-class RechartJs {
+class Main {
 
     constructor(domId, imgElement, options) {
         var events = new EventAggregator(domId);
@@ -84,6 +83,6 @@ class RechartJs {
     }
 }
 
-new Browser().appendToWindow('RechartJs', RechartJs);
 
-export default RechartJs;
+
+export default Main;

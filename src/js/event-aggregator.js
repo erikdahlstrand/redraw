@@ -1,6 +1,5 @@
 class EventAggregator {
-    constructor(id) {
-        this.id = id;
+    constructor() {
         this.subscriptions = {};
         this.subscriptionsByTopic = {};
     }
@@ -9,7 +8,7 @@ class EventAggregator {
         this.subscriptions[subscriber] = onNotifyFn;
     }
     subscribeTo(topic, subscriberId, onNotifyFn) {
-        //console.log(this.id, 'EN subscribeTo',topic, subscriberId);
+        console.log('subscribeTo', topic, subscriberId, onNotifyFn);
         if (!this.subscriptionsByTopic[topic]) {
             this.subscriptionsByTopic[topic] = [];
         }
@@ -39,7 +38,7 @@ class EventAggregator {
     }
 
     notify(topic, sender, payload) {
-        console.log(this.id, 'EN notify',topic, sender, payload);
+        console.log('ev', topic, sender, payload);
         for (var s1 in this.subscriptions) {
             this.subscriptions[s1].apply(undefined, [topic, sender, payload]);
         }

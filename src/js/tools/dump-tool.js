@@ -1,4 +1,5 @@
 import CONST from '../canvas-const.js';
+import Browser from '../browser-api.js';
 
 class DumpTool {
     constructor(canvasWrapper, eventAggregator) {
@@ -11,4 +12,9 @@ class DumpTool {
         };
     }
 }
+var toolProps = {
+    label: 'Dump'
+};
+
+(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.DUMP, DumpTool, toolProps);
 export default DumpTool;

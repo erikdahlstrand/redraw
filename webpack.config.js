@@ -1,21 +1,25 @@
 var webpack = require('webpack');
 var path = require('path');
-// var RewirePlugin = require("rewire-webpack");
 
 module.exports = {
-    entry: './src/js/rechartjs.js',
+    entry: [
+        './src/js/redraw.js',
+        './src/js/tools/arrow.js',
+        './src/js/tools/box.js',
+        './src/js/tools/clear-tool.js',
+        './src/js/tools/hline.js',
+        './src/js/tools/remove-tool.js',
+        './src/js/tools/text.js'
+        ],
     output: {
         path: __dirname,
-        filename: './dist/rechart.js'
+        filename: './dist/redraw.js'
     },
     plugins: [
-        // new RewirePlugin(),
         new webpack.dependencies.LabeledModulesPlugin()
     ],
     resolve: {
-        // root: '/Users/swanmo/Documents/javascript/rechart.js/',
-        modulesDirectories: ['bower_components', 'node_modules'],
-        //extensions: ['.js']
+        modulesDirectories: ['bower_components', 'node_modules']
     },
     module: {
         loaders: [

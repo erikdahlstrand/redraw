@@ -1,7 +1,7 @@
 {
-  "name": "rechart.js",
+  "name": "redraw JS",
   "version": "0.0.1",
-  "description": "Rechart.js is a JavaScript library which provides basic chart editing tools in your browser",
+  "description": "Redraw JS is a JavaScript library which provides basic chart editing tools in your browser",
   "author": "swanmo, erikdahlstrand",
   "devDependencies": {
     "babel": "^5.8.21",

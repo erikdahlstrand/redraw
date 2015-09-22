@@ -9,7 +9,7 @@ tools[CONST.TOOL.CLEAR] =  { id: 'action_clear',  content:'<i class="fa fa-bar-c
 tools[CONST.TOOL.DUMP] =   { id: 'action_dump',   content:'<i class="fa fa-floppy-o"></i>',         address: CONST.TOOL.DUMP };
 
 export default class HorizontalBar {
-    constructor(idPrefix, eventAggregator, rootNode, toolsOptions) {
+    constructor(eventAggregator, rootNode, toolsOptions) {
         var activeTool, delBtn;
         var toolsInUse = {};
         function notifyActive(topic) {
@@ -27,9 +27,7 @@ export default class HorizontalBar {
         }
 
         eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function(subscriptionId, sender, status) {
-            console.log(eventAggregator.id, 'BAR TOOL_USAGE', subscriptionId, sender, status);
             var currTool = toolsInUse[sender];
-            console.log(sender, '->', toolsInUse);
 
             if (status !== 'active') {
                 if(sender === activeTool) {
@@ -42,7 +40,7 @@ export default class HorizontalBar {
         });
 
         eventAggregator.subscribeTo('canvas-selection', 'toolbar', function(subscriptionId, sender, status) {
-            console.log(eventAggregator.id, 'BAR canvas-selection', subscriptionId, sender, status);
+
             delBtn.className = status === 'selected' ? '' : 'inactive';
         });
 
@@ -74,7 +72,6 @@ export default class HorizontalBar {
 
             for (var i in toolsInUse) {
                 var t = document.createElement('li');
-                t.id = idPrefix + tools[i].id;
                 t.innerHTML = tools[i].content;
                 t.onclick = notifyActive(tools[i].address);
                 toolsInUse[tools[i].address] = t;

@@ -1,4 +1,5 @@
 import CONST from '../canvas-const.js';
+import Browser from '../browser-api.js';
 
 var editorHeight = 30;
 
@@ -69,5 +70,9 @@ class TextTool {
         }
     }
 }
+var toolProps = {
+    label: 'Text'
+};
+(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.TEXT, TextTool, toolProps);
 
 export default TextTool;

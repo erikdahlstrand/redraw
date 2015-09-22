@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/recharthq/rechart.js.svg?branch=master)](https://travis-ci.org/recharthq/rechart.js)
-
-# rechartjs
+# redraw JS
 Simple HTML5 Chart tools for the awesome [FabricJs](http://fabricjs.com/).
 
 ## Setup

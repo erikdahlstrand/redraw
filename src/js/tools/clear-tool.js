@@ -1,4 +1,5 @@
 import CONST from '../canvas-const.js';
+import Browser from '../browser-api.js';
 
 class ResetTool {
     constructor(canvasWrapper, eventAggregator) {
@@ -19,4 +20,9 @@ class ResetTool {
 		}
     }
 }
+var toolProps = {
+    label: 'Clear'
+};
+
+(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.CLEAR, ResetTool, toolProps);
 export default ResetTool;

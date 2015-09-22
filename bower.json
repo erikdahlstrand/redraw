@@ -1,9 +1,9 @@
 {
-  "name": "rechart.js",
-  "description": "Rechart.js is a JavaScript library which provides basic chart editing tools in your browser",
+  "name": "redraw.js",
+  "description": "Redraw is a JavaScript library which provides basic chart editing tools in your browser",
   "main": [
-    "dist/rechart.js",
-    "dist/rechart.css"
+    "dist/redraw.js",
+    "dist/redraw.css"
   ],
   "dependencies": {
     "fabric": "^v1.5.0",

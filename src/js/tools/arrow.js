@@ -1,4 +1,5 @@
 import CONST from '../canvas-const.js';
+import Browser from '../browser-api.js';
 
 var f = require('fabric').fabric;
 
@@ -11,6 +12,7 @@ var circleMarker, line;
 
 class ArrowTool {
     constructor(canvasWrapper, eventAggregator) {
+        console.log('arrow init');
         this.eventAggregator = eventAggregator;
         this.canvasWrapper = canvasWrapper;
         this.arrow = this.canvas = this.start = this.end = undefined;
@@ -19,7 +21,9 @@ class ArrowTool {
 
         this.eventAggregator.subscribeTo(
             CONST.TOOL.ARROW,
-            'ArrowTool', function() {
+            'ArrowTool',
+            function() {
+                console.log('areow sdflksd');
                 callee.initListeners.apply(callee, arguments);
             });
 
@@ -192,4 +196,9 @@ class ArrowTool {
         this.canvas.off('mouse:up', this.upFn);
     }
 }
+var toolProps = {
+    label: 'Arrow'
+};
+
+(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.ARROW, ArrowTool, toolProps);
 export default ArrowTool;

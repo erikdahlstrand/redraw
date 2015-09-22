@@ -1,4 +1,5 @@
 import CONST from '../canvas-const.js';
+import Browser from '../browser-api.js';
 
 class RemoveTool {
     constructor(canvasWrapper, eventAggregator) {
@@ -19,4 +20,8 @@ class RemoveTool {
         
     }
 }
+var toolProps = {
+    label: 'Delete'
+};
+(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.REMOVE, RemoveTool, toolProps);
 export default RemoveTool;

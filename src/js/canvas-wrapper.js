@@ -14,52 +14,52 @@ function scrollPosition(elem) {
 }
 
 class Canvas {
-    constructor(domId, imgElement) {
+    constructor(imgElement) {
+		var parent = imgElement.parentNode;
+		var canvasWrapper = document.createElement("div");
+
+		parent.insertBefore(canvasWrapper, imgElement);
+		parent.removeChild(imgElement);
+
+		
 		var canvasElem = document.createElement("canvas");
-		var innerDiv = document.createElement("div");
+		canvasWrapper.appendChild(canvasElem);
 
-		var canvasWrapper = document.getElementById(domId);
+		this.setCanvasProps(canvasElem, canvasWrapper, imgElement);
 
-		canvasWrapper.appendChild(innerDiv);
-		innerDiv.appendChild(canvasElem);
-		this.setCanvasProps(canvasElem, canvasWrapper, innerDiv, imgElement);
+		this.canvas = this.initFabricjsCanvas(canvasElem, imgElement);
     }
 
-	setCanvasProps(_canvasElem, overallWrapper, canvasContainer, imgElement) {
+	setCanvasProps(_canvasElem, canvasWrapper, imgElement) {
 		this.canvasElem = _canvasElem;
 
 		this.width = imgElement.width;
 		this.height = imgElement.height;
 
-		this.overallWrapper = overallWrapper;
 		this.canvasTop = this.canvasElem.offsetTop;
-		this.canvasContainer = canvasContainer;
+		this.canvasContainer = canvasWrapper;
 
 		this.canvasLeft = _canvasElem.offsetLeft;
-
-		this.imageElement = imgElement;
-
-		this.canvas = this.initFabricjsCanvas(this.canvasElem);		
 	}
 
 	getCanvasTop() {
 		return this.canvasContainer.offsetTop;
 	}
 
-	initFabricjsCanvas(canvasElem) {
+	initFabricjsCanvas(canvasElem, imgElement) {		
 		var fabricCanvas = new fabric.Canvas(canvasElem);
 
 		fabricCanvas.setDimensions({width:this.width, height:this.height});
 
-		fabricCanvas.setBackgroundImage(this.imageElement,fabricCanvas.renderAll.bind(fabricCanvas), {
+		var image = new fabric.Image(imgElement);
+		fabricCanvas.setBackgroundImage(image,fabricCanvas.renderAll.bind(fabricCanvas), {
 		    backgroundImageOpacity: 0.5,
 		    backgroundImageStretch: false
 		});
 
-
-
 		return fabricCanvas;
 	}
+
 	enableSelection(isEnabled) {
 		this.canvas.selection = isEnabled; // Restore fabricjs selection-box
         this.canvas.forEachObject(function(o) {

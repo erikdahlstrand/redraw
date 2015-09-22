@@ -14,5 +14,13 @@ class Browser {
         }
         return false;
     }
+
+    getFromWindow(attributeName) {
+
+        if (isBrowser) {
+            return window[attributeName];
+        }
+        return {tools: []};
+    }
 }
 export default Browser;

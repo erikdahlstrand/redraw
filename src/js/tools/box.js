@@ -1,4 +1,6 @@
 import CONST from '../canvas-const.js';
+import Browser from '../browser-api.js';
+
 var rect;
 class BoxTool {
     constructor(canvasWrapper, eventAggregator) {
@@ -111,4 +113,10 @@ class BoxTool {
         }
     }
 }
+var toolProps = {
+    label: 'Box'
+};
+
+(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.BOX, BoxTool, toolProps);
+
 export default BoxTool;

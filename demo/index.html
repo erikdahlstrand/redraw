@@ -12,9 +12,7 @@
 
   <img src="chart.png" id="srcImage" />
 
-  <div id="actionArea">
-    <div id="canvasArea"></div>
-  </div>
+
   <button onclick="dumpImage1()">dump image</button>
   <img id="imageDump" />
 
@@ -30,16 +28,15 @@
   <textarea id="text2" style="display:none" cols="80" rows="10"></textarea>
 
   <script src="../bower_components/fabric/dist/fabric.js"></script>
-  <script src="../dist/rechart.js"></script>
+  <script src="../dist/redraw.js"></script>
 
   <script type="text/javascript">
 
-    var rechart1 = new RechartJs('canvasArea',
-      document.getElementById('srcImage'),
+    var rechart1 = new Redraw(document.getElementById('srcImage'),
       {
         tools: ['rectangle', 'remove']
       });
-    var rechart2 = new RechartJs('canvasArea2', document.getElementById('srcImage2'));
+    var rechart2 = new Redraw(document.getElementById('srcImage2'));
     function dumpImage1() {
       console.log('1', rechart1.getImage());
 

@@ -1,4 +1,5 @@
 import CONST from '../canvas-const.js';
+import Browser from '../browser-api.js';
 
 class HorizontalLineTool {
     constructor(canvasWrapper, eventAggregator) {
@@ -85,4 +86,9 @@ class HorizontalLineTool {
         };
     }
 }
+var toolProps = {
+    label: 'Limit line'
+};
+
+(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.HLINE, HorizontalLineTool, toolProps);
 export default HorizontalLineTool;
