@@ -6,8 +6,7 @@
     "dist/redraw.css"
   ],
   "dependencies": {
-    "fabric": "^v1.5.0",
-    "font-awesome": "^v4.4.0"
+    "fabric": "^v1.5.0"
   },
   "license": "MIT",
   "moduleType": [

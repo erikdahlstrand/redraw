@@ -1,5 +1,6 @@
 import CONST from '../canvas-const.js';
 
+const BUTTON_CLASS = 'redraw_btn';
 export default class ControlsDispatcher {
     constructor(eventAggregator) {
 
@@ -47,19 +48,20 @@ export default class ControlsDispatcher {
         window.addEventListener('keydown', manageKeys, false);
 
         this.setupTools = function(tools, domParent) {
-            var div = document.createElement('div');
-            div.id='toolbar';
-            domParent.appendChild(div);
-
-            var ul = document.createElement('ul');
-            div.appendChild(ul);
+            var container = document.createElement('div');
+            container.className='redraw_toolbar';
+            domParent.appendChild(container);
 
             for (var toolName in tools) {
-                var t = document.createElement('li');
-                t.innerHTML = tools[toolName].options.label; // ???
-                t.onclick = notifyActive(tools[toolName].address);
-                toolsInUse[tools[toolName].address] = t;
-                ul.appendChild(t);
+                var btn = document.createElement('button');
+                btn.textContent = tools[toolName].options.label;
+                btn.classList.add(BUTTON_CLASS);
+                if (tools[toolName].options.className) {
+                    btn.classList.add(tools[toolName].options.className);
+                }
+                btn.onclick = notifyActive(tools[toolName].address);
+                toolsInUse[tools[toolName].address] = btn;
+                container.appendChild(btn);
             }
         };
     }
