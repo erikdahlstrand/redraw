@@ -12,7 +12,6 @@ var circleMarker, line;
 
 class ArrowTool {
     constructor(canvasWrapper, eventAggregator) {
-        console.log('arrow init');
         this.eventAggregator = eventAggregator;
         this.canvasWrapper = canvasWrapper;
         this.arrow = this.canvas = this.start = this.end = undefined;
@@ -23,7 +22,6 @@ class ArrowTool {
             CONST.TOOL.ARROW,
             'ArrowTool',
             function() {
-                console.log('areow sdflksd');
                 callee.initListeners.apply(callee, arguments);
             });
 
@@ -39,7 +37,6 @@ class ArrowTool {
             callee.onMUP(options);
         };
         this.notify = function(message) {
-            console.log(this.eventAggregator.id, 'notify', message);
             this.eventAggregator.notify('TOOL_USAGE', CONST.TOOL.ARROW, message);
         };
 
@@ -83,7 +80,6 @@ class ArrowTool {
     }
 
     abort() {
-        console.log('ARROW abort');
         if (this.arrow) {
             this.canvas.remove(this.arrow);
             this.arrow = undefined;    
@@ -164,7 +160,6 @@ class ArrowTool {
     }
 
     initListeners(topic, sender, payload) {
-        console.log(this.eventAggregator.id, 'ARROW init', this.eventAggregator);
         if (payload === 'toolbar-deactivate'){
             this.abort();
             return;
@@ -174,7 +169,6 @@ class ArrowTool {
 
         this.eventAggregator.subscribeTo('keydown', 'ArrowTool',
             function(topic, sender, keyCode) {
-                console.log(me.eventAggregator.id, 'ARROW keydown');
 
                 if (keyCode === 27) {
                     me.abort.apply(me);

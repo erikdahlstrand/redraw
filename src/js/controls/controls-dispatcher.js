@@ -20,7 +20,9 @@ export default class ControlsDispatcher {
             };
         }
 
-        eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function(subscriptionId, sender, status) {
+        eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
+            function(subscriptionId, sender, status) {
+            //    console.log('x', subscriptionId, sender, status)
             // var currTool = toolsInUse[sender];
 
             // if (status !== 'active') {

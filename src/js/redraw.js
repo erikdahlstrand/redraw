@@ -37,7 +37,6 @@ class Redraw {
 
 
 redrawNs.registerTool = function(_name, _toolFn, _options) {
-	console.log('registerTool',_name, _toolFn, _options);
 	redrawNs.tools[_name] = {address: _name, toolFn: _toolFn, options: _options};
 
 };

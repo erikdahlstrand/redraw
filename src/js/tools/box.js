@@ -53,13 +53,13 @@ class BoxTool {
                 canvas.remove(rect);
                 return;
             }
-            var filter = new fabric.Image.filters.Convolute({
-              matrix: [ 0, -1,  0,
-                       -1,  5, -1,
-                        0, -1,  0 ]
-            });
-            rect.filters.push(filter);
-            rect.applyFilters(canvas.renderAll.bind(canvas));
+            // var filter = new fabric.Image.filters.Convolute({
+            //   matrix: [ 0, -1,  0,
+            //            -1,  5, -1,
+            //             0, -1,  0 ]
+            // });
+            // rect.filters.push(filter);
+            // rect.applyFilters(canvas.renderAll.bind(canvas));
 
 
             rect.set({opacity: 0.5});
