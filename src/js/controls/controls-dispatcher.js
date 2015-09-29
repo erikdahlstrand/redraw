@@ -3,13 +3,13 @@ import CONST from '../canvas-const.js';
 const BUTTON_CLASS = 'redraw_btn';
 export default class ControlsDispatcher {
     constructor(eventAggregator) {
-
+        this.toolsInUse = {};
         var activeTool, delBtn;
-        var toolsInUse = {};
+
         function notifyActive(topic) {
             return function() {
                 if (activeTool) {
-                    eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');    
+                    eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
                 }
                 if (activeTool !== topic) {
                     activeTool = topic;
@@ -20,29 +20,15 @@ export default class ControlsDispatcher {
             };
         }
 
-        eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
+
+        eventAggregator.subscribeTo('canvas-selection', 'toolbar',
             function(subscriptionId, sender, status) {
-            //    console.log('x', subscriptionId, sender, status)
-            // var currTool = toolsInUse[sender];
-
-            // if (status !== 'active') {
-            //     if(sender === activeTool) {
-            //         activeTool = undefined;
-            //     }
-            //     currTool.className = '';
-            // } else {
-            //     currTool.className = 'active';
-            // }
-        });
-
-        eventAggregator.subscribeTo('canvas-selection', 'toolbar', function(subscriptionId, sender, status) {
-
-            delBtn.className = status === 'selected' ? '' : 'inactive';
-        });
+                delBtn.className = status === 'selected' ? '' : 'inactive';
+            });
 
         var manageKeys = function(e) {
             if (e.keyCode === 46 || e.keyCode === 27) {
-                
+
                 eventAggregator.notify('keydown', 'toolbar', e.keyCode);
             }
         };
@@ -51,7 +37,7 @@ export default class ControlsDispatcher {
 
         this.setupTools = function(tools, domParent) {
             var container = document.createElement('div');
-            container.className='redraw_toolbar';
+            container.className = 'redraw_toolbar';
             domParent.appendChild(container);
 
             for (var toolName in tools) {
@@ -62,9 +48,24 @@ export default class ControlsDispatcher {
                     btn.classList.add(tools[toolName].options.className);
                 }
                 btn.onclick = notifyActive(tools[toolName].address);
-                toolsInUse[tools[toolName].address] = btn;
+                this.toolsInUse[tools[toolName].address] = btn;
                 container.appendChild(btn);
             }
+
+            eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
+                function(subscriptionId, sender, status) {
+                    var currTool = this.toolsInUse[sender];
+
+                    if (status !== 'active') {
+                        if (sender === activeTool) {
+                            activeTool = undefined;
+                        }
+                        currTool.className = '';
+                    } else {
+                        currTool.className = 'active';
+                    }
+                }, this);
+
         };
     }
 }

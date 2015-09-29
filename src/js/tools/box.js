@@ -5,7 +5,7 @@ var rect;
 class BoxTool {
     constructor(canvasWrapper, eventAggregator) {
         eventAggregator.subscribeTo(CONST.TOOL.BOX, 'BoxTool', attachBoxListener);
-
+        var callbackCtx = this;
         let canvas = canvasWrapper.canvas;
 
         function notify(message) {
@@ -105,7 +105,7 @@ class BoxTool {
                 if (keyCode === 27) {
                     done();
                 }
-            });
+            }, callbackCtx);
             canvasWrapper.enableSelection(false);
             notify('active');
             

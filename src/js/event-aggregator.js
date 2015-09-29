@@ -7,12 +7,13 @@ class EventAggregator {
     subscribe(subscriber, onNotifyFn) {
         this.subscriptions[subscriber] = onNotifyFn;
     }
-    subscribeTo(topic, subscriberId, onNotifyFn) {
-
+    subscribeTo(topic, subscriberId, onNotifyFn, _invokationScope) {
         if (!this.subscriptionsByTopic[topic]) {
             this.subscriptionsByTopic[topic] = [];
         }
-        this.subscriptionsByTopic[topic].push({subscriber: subscriberId, callbackFn: onNotifyFn});
+
+        this.subscriptionsByTopic[topic].push({subscriber: subscriberId, callbackFn: onNotifyFn, invokationScope: _invokationScope});
+        console.log('subscribeTo', topic, subscriberId, this.subscriptionsByTopic[topic], _invokationScope);
     }
 
     // ToDo needs test
@@ -38,11 +39,20 @@ class EventAggregator {
     }
 
     notify(topic, sender, payload) {
-        for (var s1 in this.subscriptions) {
-            this.subscriptions[s1].apply(undefined, [topic, sender, payload]);
-        }
+
+        // for (var s1 in this.subscriptions) {
+        //     this.subscriptions[s1].apply(undefined, [topic, sender, payload]);
+        //     console.log('any', s1);
+        // }
         for (var s2 in this.subscriptionsByTopic[topic]) {
-            this.subscriptionsByTopic[topic][s2].callbackFn.apply(undefined, [topic, sender, payload]);
+            var scope = undefined;
+            console.log('topical', this.subscriptionsByTopic[topic][s2]);
+            if (this.subscriptionsByTopic[topic][s2].invokationScope) {
+                
+                console.log('invoking with scope');
+                scope = this.subscriptionsByTopic[topic][s2].invokationScope;
+            }
+            this.subscriptionsByTopic[topic][s2].callbackFn.apply(scope, [topic, sender, payload]);
         }
     }
 

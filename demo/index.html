@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>sample</title>
+  <style type="text/css">
+  .active {
+    background:blue;
+    }</style>
 </head>
 <body>
   <h1>Demo 1, two tools</h1>
@@ -33,16 +37,16 @@
       {
         tools: ['rectangle', 'remove']
       });
-    var rechart2 = new Redraw(document.getElementById('srcImage2'));
+    // var rechart2 = new Redraw(document.getElementById('srcImage2'));
     function dumpImage1() {
       console.log('1', rechart1.getImage());
 
       document.getElementById('imageDump').src = rechart1.getImage();
     }
     function showJsonImage1() {
-      console.log('json', rechart2.getEditedJson());
-      var elem = document.getElementById('text2').style.display = 'block';
-      document.getElementById('text2').value = rechart2.getEditedJson();
+      // console.log('json', rechart2.getEditedJson());
+      // var elem = document.getElementById('text2').style.display = 'block';
+      // document.getElementById('text2').value = rechart2.getEditedJson();
       
     }
   </script>

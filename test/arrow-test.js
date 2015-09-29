@@ -5,6 +5,7 @@ jest.dontMock(__path__);
 describe('ArrowTool', function() {
 
 	let canvasWrapper = {
+		registerTool: function() {},
 		enableSelection:function() {},
 		canvas: {
 			add:function() {},
@@ -12,9 +13,19 @@ describe('ArrowTool', function() {
 		},
 		eventAggregator = {};
 
-	let subscriptionTopic, subscriberId, toolbarSubscriptionFn, arrowTool, notificationTopic;;	var ArrowTool;
+	let Browser, subscriptionTopic, subscriberId, toolbarSubscriptionFn, arrowTool, notificationTopic, ArrowTool;
 
 	beforeEach(function() {
+		var Browser = require('../src/js/browser-api.js');
+
+		Browser.mockImplementation(function() {
+			return {
+				getFromWindow:function () {
+					return {registerTool:function() {}};
+				}
+			};
+		});
+
 		ArrowTool = require(__path__);
 	});
 
@@ -30,29 +41,31 @@ describe('ArrowTool', function() {
 
 	describe('should register for toolbar event', function () {
 		it('with parameter topicName "arrow"', function () {
+
 			arrowTool = new ArrowTool(canvasWrapper, eventAggregator);
 			expect(subscriptionTopic).toBe('arrow');
 		});
 	
 
 		it('with parameter subscriber "ArrowTool"', function () {
+			
 			arrowTool = new ArrowTool(canvasWrapper, eventAggregator);
 			expect(subscriberId).toBe('ArrowTool');
+
 		});
 	});
 
 	describe('upon toolbar activation', function () {
-		
+
 		beforeEach(function() {
 			var sampleProvider = require.requireActual('../src/js/tools/sample.js');
-			// window.fabric = { Line: function() {} };
 			arrowTool = new ArrowTool(canvasWrapper, eventAggregator);
 			toolbarSubscriptionFn.apply(toolbarSubscriptionFn, []);
 
 		});
 
 		it('should register for keydown event', function () {
-			
+
 			expect(subscriptionTopic).toBe('keydown');
 			expect(subscriberId).toBe('ArrowTool');
 		});
