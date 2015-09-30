@@ -60,9 +60,9 @@ export default class ControlsDispatcher {
                         if (sender === activeTool) {
                             activeTool = undefined;
                         }
-                        currTool.className = '';
+                        currTool.classList.remove('active');
                     } else {
-                        currTool.className = 'active';
+                        currTool.classList.add('active');
                     }
                 }, this);
 

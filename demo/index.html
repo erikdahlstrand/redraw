@@ -1,55 +1,114 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>sample</title>
-  <style type="text/css">
-  .active {
-    background:blue;
-    }</style>
+    <meta charset="UTF-8">
+    <title>sample</title>
+    <style type="text/css">
+    
+      .redraw_btn {
+        padding:10px;
+        background-color: #aaa;
+        color: #222;
+      }
+
+      .redraw_btn.active {
+        background-color: #eef;
+        color: #888;
+      }
+      pre {
+        background: #bbb;
+      }
+      fieldset {
+        margin:10px;
+        width:50%;
+      }
+    </style>
 </head>
+
 <body>
-  <h1>Demo 1, two tools</h1>
+    <h1>Demo 1, two tools</h1>
+    <img src="chart.png" id="srcImage" />
+    
+    <br>
+    <fieldset>
+      <legend>As binary</legend>    
+      <button onclick="downloadImage()">download image</button>
+      <pre>redrawArea.toDataBlob()</pre>
+    </fieldset>
 
-  <img src="chart.png" id="srcImage" />
+    <fieldset>
+      <legend>Show Json</legend>
+      <pre>redrawArea.toJson();</pre>
+      <button onclick="showJson()">show json</button>
+      <textarea cols="80" rows="4" id="dumpJson" style="display:none"></textarea>
+    </fieldset>
+    
+    <fieldset>
+      <legend>Load From Json</legend>
+      <pre>redrawArea.fromJson(document.getElementById('loadJson').value);</pre>
 
+      <button onclick="showJsonInput(this)">upload</button>
+      <textarea cols="80" rows="4" id="loadJson" style="display:none"></textarea>
+      <button id="loadBtn" onclick="loadFromJson()" style="display:none">load from json</button>
+    </fieldset>
 
-  <button onclick="dumpImage1()">dump image</button>
-  <img id="imageDump" />
+    <fieldset>
+      <legend>Show image</legend>
+      <pre>redrawArea.toBase64URL();</pre>
+      <button onclick="dumpImage1()">dump base64 string</button>
+      <img id="imageDump" />
+    </fieldset>
+        
+    <textarea id="text2" style="display:none" cols="80" rows="10"></textarea>
+    <script src="../bower_components/fabric/dist/fabric.js"></script>
+    <script src="../dist/redraw.js"></script>
+    <script type="text/javascript">
 
-  <h1>Demo 2, all tools</h1>
-
-  <img src="candlestick-chart.png" id="srcImage2" />
-
-  <div id="actionArea">
-    <div id="canvasArea2"></div>
-  </div>
-  <button onclick="showJsonImage1()">dump json</button>
-
-  <textarea id="text2" style="display:none" cols="80" rows="10"></textarea>
-
-  <script src="../bower_components/fabric/dist/fabric.js"></script>
-  <script src="../dist/redraw.js"></script>
-
-  <script type="text/javascript">
-
-    var rechart1 = new Redraw(document.getElementById('srcImage'),
-      {
+    var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
         tools: ['rectangle', 'remove']
-      });
-    // var rechart2 = new Redraw(document.getElementById('srcImage2'));
+    });
+
+
     function dumpImage1() {
-      console.log('1', rechart1.getImage());
-
-      document.getElementById('imageDump').src = rechart1.getImage();
+      console.log('image',redrawArea.toBase64URL());
+        document.getElementById('imageDump').src = redrawArea.toBase64URL();
     }
-    function showJsonImage1() {
-      // console.log('json', rechart2.getEditedJson());
-      // var elem = document.getElementById('text2').style.display = 'block';
-      // document.getElementById('text2').value = rechart2.getEditedJson();
-      
-    }
-  </script>
 
+    function downloadImage() {
+        asByteDownload(redrawArea.toDataBlob(), 'sample-chart.png');
+        console.log('2', redrawArea.toDataBlob());
+    }
+
+    function showJson() {
+      document.getElementById('dumpJson').value = redrawArea.toJson();
+      document.getElementById('dumpJson').style.display='block';
+    }
+
+    function showJsonInput(btn) {
+      btn.style.display='none';
+      document.getElementById('loadJson').style.display='block';
+      document.getElementById('loadBtn').style.display='block';
+    }
+
+    function loadFromJson() {
+      redrawArea.fromJson(document.getElementById('loadJson').value);
+    }
+
+    var asByteDownload = (function() {
+        var link = document.createElement("a");
+        document.body.appendChild(link);
+        link.style.display = 'none';
+
+        return function(data, name) {
+            url = window.URL.createObjectURL(data);
+            link.href = url;
+            link.download = name;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        };
+    }());
+    </script>
 </body>
+
 </html>

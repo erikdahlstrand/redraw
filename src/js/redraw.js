@@ -55,7 +55,12 @@ class Redraw {
 		return JSON.stringify(x);
     }
 
-    
+    fromJson(jsonRepresentation) {
+    	var c = this._canvas.canvas;
+    	c.clear();
+
+    	c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
+    }
 
     initializeTools (events) {
     	var controls = new ControlsDispatcher(events);
