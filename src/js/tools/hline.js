@@ -2,7 +2,7 @@ import CONST from '../canvas-const.js';
 import Browser from '../browser-api.js';
 
 class HorizontalLineTool {
-    constructor(canvasWrapper, eventAggregator) {
+    constructor(canvasWrapper, eventAggregator, toolOptions) {
         var movingRect;
         var canvas = canvasWrapper.canvas;
         eventAggregator.subscribeTo(CONST.TOOL.HLINE, 'HorizontalLineTool', HorizontalLineTool);
@@ -17,7 +17,7 @@ class HorizontalLineTool {
                 top: 1,
                 width: canvasWrapper.getWidth(),
                 height: 2,
-                fill: '#000',
+                fill: toolOptions.activeColor,
                 opacity: 0.7,
                 hasControls: false,
                 hasBorders: true
@@ -77,7 +77,7 @@ class HorizontalLineTool {
             }
 
             var onMUP = function(options) {
-                movingRect.fill = '#666';
+                movingRect.fill = toolOptions.color;
                 movingRect = createLineRect();
                 canvas.add(movingRect);
             };
@@ -87,7 +87,9 @@ class HorizontalLineTool {
     }
 }
 var toolProps = {
-    label: 'Limit line'
+    label: 'Limit line',
+    color:CONST.DEFAULT_COLOR,
+    activeColor:'#55f'
 };
 
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.HLINE, HorizontalLineTool, toolProps);

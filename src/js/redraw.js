@@ -3,81 +3,139 @@ import Canvas from './canvas-wrapper.js';
 import EventAggregator from './event-aggregator.js';
 import ControlsDispatcher from './controls/controls-dispatcher.js';
 
-var redrawNs = {tools: {}};
+var redrawNs = {
+    tools: {}
+};
 
-   function dataURItoBlob(encodedData) {
+function dataURItoBlob(encodedData) {
     var decodedData = atob(encodedData.split(',')[1]);
     var array = []; // 8-bit unsigned array
-    for(var i = 0; i < decodedData.length; i++) {
-      array.push(decodedData.charCodeAt(i));
+    for (var i = 0; i < decodedData.length; i++) {
+        array.push(decodedData.charCodeAt(i));
     }
-    return new Blob([new Uint8Array(array)], {type: 'image/png'});
-  }
+    return new Blob([new Uint8Array(array)], {
+        type: 'image/png'
+    });
+}
 
+function defineTools(allTools, options) {
+
+	if (options && options.tools) {
+		var definedTools = {};
+		for (let t in options.tools) {
+			let toolName = options.tools[t];
+			definedTools[toolName] = allTools[toolName];
+		}
+		return definedTools;
+	} else {
+		return allTools;
+	}
+}
+
+var globalOverrides = ['color', 'activeColor'];
+
+function overwriteProps(allProps, precedenceProps, globalOptions, toolName) {
+    var results = {};
+
+    for (var p in allProps[toolName].options) {
+        if (allProps[toolName].options.hasOwnProperty(p)) {
+            if (precedenceProps && precedenceProps[toolName] && precedenceProps[toolName].hasOwnProperty(p)) {
+                results[p] = precedenceProps[toolName][p];
+            } else if (globalOverrides.indexOf(p) > -1 && globalOptions.hasOwnProperty(p)){
+                results[p] = globalOptions[p];
+            } else {
+                results[p] = allProps[toolName].options[p];
+            }
+        }
+    }
+    return results;
+}
 
 /**
  * Main module.
  * @module redraw
  */
 class Redraw {
-	/**
-	 * Redraw constructor. Bootstraps the canvas and tools.
-	 * @constructor
-	 * @param {Object} imgElement - The dom element that holds the image.
-	 * @param {Object} options - Options.
-	 */
+    /**
+     * Redraw constructor. Bootstraps the canvas and tools.
+     * @constructor
+     * @param {Object} imgElement - The dom element that holds the image.
+     * @param {Object} options - Options.
+     */
     constructor(imgElement, options) {
-		var events = new EventAggregator();
+        var events = new EventAggregator();
 
-		this._canvas = new Canvas(imgElement); // Needs defactor
+        this._canvas = new Canvas(imgElement); // Needs defactor
 
-		if (options.jsonContent) {
-			this._canvas.canvas.loadFromJSON(options.jsonContent);
-		}
-		
+        if (options.jsonContent) {
+            this._canvas.canvas.loadFromJSON(options.jsonContent);
+        }
 
-		var controlsDispatcher = new ControlsDispatcher(events);
-		this.tools = [];
-		this.initializeTools(events, this._canvas.canvasContainer);
+
+        var controlsDispatcher = new ControlsDispatcher(events);
+        this.tools = [];
+        this.initializeTools(events, options);
     }
-
+    getCanvasForExport() {
+        this._canvas.canvas.deactivateAllWithDispatch();
+        return this._canvas.canvas;
+    }
     toBase64URL() {
-    	return this._canvas.canvas.toDataURL('png');
+        return this.getCanvasForExport().toDataURL('png');
     }
     toDataBlob() {
-		return dataURItoBlob(this._canvas.canvas.toDataURL('png'));
+        return dataURItoBlob(this.getCanvasForExport().toDataURL('png'));
     }
-	toJson(includeImage) {
-		var x = this._canvas.canvas.toObject();
-		if (!includeImage) {
-			delete x.backgroundImage;
-		}
-		return JSON.stringify(x);
+    toJson(includeImage) {
+        var x = this._canvas.canvas.toObject();
+        if (!includeImage) {
+            delete x.backgroundImage;
+        }
+        return JSON.stringify(x);
     }
 
     fromJson(jsonRepresentation) {
-    	var c = this._canvas.canvas;
-    	c.clear();
+        var c = this._canvas.canvas;
+        c.clear();
 
-    	c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
+        c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
     }
 
-    initializeTools (events) {
-    	var controls = new ControlsDispatcher(events);
-    	controls.setupTools(redrawNs.tools, this._canvas.canvasContainer);
+    initializeTools(events, options) {
+        var localToolSettings = {};
+        var toolsInUse = defineTools(redrawNs.tools, options);
 
-		for (var toolName in redrawNs.tools) {
-			new redrawNs.tools[toolName].toolFn(this._canvas, events);
-		}
+        for (var toolName in toolsInUse) {
+            var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+            toolsInUse[toolName].options = passedProps;
+            console.log('TOOl', toolName, toolsInUse[toolName].options, passedProps);
+        }
+        var controls = new ControlsDispatcher(events);
+
+        for (var toolName in toolsInUse) {
+
+            var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+            if (toolName === 'arrow') {
+                console.log('invoking setup for arrow', passedProps, options.toolSettings);
+            }
+            new redrawNs.tools[toolName].toolFn(this._canvas, events, passedProps);
+        }
+        controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
     }
 }
 
 redrawNs.Annotation = Redraw;
 redrawNs.registerTool = function(_name, _toolFn, _options) {
-	redrawNs.tools[_name] = {address: _name, toolFn: _toolFn, options: _options};
+    redrawNs.tools[_name] = {
+        address: _name,
+        toolFn: _toolFn,
+        options: _options
+    };
+    // buttonCss is an attribute that applies to all tools
+    redrawNs.tools[_name].options.buttonCss = redrawNs.tools[_name].options.buttonCss || '';
 };
 
 
 var b = new Browser();
-//b.appendToWindow('Redraw', Redraw);
+
 b.appendToWindow('redraw', redrawNs);

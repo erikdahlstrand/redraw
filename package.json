@@ -5,21 +5,19 @@
   "author": "swanmo, erikdahlstrand",
   "devDependencies": {
     "babel": "^5.8.21",
-    "babel-loader": "^5.3.2",
     "babel-core": "^5.8.22",
     "babel-jest": "^5.3.0",
     "babel-loader": "^5.3.2",
     "chai": "^1.10.0",
     "css-loader": "^0.16.0",
     "eslint": "^1.2.1",
-    "jest-cli": "0.4.19",
-    "jsdom": "^3.1.2",
+    "jest": "^0.1.40",
+    "jest-cli": "0.5.8",
+    "jsdom": "6.5.1",
     "json-loader": "0.5.2",
     "style-loader": "^0.12.3",
-    "webpack": "^1.11.0"
-  },
-  "scripts": {
-    "test": "jest"
+    "webpack": "^1.11.0",
+    "webpack-dev-server": "^1.12.0"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
@@ -30,5 +28,8 @@
     "moduleFileExtensions": [
       "js"
     ]
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

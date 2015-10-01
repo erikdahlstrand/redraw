@@ -13,7 +13,6 @@ class EventAggregator {
         }
 
         this.subscriptionsByTopic[topic].push({subscriber: subscriberId, callbackFn: onNotifyFn, invokationScope: _invokationScope});
-        console.log('subscribeTo', topic, subscriberId, this.subscriptionsByTopic[topic], _invokationScope);
     }
 
     // ToDo needs test
@@ -46,10 +45,7 @@ class EventAggregator {
         // }
         for (var s2 in this.subscriptionsByTopic[topic]) {
             var scope = undefined;
-            console.log('topical', this.subscriptionsByTopic[topic][s2]);
             if (this.subscriptionsByTopic[topic][s2].invokationScope) {
-                
-                console.log('invoking with scope');
                 scope = this.subscriptionsByTopic[topic][s2].invokationScope;
             }
             this.subscriptionsByTopic[topic][s2].callbackFn.apply(scope, [topic, sender, payload]);

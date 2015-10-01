@@ -3,7 +3,8 @@ import Browser from '../browser-api.js';
 
 var rect;
 class BoxTool {
-    constructor(canvasWrapper, eventAggregator) {
+    constructor(canvasWrapper, eventAggregator, toolOptions) {
+
         eventAggregator.subscribeTo(CONST.TOOL.BOX, 'BoxTool', attachBoxListener);
         var callbackCtx = this;
         let canvas = canvasWrapper.canvas;
@@ -78,9 +79,9 @@ class BoxTool {
                 left: startLeft,
                 top: startTop,
                 width: 4,
-                borderColor: '#444',
+                borderColor: toolOptions.color,
                 height: 4,
-                fill: '#888',
+                fill: toolOptions.color,
                 opacity: 0.3,
                 hasControls: true,
                 hasRotatingPoint:false,
@@ -113,10 +114,11 @@ class BoxTool {
         }
     }
 }
-var toolProps = {
-    label: 'Box'
+var defaultToolProps = {
+    label: 'Box',
+    color:CONST.DEFAULT_COLOR
 };
 
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.BOX, BoxTool, toolProps);
+(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.BOX, BoxTool, defaultToolProps);
 
 export default BoxTool;

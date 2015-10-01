@@ -4,6 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>sample</title>
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css">
+
+    
     <style type="text/css">
     
       .redraw_btn {
@@ -17,30 +21,63 @@
         color: #888;
       }
       pre {
-        background: #bbb;
+        background: #ccc;
       }
       fieldset {
         margin:10px;
         width:50%;
       }
+      .grass-colored {
+        background: #8f8;
+      }
+      .sky-colored {
+        background: #aaf;
+      }
+      code {
+        font-weight: bold;
+        color: #666;
+      }
+      .crazy-cool {
+        color:red;
+        font-size: larger;
+      }
+      .super-padded {
+        padding: 2em;
+      }
     </style>
 </head>
 
 <body>
-    <h1>Demo 1, two tools</h1>
-    <img src="chart.png" id="srcImage" />
-    
-    <br>
+  <div class="main ui container">
+      <h1>Demo 1</h1>
+      <img src="chart.png" id="srcImage" />
+      <h2 class="ui sub header">Example</h2>
+      <pre>
+        var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
+          buttonCss: 'ui button',
+          color: '#1f1',
+          activeColor: '#aea',
+          toolSettings: {
+            arrow: {
+              label:'My custom arrow text',
+              buttonCss: 'ui secondary button',
+              color: 'pink'
+            }
+          }
+      });
+      </pre>
+
+
     <fieldset>
       <legend>As binary</legend>    
-      <button onclick="downloadImage()">download image</button>
+      <button class="ui button" onclick="downloadImage()">download image</button>
       <pre>redrawArea.toDataBlob()</pre>
     </fieldset>
 
     <fieldset>
       <legend>Show Json</legend>
       <pre>redrawArea.toJson();</pre>
-      <button onclick="showJson()">show json</button>
+      <button class="ui button" onclick="showJson()">show json</button>
       <textarea cols="80" rows="4" id="dumpJson" style="display:none"></textarea>
     </fieldset>
     
@@ -48,7 +85,7 @@
       <legend>Load From Json</legend>
       <pre>redrawArea.fromJson(document.getElementById('loadJson').value);</pre>
 
-      <button onclick="showJsonInput(this)">upload</button>
+      <button class="ui button" onclick="showJsonInput(this)">upload</button>
       <textarea cols="80" rows="4" id="loadJson" style="display:none"></textarea>
       <button id="loadBtn" onclick="loadFromJson()" style="display:none">load from json</button>
     </fieldset>
@@ -56,17 +93,72 @@
     <fieldset>
       <legend>Show image</legend>
       <pre>redrawArea.toBase64URL();</pre>
-      <button onclick="dumpImage1()">dump base64 string</button>
+      <button class="ui button" onclick="dumpImage1()">dump base6 4 string</button>
       <img id="imageDump" />
     </fieldset>
-        
+
     <textarea id="text2" style="display:none" cols="80" rows="10"></textarea>
 
+    <h1 class="ui header">Documentation</h1>
+    <h2 class="ui header">Initial setup</h2>
+
+    Example:
+    <pre>
+      var redrawInstance = new redraw.Annotation(document.getElementById('srcImage'));
+    </pre>
+
+    <h2 class="ui header">Options</h2>
+    Use <code>buttonCss</code> to assign one of many css-classes to all buttons.
+    <pre>
+      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
+        buttonCss: 'any-class another-class'
+    });
+    </pre>
+
+    Use <code>color</code> and <code>activeColor</code> to assign colors to the paint work prefomed by each tool.
+    <pre>
+      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
+        color: '#f00',
+        activeColor: 'green'
+    });
+    </pre>
+
+    When provided <code>tools</code> can accomodate a string array with the names of all tools activated.
+    <pre>
+      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
+        tools: ['arrow', 'box']
+    });
+    </pre>
+    
+    <h2 class="ui header">toolSettings</h2>
+    Settings can be passed per tool. For example <code>color</code> can be set to green for the arrow-tool:
+    <pre>
+      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
+        toolSettings: {
+          'arrow': {
+            color: 'green',
+            buttonCss: 'ui button',
+          }
+        }
+    });
+    </pre>
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
     <script src="../dist/redraw.js"></script>
     <script type="text/javascript">
 
     var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        tools: ['rectangle', 'remove']
+        buttonCss: 'ui button',
+        color: '#1f1',
+        activeColor: '#aea',
+        toolSettings: {
+          arrow: {
+            label:'My custom arrow text',
+            buttonCss: 'ui secondary button',
+            color: 'pink'
+          }
+        }
     });
 
 

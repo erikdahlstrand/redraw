@@ -81,15 +81,52 @@
 
 	var _controlsControlsDispatcherJs2 = _interopRequireDefault(_controlsControlsDispatcherJs);
 
-	var redrawNs = { tools: {} };
+	var redrawNs = {
+	    tools: {}
+	};
 
 	function dataURItoBlob(encodedData) {
-	  var decodedData = atob(encodedData.split(',')[1]);
-	  var array = []; // 8-bit unsigned array
-	  for (var i = 0; i < decodedData.length; i++) {
-	    array.push(decodedData.charCodeAt(i));
-	  }
-	  return new Blob([new Uint8Array(array)], { type: 'image/png' });
+	    var decodedData = atob(encodedData.split(',')[1]);
+	    var array = []; // 8-bit unsigned array
+	    for (var i = 0; i < decodedData.length; i++) {
+	        array.push(decodedData.charCodeAt(i));
+	    }
+	    return new Blob([new Uint8Array(array)], {
+	        type: 'image/png'
+	    });
+	}
+
+	function defineTools(allTools, options) {
+
+	    if (options && options.tools) {
+	        var definedTools = {};
+	        for (var t in options.tools) {
+	            var toolName = options.tools[t];
+	            definedTools[toolName] = allTools[toolName];
+	        }
+	        return definedTools;
+	    } else {
+	        return allTools;
+	    }
+	}
+
+	var globalOverrides = ['color', 'activeColor'];
+
+	function overwriteProps(allProps, precedenceProps, globalOptions, toolName) {
+	    var results = {};
+
+	    for (var p in allProps[toolName].options) {
+	        if (allProps[toolName].options.hasOwnProperty(p)) {
+	            if (precedenceProps && precedenceProps[toolName] && precedenceProps[toolName].hasOwnProperty(p)) {
+	                results[p] = precedenceProps[toolName][p];
+	            } else if (globalOverrides.indexOf(p) > -1 && globalOptions.hasOwnProperty(p)) {
+	                results[p] = globalOptions[p];
+	            } else {
+	                results[p] = allProps[toolName].options[p];
+	            }
+	        }
+	    }
+	    return results;
 	}
 
 	/**
@@ -98,78 +135,86 @@
 	 */
 
 	var Redraw = (function () {
-	  /**
-	   * Redraw constructor. Bootstraps the canvas and tools.
-	   * @constructor
-	   * @param {Object} imgElement - The dom element that holds the image.
-	   * @param {Object} options - Options.
-	   */
+	    /**
+	     * Redraw constructor. Bootstraps the canvas and tools.
+	     * @constructor
+	     * @param {Object} imgElement - The dom element that holds the image.
+	     * @param {Object} options - Options.
+	     */
 
-	  function Redraw(imgElement, options) {
-	    _classCallCheck(this, Redraw);
+	    function Redraw(imgElement, options) {
+	        _classCallCheck(this, Redraw);
 
-	    var events = new _eventAggregatorJs2['default']();
+	        var events = new _eventAggregatorJs2['default']();
 
-	    this._canvas = new _canvasWrapperJs2['default'](imgElement); // Needs defactor
+	        this._canvas = new _canvasWrapperJs2['default'](imgElement); // Needs defactor
 
-	    if (options.jsonContent) {
-	      this._canvas.canvas.loadFromJSON(options.jsonContent);
+	        if (options.jsonContent) {
+	            this._canvas.canvas.loadFromJSON(options.jsonContent);
+	        }
+
+	        var controlsDispatcher = new _controlsControlsDispatcherJs2['default'](events);
+	        this.tools = [];
+	        this.initializeTools(events, options);
 	    }
 
-	    var controlsDispatcher = new _controlsControlsDispatcherJs2['default'](events);
-	    this.tools = [];
-	    this.initializeTools(events, this._canvas.canvasContainer);
-	  }
+	    _createClass(Redraw, [{
+	        key: 'toBase64URL',
+	        value: function toBase64URL() {
+	            return this._canvas.canvas.toDataURL('png');
+	        }
+	    }, {
+	        key: 'toDataBlob',
+	        value: function toDataBlob() {
+	            return dataURItoBlob(this._canvas.canvas.toDataURL('png'));
+	        }
+	    }, {
+	        key: 'toJson',
+	        value: function toJson(includeImage) {
+	            var x = this._canvas.canvas.toObject();
+	            if (!includeImage) {
+	                delete x.backgroundImage;
+	            }
+	            return JSON.stringify(x);
+	        }
+	    }, {
+	        key: 'fromJson',
+	        value: function fromJson(jsonRepresentation) {
+	            var c = this._canvas.canvas;
+	            c.clear();
 
-	  _createClass(Redraw, [{
-	    key: 'toBase64URL',
-	    value: function toBase64URL() {
-	      return this._canvas.canvas.toDataURL('png');
-	    }
-	  }, {
-	    key: 'toDataBlob',
-	    value: function toDataBlob() {
-	      return dataURItoBlob(this._canvas.canvas.toDataURL('png'));
-	    }
-	  }, {
-	    key: 'toJson',
-	    value: function toJson(includeImage) {
-	      var x = this._canvas.canvas.toObject();
-	      if (!includeImage) {
-	        delete x.backgroundImage;
-	      }
-	      return JSON.stringify(x);
-	    }
-	  }, {
-	    key: 'fromJson',
-	    value: function fromJson(jsonRepresentation) {
-	      var c = this._canvas.canvas;
-	      c.clear();
+	            c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
+	        }
+	    }, {
+	        key: 'initializeTools',
+	        value: function initializeTools(events, options) {
+	            var controls = new _controlsControlsDispatcherJs2['default'](events);
 
-	      c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
-	    }
-	  }, {
-	    key: 'initializeTools',
-	    value: function initializeTools(events) {
-	      var controls = new _controlsControlsDispatcherJs2['default'](events);
-	      controls.setupTools(redrawNs.tools, this._canvas.canvasContainer);
+	            var toolsInUse = defineTools(redrawNs.tools, options);
 
-	      for (var toolName in redrawNs.tools) {
-	        new redrawNs.tools[toolName].toolFn(this._canvas, events);
-	      }
-	    }
-	  }]);
+	            controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
 
-	  return Redraw;
+	            for (var toolName in toolsInUse) {
+	                var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+	                new redrawNs.tools[toolName].toolFn(this._canvas, events, passedProps);
+	            }
+	        }
+	    }]);
+
+	    return Redraw;
 	})();
 
 	redrawNs.Annotation = Redraw;
 	redrawNs.registerTool = function (_name, _toolFn, _options) {
-	  redrawNs.tools[_name] = { address: _name, toolFn: _toolFn, options: _options };
+	    redrawNs.tools[_name] = {
+	        address: _name,
+	        toolFn: _toolFn,
+	        options: _options
+	    };
 	};
 
 	var b = new _browserApiJs2['default']();
-	//b.appendToWindow('Redraw', Redraw);
+
 	b.appendToWindow('redraw', redrawNs);
 
 /***/ },
@@ -476,7 +521,7 @@
 
 	    window.addEventListener('keydown', manageKeys, false);
 
-	    this.setupTools = function (tools, domParent) {
+	    this.setupTools = function (tools, domParent, mainOptions) {
 	        var container = document.createElement('div');
 	        container.className = 'redraw_toolbar';
 	        domParent.appendChild(container);
@@ -487,6 +532,9 @@
 	            btn.classList.add(BUTTON_CLASS);
 	            if (tools[toolName].options.className) {
 	                btn.classList.add(tools[toolName].options.className);
+	            }
+	            if (mainOptions.btnCssClass) {
+	                btn.classList.add(mainOptions.btnCssClass);
 	            }
 	            btn.onclick = notifyActive(tools[toolName].address);
 	            this.toolsInUse[tools[toolName].address] = btn;
@@ -529,7 +577,8 @@
 			HLINE: 'hline',
 			REMOVE: 'delete',
 			TEXT: 'text'
-		}
+		},
+		DEFAULT_COLOR: '#33e'
 	};
 	module.exports = exports['default'];
 
@@ -560,18 +609,17 @@
 	var f = __webpack_require__(8).fabric;
 
 	var indicationLength = 20;
-	var arrowColor = '#444';
-	var dragArrowColor = '#888';
 
 	var circleMarker, line;
 
 	var ArrowTool = (function () {
-	    function ArrowTool(canvasWrapper, eventAggregator) {
+	    function ArrowTool(canvasWrapper, eventAggregator, toolOptions) {
 	        _classCallCheck(this, ArrowTool);
 
 	        this.eventAggregator = eventAggregator;
 	        this.canvasWrapper = canvasWrapper;
 	        this.arrow = this.canvas = this.start = this.end = undefined;
+	        this.options = toolOptions;
 
 	        var callee = this;
 
@@ -621,7 +669,7 @@
 	            }
 	            this.arrow = new f.Triangle({
 	                angle: angle,
-	                fill: dragArrowColor,
+	                fill: this.options.activeColor,
 	                top: y2,
 	                left: x2,
 	                height: indicationLength,
@@ -679,14 +727,14 @@
 
 	            if (perimeter > 10) {
 	                if (this.arrow) {
-	                    this.arrow.fill = arrowColor;
+	                    this.arrow.fill = this.options.color;
 	                }
 	                var group = new f.Group([line, this.arrow], {
 	                    hasControls: false,
 	                    hasBorders: true,
 	                    selectable: false
 	                });
-	                line.stroke = arrowColor;
+	                line.stroke = this.options.color;
 
 	                this.canvas.add(group);
 	            }
@@ -706,7 +754,7 @@
 
 	            line = new f.Line([this.start.left, this.start.top, this.start.left, this.start.top], {
 	                strokeWidth: 5,
-	                stroke: dragArrowColor,
+	                stroke: this.options.activeColor,
 	                originX: 'center',
 	                originY: 'center',
 	                hasControls: false,
@@ -754,7 +802,9 @@
 	})();
 
 	var toolProps = {
-	    label: 'Arrow'
+	    label: 'Arrow',
+	    color: _canvasConstJs2['default'].DEFAULT_COLOR,
+	    activeColor: '#55f'
 	};
 
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.ARROW, ArrowTool, toolProps);
@@ -10559,18 +10609,11 @@
 	        break;
 	      // slower
 	      default:
-	        len = arguments.length;
-	        args = new Array(len - 1);
-	        for (i = 1; i < len; i++)
-	          args[i - 1] = arguments[i];
+	        args = Array.prototype.slice.call(arguments, 1);
 	        handler.apply(this, args);
 	    }
 	  } else if (isObject(handler)) {
-	    len = arguments.length;
-	    args = new Array(len - 1);
-	    for (i = 1; i < len; i++)
-	      args[i - 1] = arguments[i];
-
+	    args = Array.prototype.slice.call(arguments, 1);
 	    listeners = handler.slice();
 	    len = listeners.length;
 	    for (i = 0; i < len; i++)
@@ -10608,7 +10651,6 @@
 
 	  // Check for listener leak
 	  if (isObject(this._events[type]) && !this._events[type].warned) {
-	    var m;
 	    if (!isUndefined(this._maxListeners)) {
 	      m = this._maxListeners;
 	    } else {
@@ -10730,7 +10772,7 @@
 
 	  if (isFunction(listeners)) {
 	    this.removeListener(type, listeners);
-	  } else {
+	  } else if (listeners) {
 	    // LIFO order
 	    while (listeners.length)
 	      this.removeListener(type, listeners[listeners.length - 1]);
@@ -10751,15 +10793,20 @@
 	  return ret;
 	};
 
+	EventEmitter.prototype.listenerCount = function(type) {
+	  if (this._events) {
+	    var evlistener = this._events[type];
+
+	    if (isFunction(evlistener))
+	      return 1;
+	    else if (evlistener)
+	      return evlistener.length;
+	  }
+	  return 0;
+	};
+
 	EventEmitter.listenerCount = function(emitter, type) {
-	  var ret;
-	  if (!emitter._events || !emitter._events[type])
-	    ret = 0;
-	  else if (isFunction(emitter._events[type]))
-	    ret = 1;
-	  else
-	    ret = emitter._events[type].length;
-	  return ret;
+	  return emitter.listenerCount(type);
 	};
 
 	function isFunction(arg) {
@@ -14289,7 +14336,7 @@
 
 	var rect;
 
-	var BoxTool = function BoxTool(canvasWrapper, eventAggregator) {
+	var BoxTool = function BoxTool(canvasWrapper, eventAggregator, toolOptions) {
 	    _classCallCheck(this, BoxTool);
 
 	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.BOX, 'BoxTool', attachBoxListener);
@@ -14365,9 +14412,9 @@
 	            left: startLeft,
 	            top: startTop,
 	            width: 4,
-	            borderColor: '#444',
+	            borderColor: toolOptions.color,
 	            height: 4,
-	            fill: '#888',
+	            fill: toolOptions.color,
 	            opacity: 0.3,
 	            hasControls: true,
 	            hasRotatingPoint: false,
@@ -14400,11 +14447,12 @@
 	    }
 	};
 
-	var toolProps = {
-	    label: 'Box'
+	var defaultToolProps = {
+	    label: 'Box',
+	    color: _canvasConstJs2['default'].DEFAULT_COLOR
 	};
 
-	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.BOX, BoxTool, toolProps);
+	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.BOX, BoxTool, defaultToolProps);
 
 	exports['default'] = BoxTool;
 	module.exports = exports['default'];
@@ -14480,7 +14528,7 @@
 
 	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
 
-	var HorizontalLineTool = function HorizontalLineTool(canvasWrapper, eventAggregator) {
+	var HorizontalLineTool = function HorizontalLineTool(canvasWrapper, eventAggregator, toolOptions) {
 	    _classCallCheck(this, HorizontalLineTool);
 
 	    var movingRect;
@@ -14497,7 +14545,7 @@
 	            top: 1,
 	            width: canvasWrapper.getWidth(),
 	            height: 2,
-	            fill: '#000',
+	            fill: toolOptions.activeColor,
 	            opacity: 0.7,
 	            hasControls: false,
 	            hasBorders: true
@@ -14555,7 +14603,7 @@
 	        }
 
 	        var onMUP = function onMUP(options) {
-	            movingRect.fill = '#666';
+	            movingRect.fill = toolOptions.color;
 	            movingRect = createLineRect();
 	            canvas.add(movingRect);
 	        };
@@ -14565,7 +14613,9 @@
 	};
 
 	var toolProps = {
-	    label: 'Limit line'
+	    label: 'Limit line',
+	    color: _canvasConstJs2['default'].DEFAULT_COLOR,
+	    activeColor: '#55f'
 	};
 
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.HLINE, HorizontalLineTool, toolProps);
@@ -14643,7 +14693,7 @@
 
 	var editorHeight = 30;
 
-	var TextTool = function TextTool(canvasWrapper, eventAggregator) {
+	var TextTool = function TextTool(canvasWrapper, eventAggregator, toolOptions) {
 	    _classCallCheck(this, TextTool);
 
 	    var canvas = canvasWrapper.canvas;
@@ -14678,6 +14728,7 @@
 	            fontSize: 18,
 	            left: 100,
 	            top: -40,
+	            fill: toolOptions.color,
 	            hasControls: false
 	        });
 
@@ -14712,7 +14763,8 @@
 	};
 
 	var toolProps = {
-	    label: 'Text'
+	    label: 'Text',
+	    color: _canvasConstJs2['default'].DEFAULT_COLOR
 	};
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.TEXT, TextTool, toolProps);
 

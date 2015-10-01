@@ -7,5 +7,6 @@ export default {
 		HLINE:'hline',
 		REMOVE:'delete',
 		TEXT:'text'
-	}
+	},
+	DEFAULT_COLOR: '#33e'
 }

@@ -4,7 +4,7 @@ import Browser from '../browser-api.js';
 var editorHeight = 30;
 
 class TextTool {
-    constructor(canvasWrapper, eventAggregator) {
+    constructor(canvasWrapper, eventAggregator, toolOptions) {
         var canvas = canvasWrapper.canvas;
         var editor;
         eventAggregator.subscribeTo(CONST.TOOL.TEXT, 'TextTool', textTool);
@@ -37,6 +37,7 @@ class TextTool {
                 fontSize: 18,
                 left: 100,
                 top: -40,
+                fill: toolOptions.color,
                 hasControls: false
             });
 
@@ -71,7 +72,8 @@ class TextTool {
     }
 }
 var toolProps = {
-    label: 'Text'
+    label: 'Text',
+    color:CONST.DEFAULT_COLOR,
 };
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.TEXT, TextTool, toolProps);
 
