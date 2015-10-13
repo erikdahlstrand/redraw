@@ -159,14 +159,20 @@
 	    }
 
 	    _createClass(Redraw, [{
+	        key: 'getCanvasForExport',
+	        value: function getCanvasForExport() {
+	            this._canvas.canvas.deactivateAllWithDispatch();
+	            return this._canvas.canvas;
+	        }
+	    }, {
 	        key: 'toBase64URL',
 	        value: function toBase64URL() {
-	            return this._canvas.canvas.toDataURL('png');
+	            return this.getCanvasForExport().toDataURL('png');
 	        }
 	    }, {
 	        key: 'toDataBlob',
 	        value: function toDataBlob() {
-	            return dataURItoBlob(this._canvas.canvas.toDataURL('png'));
+	            return dataURItoBlob(this.getCanvasForExport().toDataURL('png'));
 	        }
 	    }, {
 	        key: 'toJson',
@@ -188,16 +194,25 @@
 	    }, {
 	        key: 'initializeTools',
 	        value: function initializeTools(events, options) {
-	            var controls = new _controlsControlsDispatcherJs2['default'](events);
-
+	            var localToolSettings = {};
 	            var toolsInUse = defineTools(redrawNs.tools, options);
-
-	            controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
 
 	            for (var toolName in toolsInUse) {
 	                var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+	                toolsInUse[toolName].options = passedProps;
+	                console.log('TOOl', toolName, toolsInUse[toolName].options, passedProps);
+	            }
+	            var controls = new _controlsControlsDispatcherJs2['default'](events);
+
+	            for (var toolName in toolsInUse) {
+
+	                var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+	                if (toolName === 'arrow') {
+	                    console.log('invoking setup for arrow', passedProps, options.toolSettings);
+	                }
 	                new redrawNs.tools[toolName].toolFn(this._canvas, events, passedProps);
 	            }
+	            controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
 	        }
 	    }]);
 
@@ -211,6 +226,8 @@
 	        toolFn: _toolFn,
 	        options: _options
 	    };
+	    // buttonCss is an attribute that applies to all tools
+	    redrawNs.tools[_name].options.buttonCss = redrawNs.tools[_name].options.buttonCss || '';
 	};
 
 	var b = new _browserApiJs2['default']();
@@ -382,15 +399,15 @@
 /* 4 */
 /***/ function(module, exports) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var EventAggregator = (function () {
 	    function EventAggregator() {
@@ -401,24 +418,23 @@
 	    }
 
 	    _createClass(EventAggregator, [{
-	        key: 'subscribe',
+	        key: "subscribe",
 	        value: function subscribe(subscriber, onNotifyFn) {
 	            this.subscriptions[subscriber] = onNotifyFn;
 	        }
 	    }, {
-	        key: 'subscribeTo',
+	        key: "subscribeTo",
 	        value: function subscribeTo(topic, subscriberId, onNotifyFn, _invokationScope) {
 	            if (!this.subscriptionsByTopic[topic]) {
 	                this.subscriptionsByTopic[topic] = [];
 	            }
 
 	            this.subscriptionsByTopic[topic].push({ subscriber: subscriberId, callbackFn: onNotifyFn, invokationScope: _invokationScope });
-	            console.log('subscribeTo', topic, subscriberId, this.subscriptionsByTopic[topic], _invokationScope);
 	        }
 
 	        // ToDo needs test
 	    }, {
-	        key: 'unsubscribe',
+	        key: "unsubscribe",
 	        value: function unsubscribe(_subscriber) {
 	            delete this.subscriptions[_subscriber];
 	            for (var i in this.subscriptionsByTopic) {
@@ -433,7 +449,7 @@
 
 	        // ToDo needs test
 	    }, {
-	        key: 'unsubscribeTo',
+	        key: "unsubscribeTo",
 	        value: function unsubscribeTo(topic, _subscriber) {
 	            for (var j in this.subscriptionsByTopic[topic]) {
 	                if (this.subscriptionsByTopic[topic][j].subscriber === _subscriber) {
@@ -442,7 +458,7 @@
 	            }
 	        }
 	    }, {
-	        key: 'notify',
+	        key: "notify",
 	        value: function notify(topic, sender, payload) {
 
 	            // for (var s1 in this.subscriptions) {
@@ -451,10 +467,7 @@
 	            // }
 	            for (var s2 in this.subscriptionsByTopic[topic]) {
 	                var scope = undefined;
-	                console.log('topical', this.subscriptionsByTopic[topic][s2]);
 	                if (this.subscriptionsByTopic[topic][s2].invokationScope) {
-
-	                    console.log('invoking with scope');
 	                    scope = this.subscriptionsByTopic[topic][s2].invokationScope;
 	                }
 	                this.subscriptionsByTopic[topic][s2].callbackFn.apply(scope, [topic, sender, payload]);
@@ -465,8 +478,8 @@
 	    return EventAggregator;
 	})();
 
-	exports['default'] = EventAggregator;
-	module.exports = exports['default'];
+	exports["default"] = EventAggregator;
+	module.exports = exports["default"];
 
 /***/ },
 /* 5 */
@@ -487,6 +500,14 @@
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
 	var BUTTON_CLASS = 'redraw_btn';
+	function addClasses(btnObj, classes) {
+	    if (!classes) return;
+	    var allClasses = classes.split(' ');
+
+	    allClasses.forEach(function (clazz) {
+	        btnObj.classList.add(clazz);
+	    });
+	}
 
 	var ControlsDispatcher = function ControlsDispatcher(eventAggregator) {
 	    _classCallCheck(this, ControlsDispatcher);
@@ -529,13 +550,16 @@
 	        for (var toolName in tools) {
 	            var btn = document.createElement('button');
 	            btn.textContent = tools[toolName].options.label;
+
 	            btn.classList.add(BUTTON_CLASS);
-	            if (tools[toolName].options.className) {
-	                btn.classList.add(tools[toolName].options.className);
+
+	            if (toolName === 'arrow') {
+	                console.log('setting up arrow tool', tools[toolName].options);
 	            }
-	            if (mainOptions.btnCssClass) {
-	                btn.classList.add(mainOptions.btnCssClass);
-	            }
+
+	            addClasses(btn, mainOptions.buttonCss);
+	            addClasses(btn, tools[toolName].options.buttonCss);
+
 	            btn.onclick = notifyActive(tools[toolName].address);
 	            this.toolsInUse[tools[toolName].address] = btn;
 	            container.appendChild(btn);
@@ -14367,8 +14391,12 @@
 
 	    function drawBox(options) {
 	        if (rect) {
-	            currWidth = options.e.clientX - canvasWrapper.getOffsetLeft() - startLeft;
-	            currHeight = options.e.clientY - canvasWrapper.getOffsetTop() - startTop;
+	            var pointer = canvas.getPointer(options.e);
+
+	            currWidth = pointer.x - startLeft;
+	            currHeight = pointer.y - startTop;
+
+	            console.log('move', arguments);
 
 	            rect.set({
 	                'width': currWidth
@@ -14388,13 +14416,6 @@
 	            canvas.remove(rect);
 	            return;
 	        }
-	        // var filter = new fabric.Image.filters.Convolute({
-	        //   matrix: [ 0, -1,  0,
-	        //            -1,  5, -1,
-	        //             0, -1,  0 ]
-	        // });
-	        // rect.filters.push(filter);
-	        // rect.applyFilters(canvas.renderAll.bind(canvas));
 
 	        rect.set({ opacity: 0.5 });
 	        canvas.renderAll();
@@ -14403,10 +14424,12 @@
 	    var currWidth, currHeight, startTop, startLeft;
 
 	    function mouseDown(options) {
-
+	        var pointer = canvas.getPointer(options.e);
+	        console.log('down', pointer);
 	        currWidth = currHeight = 0;
-	        startTop = options.e.clientY - canvasWrapper.getOffsetTop();
-	        startLeft = options.e.clientX - canvasWrapper.getOffsetLeft();
+
+	        startTop = pointer.y;
+	        startLeft = pointer.x;
 
 	        rect = new fabric.Rect({
 	            left: startLeft,

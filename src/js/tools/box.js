@@ -33,8 +33,12 @@ class BoxTool {
 
         function drawBox(options) {
             if (rect) {                
-                currWidth = (options.e.clientX - canvasWrapper.getOffsetLeft()) - startLeft;
-                currHeight = (options.e.clientY - canvasWrapper.getOffsetTop()) - startTop;
+                let pointer = canvas.getPointer(options.e);
+
+                currWidth = pointer.x - startLeft;
+                currHeight = pointer.y - startTop;                
+
+                console.log('move', arguments);
 
                 rect.set({
                     'width': currWidth
@@ -54,14 +58,6 @@ class BoxTool {
                 canvas.remove(rect);
                 return;
             }
-            // var filter = new fabric.Image.filters.Convolute({
-            //   matrix: [ 0, -1,  0,
-            //            -1,  5, -1,
-            //             0, -1,  0 ]
-            // });
-            // rect.filters.push(filter);
-            // rect.applyFilters(canvas.renderAll.bind(canvas));
-
 
             rect.set({opacity: 0.5});
             canvas.renderAll();
@@ -70,10 +66,13 @@ class BoxTool {
         var currWidth, currHeight, startTop, startLeft;
 
         function mouseDown(options) {
-            
+            let pointer = canvas.getPointer(options.e);
+            console.log('down', pointer);
             currWidth = currHeight = 0;
-            startTop = (options.e.clientY - canvasWrapper.getOffsetTop());
-            startLeft = (options.e.clientX - canvasWrapper.getOffsetLeft());
+            
+
+            startTop = pointer.y;
+            startLeft = pointer.x;
 
             rect = new fabric.Rect({
                 left: startLeft,
