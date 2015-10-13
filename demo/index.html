@@ -7,18 +7,9 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css">
 
-    
     <style type="text/css">
-    
-      .redraw_btn {
-        padding:10px;
-        background-color: #aaa;
-        color: #222;
-      }
-
-      .redraw_btn.active {
-        background-color: #eef;
-        color: #888;
+      .active {
+        background-color: #eef !important;
       }
       pre {
         background: #ccc;
@@ -27,22 +18,10 @@
         margin:10px;
         width:50%;
       }
-      .grass-colored {
-        background: #8f8;
-      }
-      .sky-colored {
-        background: #aaf;
-      }
+
       code {
         font-weight: bold;
         color: #666;
-      }
-      .crazy-cool {
-        color:red;
-        font-size: larger;
-      }
-      .super-padded {
-        padding: 2em;
       }
     </style>
 </head>
@@ -50,7 +29,11 @@
 <body>
   <div class="main ui container">
       <h1>Demo 1</h1>
-      <img src="chart.png" id="srcImage" />
+      <br><br>
+      <div style="position:absolute">
+        <img src="chart.png" id="srcImage" />
+      </div>
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
       <h2 class="ui sub header">Example</h2>
       <pre>
         var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
@@ -149,16 +132,9 @@
     <script type="text/javascript">
 
     var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        buttonCss: 'ui button',
-        color: '#1f1',
-        activeColor: '#aea',
-        toolSettings: {
-          arrow: {
-            label:'My custom arrow text',
-            buttonCss: 'ui secondary button',
-            color: 'pink'
-          }
-        }
+        buttonCss: 'ui black basic button',
+        color: '#88b',
+        activeColor: '#99e'
     });
 
 
