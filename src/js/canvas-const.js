@@ -8,5 +8,11 @@ export default {
 		REMOVE:'delete',
 		TEXT:'text'
 	},
-	DEFAULT_COLOR: '#33e'
+	DEFAULT_COLOR: '#33e',
+	CSS: {
+		PARENT:'redraw_parent',
+		TOOLBAR:'redraw_toolbar',
+		BUTTON:'redraw_btn',
+		ACTIVE_BUTTON:'active'
+	}
 }

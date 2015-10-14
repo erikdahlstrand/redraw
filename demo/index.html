@@ -4,87 +4,136 @@
 <head>
     <meta charset="UTF-8">
     <title>sample</title>
-
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css">
-
+    <link rel="stylesheet" type="text/css" href="green-disease.css">
+    <link rel="stylesheet" type="text/css" href="black-flexbox.css">
     <style type="text/css">
-    .redraw_btn {
-        color: green;
-      }
-      .myActive {
-        color: red;
-      }
-      pre {
-        background: #ccc;
-      }
-      fieldset {
-        margin:10px;
-        width:50%;
-      }
-
-      code {
-        font-weight: bold;
-        color: #666;
-      }
+        .margined {
+            margin-top: 6px !important;
+            margin-bottom: 6px !important;
+        }
+        pre {
+            background-color: #fcfaf3;
+            border-radius: 10px;
+        }
     </style>
+    
 </head>
 
 <body>
-  <div class="main ui container">
-      <h1>Elaboration</h1>
-      <img src="chart.png" id="srcImage" />
-      
-    <fieldset>
-      <legend>As binary</legend>    
-      <button class="ui button" onclick="downloadImage()">download image</button>
-      <pre>redrawArea.toDataBlob()</pre>
-    </fieldset>
+    <div class="main ui container">
+      <h1>CSS samples</h1>
 
-    <fieldset>
-      <legend>Show Json</legend>
-      <pre>redrawArea.toJson();</pre>
-      <button class="ui button" onclick="showJson()">show json</button>
-      <textarea cols="80" rows="4" id="dumpJson" style="display:none"></textarea>
-    </fieldset>
-    
-    <fieldset>
-      <legend>Load From Json</legend>
-      <pre>redrawArea.fromJson(document.getElementById('loadJson').value);</pre>
+      <div class="ui horizontal divider">Semantic UI buttons</div>
 
-      <button class="ui button" onclick="showJsonInput(this)">upload</button>
-      <textarea cols="80" rows="4" id="loadJson" style="display:none"></textarea>
-      <button id="loadBtn" onclick="loadFromJson()" style="display:none">load from json</button>
-    </fieldset>
-
-    <fieldset>
-      <legend>Show image</legend>
-      <pre>redrawArea.toBase64URL();</pre>
-      <button class="ui button" onclick="dumpImage1()">dump base6 4 string</button>
-      <img id="imageDump" />
-    </fieldset>
-
-    <h2 class="ui sub header">Sample</h2>
+      <img src="chart.png" id="anotherImage" />
       <pre>
+var redrawArea = new redraw.Annotation(document.getElementById('anotherImage'), {
+  buttonActiveCss: 'active', buttonCss: 'ui button', toolbarCss: 'ui buttons'
+});        </pre>
+
+
+
+      <div class="ui horizontal divider">Semantic UI buttons, with toolbar first in dom</div>
+      <img src="chart.png" id="preceededImage" />
+        <pre>
+var redrawArea = new redraw.Annotation(document.getElementById('preceededImage'),
+{
+    toolbarFirst: true,
+    buttonActiveCss: 'active',
+    buttonCss: 'ui button',
+    toolbarCss: 'ui basic buttons'
+});</pre>
+
+
+
+      <div class="ui horizontal divider">Tools on top, see black-flexbox.css</div>
+      <div class="black-mass">
+        <img src="chart.png" id="yetAnotherImage" />
+      </div>
+      <pre>var redrawArea = new redraw.Annotation(document.getElementById('yetAnotherImage'));</pre>
+
+
+        <div class="ui horizontal divider">Own, see green-disease.css</div>
+
+
+        <div class="ui basic segment">
+            <div class="ui input green-disease">
+                <img src="chart.png" id="srcImage" />
+            </div>
+            <div class="ui horizontal divider">
+                Export (from the green one)
+            </div>
+            <div>
+                <h4 class="ui horizontal divider header">
+                  <i class="cloud download icon"></i>
+                  Binary download
+                </h4>
+                <button class="ui button" onclick="downloadImage()">download image</button>
+                <pre>redrawArea.toDataBlob()</pre>
+                <h4 class="ui horizontal divider header">
+                  <i class="file code outline icon"></i>
+                  Show Json
+                </h4>
+                <pre>redrawArea.toJson();</pre>
+                <button class="ui button" onclick="showJson()">show json</button>
+                <textarea cols="80" rows="4" id="dumpJson" style="display:none"></textarea>
+                <h4 class="ui horizontal divider header">
+                  <i class="file code outline icon"></i>
+                  Load from Json
+                </h4>
+                <pre>redrawArea.fromJson(document.getElementById('loadJson').value);</pre>
+                <button class="ui button" onclick="showJsonInput(this)">upload</button>
+                <textarea cols="80" rows="4" id="loadJson" style="display:none"></textarea>
+                <button id="loadBtn" onclick="loadFromJson()" style="display:none">load from json</button>
+                <h4 class="ui horizontal divider header">
+                  <i class="file image outline icon"></i>
+                  Show image
+                </h4>
+                <pre>redrawArea.toBase64URL();</pre>
+                <button class="ui button" onclick="dumpImage1()">dump base6 4 string</button>
+                <img id="imageDump" />
+            </div>
+        </div>
+
+        <h2 class="ui sub header">Sample</h2>
+        <pre>
         var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
           buttonCss: 'ui orange basic button',
           maxWidth:200
       });
       </pre>
 
-</div>
+    
+
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
     <script src="../dist/redraw.js"></script>
     <script type="text/javascript">
-
     var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        buttonCss: 'ui orange basic button',
-        maxWidth:200
+        maxWidth: 700,
+        color:'#5e5'
     });
+
+    var redrawArea = new redraw.Annotation(document.getElementById('anotherImage'), {
+      buttonActiveCss: 'active', buttonCss: 'ui button', toolbarCss: 'ui buttons margined'
+    });
+
+    var redrawArea = new redraw.Annotation(document.getElementById('yetAnotherImage'));
+
+    var redrawArea = new redraw.Annotation(document.getElementById('preceededImage'),
+        {
+            toolbarFirst: true,
+            buttonActiveCss: 'active',
+            buttonCss: 'ui button',
+            toolbarCss: 'ui basic buttons margined'
+        });
+    
 
 
     function dumpImage1() {
-      console.log('image',redrawArea.toBase64URL());
+        console.log('image', redrawArea.toBase64URL());
         document.getElementById('imageDump').src = redrawArea.toBase64URL();
     }
 
@@ -94,18 +143,18 @@
     }
 
     function showJson() {
-      document.getElementById('dumpJson').value = redrawArea.toJson();
-      document.getElementById('dumpJson').style.display='block';
+        document.getElementById('dumpJson').value = redrawArea.toJson();
+        document.getElementById('dumpJson').style.display = 'block';
     }
 
     function showJsonInput(btn) {
-      btn.style.display='none';
-      document.getElementById('loadJson').style.display='block';
-      document.getElementById('loadBtn').style.display='block';
+        btn.style.display = 'none';
+        document.getElementById('loadJson').style.display = 'block';
+        document.getElementById('loadBtn').style.display = 'block';
     }
 
     function loadFromJson() {
-      redrawArea.fromJson(document.getElementById('loadJson').value);
+        redrawArea.fromJson(document.getElementById('loadJson').value);
     }
 
     var asByteDownload = (function() {

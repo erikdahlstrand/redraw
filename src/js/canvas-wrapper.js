@@ -1,5 +1,5 @@
-var functionRepository = {},
-    serviceRepository = {};
+import CONST from './canvas-const.js';
+
 
 function scrollPosition(elem) {
     var left = 0,
@@ -18,6 +18,7 @@ class Canvas {
 
         var parent = imgElement.parentNode;
         var canvasWrapper = document.createElement("div");
+        canvasWrapper.className = CONST.CSS.PARENT;
         this.scale = 1;
         parent.insertBefore(canvasWrapper, imgElement);
         parent.removeChild(imgElement);

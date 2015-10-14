@@ -73,11 +73,11 @@
 
 	var _canvasWrapperJs2 = _interopRequireDefault(_canvasWrapperJs);
 
-	var _eventAggregatorJs = __webpack_require__(4);
+	var _eventAggregatorJs = __webpack_require__(5);
 
 	var _eventAggregatorJs2 = _interopRequireDefault(_eventAggregatorJs);
 
-	var _controlsControlsDispatcherJs = __webpack_require__(5);
+	var _controlsControlsDispatcherJs = __webpack_require__(6);
 
 	var _controlsControlsDispatcherJs2 = _interopRequireDefault(_controlsControlsDispatcherJs);
 
@@ -147,7 +147,6 @@
 
 	        var events = new _eventAggregatorJs2['default']();
 	        options = options || {};
-	        console.log('options', options);
 	        this._canvas = new _canvasWrapperJs2['default'](imgElement, options); // Needs defactor
 
 	        if (options.jsonContent) {
@@ -160,15 +159,6 @@
 	    }
 
 	    _createClass(Redraw, [{
-<<<<<<< HEAD
-<<<<<<< HEAD
-	        key: 'getCanvasForExport',
-	        value: function getCanvasForExport() {
-	            this._canvas.canvas.deactivateAllWithDispatch();
-	            return this._canvas.canvas;
-=======
-=======
->>>>>>> e05112d... Build
 	        key: 'getDataUrlForExport',
 	        value: function getDataUrlForExport() {
 	            this._canvas.canvas.deactivateAllWithDispatch();
@@ -176,36 +166,16 @@
 	                format: 'png',
 	                multiplier: 1 / this._canvas.scale
 	            });
-<<<<<<< HEAD
->>>>>>> e05112d... Build
-=======
->>>>>>> e05112d... Build
 	        }
 	    }, {
 	        key: 'toBase64URL',
 	        value: function toBase64URL() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	            return this.getCanvasForExport().toDataURL('png');
-=======
 	            return this.getDataUrlForExport();
->>>>>>> e05112d... Build
-=======
-	            return this.getDataUrlForExport();
->>>>>>> e05112d... Build
 	        }
 	    }, {
 	        key: 'toDataBlob',
 	        value: function toDataBlob() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-	            return dataURItoBlob(this.getCanvasForExport().toDataURL('png'));
-=======
 	            return dataURItoBlob(this.getDataUrlForExport());
->>>>>>> e05112d... Build
-=======
-	            return dataURItoBlob(this.getDataUrlForExport());
->>>>>>> e05112d... Build
 	        }
 	    }, {
 	        key: 'toJson',
@@ -230,25 +200,17 @@
 	            var localToolSettings = {};
 	            var toolsInUse = defineTools(redrawNs.tools, options);
 
+	            console.log('init tools', redrawNs.tools, options.toolSettings, options);
 	            for (var toolName in toolsInUse) {
-	                var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
-	                toolsInUse[toolName].options = passedProps;
-<<<<<<< HEAD
-<<<<<<< HEAD
-	                console.log('TOOl', toolName, toolsInUse[toolName].options, passedProps);
-=======
->>>>>>> e05112d... Build
-=======
->>>>>>> e05112d... Build
+	                // var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+	                // toolsInUse[toolName].options = passedProps;
 	            }
-	            var controls = new _controlsControlsDispatcherJs2['default'](events);
+	            var controls = new _controlsControlsDispatcherJs2['default'](events, options);
 
 	            for (var toolName in toolsInUse) {
 
 	                var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
-	                if (toolName === 'arrow') {
-	                    console.log('invoking setup for arrow', passedProps, options.toolSettings);
-	                }
+
 	                new redrawNs.tools[toolName].toolFn(this._canvas, events, passedProps);
 	            }
 	            controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
@@ -325,158 +287,126 @@
 
 /***/ },
 /* 3 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	    value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var functionRepository = {},
-	    serviceRepository = {};
+	var _canvasConstJs = __webpack_require__(4);
+
+	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
 	function scrollPosition(elem) {
-		var left = 0,
-		    top = 0;
+	    var left = 0,
+	        top = 0;
 
-		do {
-			left += elem.scrollLeft;
-			top += elem.scrollTop;
-		} while (elem = elem.offsetParent);
+	    do {
+	        left += elem.scrollLeft;
+	        top += elem.scrollTop;
+	    } while (elem = elem.offsetParent);
 
-		return [left, top];
+	    return [left, top];
 	}
 
 	var Canvas = (function () {
-		function Canvas(imgElement, options) {
-			_classCallCheck(this, Canvas);
+	    function Canvas(imgElement, options) {
+	        _classCallCheck(this, Canvas);
 
-			var parent = imgElement.parentNode;
-			var canvasWrapper = document.createElement("div");
-			this.scale = 1;
-			parent.insertBefore(canvasWrapper, imgElement);
-			parent.removeChild(imgElement);
+	        var parent = imgElement.parentNode;
+	        var canvasWrapper = document.createElement("div");
+	        canvasWrapper.className = _canvasConstJs2["default"].CSS.PARENT;
+	        this.scale = 1;
+	        parent.insertBefore(canvasWrapper, imgElement);
+	        parent.removeChild(imgElement);
 
-			var canvasElem = document.createElement("canvas");
-			canvasWrapper.appendChild(canvasElem);
+	        var canvasElem = document.createElement("canvas");
+	        canvasWrapper.appendChild(canvasElem);
 
-			this.canvasElem = canvasElem;
+	        this.canvasElem = canvasElem;
 
-			this.canvasTop = this.canvasElem.offsetTop;
-			this.canvasContainer = canvasWrapper;
+	        this.canvasContainer = canvasWrapper;
+	        this.canvasLeft = canvasElem.offsetLeft;
 
-			this.canvasLeft = canvasElem.offsetLeft;
-<<<<<<< HEAD
+	        this.image = new fabric.Image(imgElement);
 
-			this.image = new fabric.Image(imgElement);
-			console.log('scaler', options.maxWidth, this.image.width);
-			if (options.maxWidth && options.maxWidth < this.image.width) {
-				this.scale = options.maxWidth / this.image.width;
-			}
-			if (options.maxHeight && options.maxHeight < this.image.height) {
-				var scaleY = options.maxHeight / this.image.height;
-				if (this.scale > scaleY) {
-					this.scale = scaleY;
-				}
-			}
-			console.log('calculating scale', this.scale, options);
-			this.width = this.scale * imgElement.width;
-			this.height = this.scale * imgElement.height;
-			// this.canvas = this.initFabricjsCanvas(canvasElem, imgElement);
+	        if (options.maxWidth && options.maxWidth < this.image.width) {
+	            this.scale = options.maxWidth / this.image.width;
+	        }
+	        if (options.maxHeight && options.maxHeight < this.image.height) {
+	            var scaleY = options.maxHeight / this.image.height;
+	            if (this.scale > scaleY) {
+	                this.scale = scaleY;
+	            }
+	        }
 
-			this.canvas = new fabric.Canvas(canvasElem);
-			//canvas.setHeight(500);
-			this.canvas.setWidth(200);
+	        this.width = this.scale * imgElement.width;
+	        this.height = this.scale * imgElement.height;
 
-			this.canvas.setDimensions({ width: this.width, height: this.height });
+	        this.canvas = new fabric.Canvas(canvasElem);
 
-=======
+	        this.canvas.setDimensions({
+	            width: this.width,
+	            height: this.height
+	        });
 
-			this.image = new fabric.Image(imgElement);
-			console.log('scaler', options.maxWidth, this.image.width);
-			if (options.maxWidth && options.maxWidth < this.image.width) {
-				this.scale = options.maxWidth / this.image.width;
-			}
-			if (options.maxHeight && options.maxHeight < this.image.height) {
-				var scaleY = options.maxHeight / this.image.height;
-				if (this.scale > scaleY) {
-					this.scale = scaleY;
-				}
-			}
-			console.log('calculating scale', this.scale, options);
-			this.width = this.scale * imgElement.width;
-			this.height = this.scale * imgElement.height;
-			// this.canvas = this.initFabricjsCanvas(canvasElem, imgElement);
+	        this.image.setScaleX(this.scale);
+	        this.image.setScaleY(this.scale);
 
-			this.canvas = new fabric.Canvas(canvasElem);
-			//canvas.setHeight(500);
-			this.canvas.setWidth(200);
+	        this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
 
-			this.canvas.setDimensions({ width: this.width, height: this.height });
+	        if (options.maxWidth && options.maxWidth < this.image.width) {
+	            this.scale = options.maxWidth / this.image.width;
+	        }
+	        if (options.maxHeight && options.maxHeight < this.image.height) {
+	            var scaleY = options.maxHeight / this.image.height;
+	            if (this.scale > scaleY) {
+	                this.scale = scaleY;
+	            }
+	        }
+	        this.width = this.scale * imgElement.width;
+	        this.height = this.scale * imgElement.height;
+	    }
 
->>>>>>> e05112d... Build
-			console.log('using scale', this.scale);
-			this.image.setScaleX(this.scale);
-			this.image.setScaleY(this.scale);
+	    _createClass(Canvas, [{
+	        key: "getCanvasTop",
+	        value: function getCanvasTop() {
+	            return this.canvasContainer.offsetTop;
+	        }
+	    }, {
+	        key: "enableSelection",
+	        value: function enableSelection(isEnabled) {
+	            this.canvas.selection = isEnabled; // Restore fabricjs selection-box
+	            this.canvas.forEachObject(function (o) {
+	                o.selectable = isEnabled;
+	            });
+	        }
+	    }, {
+	        key: "getWidth",
+	        value: function getWidth() {
+	            return this.width;
+	        }
+	    }, {
+	        key: "getOffsetLeft",
+	        value: function getOffsetLeft() {
+	            return this.canvasLeft - scrollPosition(this.canvasElem)[0];
+	        }
+	    }, {
+	        key: "getOffsetTop",
+	        value: function getOffsetTop() {
+	            return this.getCanvasTop() - scrollPosition(this.canvasElem)[1];
+	        }
+	    }]);
 
-			this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
-		}
-
-		_createClass(Canvas, [{
-			key: "getCanvasTop",
-			value: function getCanvasTop() {
-				return this.canvasContainer.offsetTop;
-			}
-		}, {
-			key: "initFabricjsCanvas",
-			value: function initFabricjsCanvas(canvasElem, imgElement) {
-				var fabricCanvas = new fabric.Canvas(canvasElem);
-				//canvas.setHeight(500);
-				fabricCanvas.setWidth(200);
-
-				fabricCanvas.setDimensions({ width: this.width, height: this.height });
-
-				this.image = new fabric.Image(imgElement);
-
-				console.log('using scale', this.scale);
-				this.image.setScaleX(this.scale);
-				this.image.setScaleY(this.scale);
-
-				fabricCanvas.setBackgroundImage(this.image, fabricCanvas.renderAll.bind(fabricCanvas), {});
-
-				return fabricCanvas;
-			}
-		}, {
-			key: "enableSelection",
-			value: function enableSelection(isEnabled) {
-				this.canvas.selection = isEnabled; // Restore fabricjs selection-box
-				this.canvas.forEachObject(function (o) {
-					o.selectable = isEnabled;
-				});
-			}
-		}, {
-			key: "getWidth",
-			value: function getWidth() {
-				return this.width;
-			}
-		}, {
-			key: "getOffsetLeft",
-			value: function getOffsetLeft() {
-				return this.canvasLeft - scrollPosition(this.canvasElem)[0];
-			}
-		}, {
-			key: "getOffsetTop",
-			value: function getOffsetTop() {
-				return this.getCanvasTop() - scrollPosition(this.canvasElem)[1];
-			}
-		}]);
-
-		return Canvas;
+	    return Canvas;
 	})();
 
 	exports["default"] = Canvas;
@@ -484,6 +414,35 @@
 
 /***/ },
 /* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+	exports['default'] = {
+		TOOL: {
+			ARROW: 'arrow',
+			BOX: 'box',
+			CLEAR: 'clear',
+			DUMP: 'dump',
+			HLINE: 'hline',
+			REMOVE: 'delete',
+			TEXT: 'text'
+		},
+		DEFAULT_COLOR: '#33e',
+		CSS: {
+			PARENT: 'redraw_parent',
+			TOOLBAR: 'redraw_toolbar',
+			BUTTON: 'redraw_btn',
+			ACTIVE_BUTTON: 'active'
+		}
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -569,7 +528,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -582,7 +541,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _canvasConstJs = __webpack_require__(6);
+	var _canvasConstJs = __webpack_require__(4);
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
@@ -596,7 +555,7 @@
 	    });
 	}
 
-	var ControlsDispatcher = function ControlsDispatcher(eventAggregator) {
+	var ControlsDispatcher = function ControlsDispatcher(eventAggregator, options) {
 	    _classCallCheck(this, ControlsDispatcher);
 
 	    this.toolsInUse = {};
@@ -631,18 +590,21 @@
 
 	    this.setupTools = function (tools, domParent, mainOptions) {
 	        var container = document.createElement('div');
-	        container.className = 'redraw_toolbar';
-	        domParent.appendChild(container);
+
+	        addClasses(container, _canvasConstJs2['default'].CSS.TOOLBAR);
+	        addClasses(container, options.toolbarCss);
+
+	        if (mainOptions.toolbarFirst === true) {
+	            domParent.insertBefore(container, domParent.firstChild);
+	        } else {
+	            domParent.appendChild(container);
+	        }
 
 	        for (var toolName in tools) {
 	            var btn = document.createElement('button');
 	            btn.textContent = tools[toolName].options.label;
 
-	            btn.classList.add(BUTTON_CLASS);
-
-	            if (toolName === 'arrow') {
-	                console.log('setting up arrow tool', tools[toolName].options);
-	            }
+	            btn.classList.add(_canvasConstJs2['default'].CSS.BUTTON);
 
 	            addClasses(btn, mainOptions.buttonCss);
 	            addClasses(btn, tools[toolName].options.buttonCss);
@@ -652,7 +614,7 @@
 	            container.appendChild(btn);
 	        }
 
-	        var btnActiveCss = mainOptions.buttonActiveCss || 'active';
+	        var btnActiveCss = mainOptions.buttonActiveCss || _canvasConstJs2['default'].CSS.ACTIVE_BUTTON;
 
 	        eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function (subscriptionId, sender, status) {
 	            var currTool = this.toolsInUse[sender];
@@ -673,29 +635,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-	exports['default'] = {
-		TOOL: {
-			ARROW: 'arrow',
-			BOX: 'box',
-			CLEAR: 'clear',
-			DUMP: 'dump',
-			HLINE: 'hline',
-			REMOVE: 'delete',
-			TEXT: 'text'
-		},
-		DEFAULT_COLOR: '#33e'
-	};
-	module.exports = exports['default'];
-
-/***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -711,7 +650,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _canvasConstJs = __webpack_require__(6);
+	var _canvasConstJs = __webpack_require__(4);
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
@@ -14440,7 +14379,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _canvasConstJs = __webpack_require__(6);
+	var _canvasConstJs = __webpack_require__(4);
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
@@ -14584,7 +14523,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _canvasConstJs = __webpack_require__(6);
+	var _canvasConstJs = __webpack_require__(4);
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
@@ -14633,7 +14572,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _canvasConstJs = __webpack_require__(6);
+	var _canvasConstJs = __webpack_require__(4);
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
@@ -14749,7 +14688,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _canvasConstJs = __webpack_require__(6);
+	var _canvasConstJs = __webpack_require__(4);
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
@@ -14796,7 +14735,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _canvasConstJs = __webpack_require__(6);
+	var _canvasConstJs = __webpack_require__(4);
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
@@ -14849,11 +14788,10 @@
 
 	        var onMove = function onMove(options) {
 	            if (editor) {
+	                var pointer = canvas.getPointer(options.e);
 	                editor.set({
-	                    'top': options.e.clientY - canvasWrapper.getOffsetTop()
-	                });
-	                editor.set({
-	                    'left': options.e.clientX - canvasWrapper.getOffsetLeft()
+	                    'top': pointer.y,
+	                    'left': pointer.x
 	                });
 	                editor.setCoords();
 	                canvas.renderAll();

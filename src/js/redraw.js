@@ -109,11 +109,12 @@ class Redraw {
         var localToolSettings = {};
         var toolsInUse = defineTools(redrawNs.tools, options);
 
+        console.log('init tools', redrawNs.tools, options.toolSettings, options);
         for (var toolName in toolsInUse) {
-            var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
-            toolsInUse[toolName].options = passedProps;
+            // var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+            // toolsInUse[toolName].options = passedProps;
         }
-        var controls = new ControlsDispatcher(events);
+        var controls = new ControlsDispatcher(events, options);
 
         for (var toolName in toolsInUse) {
 

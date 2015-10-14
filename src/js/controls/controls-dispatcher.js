@@ -9,7 +9,7 @@ function addClasses(btnObj, classes) {
 }
 
 export default class ControlsDispatcher {
-    constructor(eventAggregator) {
+    constructor(eventAggregator, options) {
         this.toolsInUse = {};
         var activeTool, delBtn;
 
@@ -44,18 +44,21 @@ export default class ControlsDispatcher {
 
         this.setupTools = function(tools, domParent, mainOptions) {
             var container = document.createElement('div');
-            container.className = 'redraw_toolbar';
-            domParent.appendChild(container);
+
+            addClasses(container, CONST.CSS.TOOLBAR);
+            addClasses(container, options.toolbarCss);
+
+            if (mainOptions.toolbarFirst === true) {
+                domParent.insertBefore(container, domParent.firstChild)
+            } else {
+                domParent.appendChild(container);
+            }
 
             for (var toolName in tools) {
                 var btn = document.createElement('button');
                 btn.textContent = tools[toolName].options.label;
 
-                btn.classList.add(BUTTON_CLASS);
-
-                if (toolName === 'arrow') {
-                    console.log('setting up arrow tool', tools[toolName].options);
-                }
+                btn.classList.add(CONST.CSS.BUTTON);
 
                 addClasses(btn, mainOptions.buttonCss);
                 addClasses(btn, tools[toolName].options.buttonCss);
@@ -65,7 +68,7 @@ export default class ControlsDispatcher {
                 container.appendChild(btn);
             }
 
-            var btnActiveCss = mainOptions.buttonActiveCss || 'active';
+            var btnActiveCss = mainOptions.buttonActiveCss || CONST.CSS.ACTIVE_BUTTON;
 
             eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
                 function(subscriptionId, sender, status) {
