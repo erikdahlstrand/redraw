@@ -724,17 +724,16 @@
 	        value: function onMove(options) {
 
 	            if (this.start && !this.end) {
+	                var pointer = this.canvas.getPointer(options.e);
 
-	                var _x2 = options.e.clientX - this.canvasWrapper.getOffsetLeft();
-	                var _y2 = options.e.clientY - this.canvasWrapper.getOffsetTop();
 	                line.set({
-	                    'x2': _x2
+	                    'x2': pointer.x
 	                });
 	                line.set({
-	                    'y2': _y2
+	                    'y2': pointer.y
 	                });
 
-	                this.moveArrowIndicator([this.start.left, this.start.top, _x2, _y2]);
+	                this.moveArrowIndicator([this.start.left, this.start.top, pointer.x, pointer.y]);
 	            }
 
 	            this.canvas.renderAll();
@@ -742,9 +741,10 @@
 	    }, {
 	        key: 'onMUP',
 	        value: function onMUP(options) {
+	            var pointer = this.canvas.getPointer(options.e);
 	            this.end = {
-	                top: options.e.clientY - this.canvasWrapper.getOffsetTop(),
-	                left: options.e.clientX - this.canvasWrapper.getOffsetLeft()
+	                top: pointer.y,
+	                left: pointer.x
 	            };
 
 	            var perimeter = Math.abs(this.end.top - this.start.top) + Math.abs(this.end.left - this.start.left);
@@ -771,9 +771,10 @@
 	    }, {
 	        key: 'onMouseDown',
 	        value: function onMouseDown(options) {
+	            var pointer = this.canvas.getPointer(options.e);
 	            this.start = {
-	                top: options.e.clientY - this.canvasWrapper.getOffsetTop(),
-	                left: options.e.clientX - this.canvasWrapper.getOffsetLeft()
+	                top: pointer.y,
+	                left: pointer.x
 	            };
 
 	            line = new f.Line([this.start.left, this.start.top, this.start.left, this.start.top], {
