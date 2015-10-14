@@ -61,7 +61,7 @@ class HorizontalLineTool {
             var onMove = function(options) {
                 if (movingRect) {
                     movingRect.set({
-                        'top': (options.e.clientY - canvasWrapper.getOffsetTop())
+                        'top': canvas.getPointer(options.e).y
                     });
                     movingRect.setCoords();
                     canvas.renderAll();
