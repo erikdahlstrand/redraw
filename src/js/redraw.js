@@ -65,7 +65,6 @@ class Redraw {
     constructor(imgElement, options) {
         var events = new EventAggregator();
         options = options || {};
-        console.log('options', options)
         this._canvas = new Canvas(imgElement, options); // Needs defactor
 
         if (options.jsonContent) {
@@ -119,9 +118,7 @@ class Redraw {
         for (var toolName in toolsInUse) {
 
             var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
-            if (toolName === 'arrow') {
-                console.log('invoking setup for arrow', passedProps, options.toolSettings);
-            }
+
             new redrawNs.tools[toolName].toolFn(this._canvas, events, passedProps);
         }
         controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
