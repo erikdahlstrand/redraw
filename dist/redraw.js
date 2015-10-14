@@ -565,6 +565,8 @@
 	            container.appendChild(btn);
 	        }
 
+	        var btnActiveCss = mainOptions.buttonActiveCss || 'active';
+
 	        eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function (subscriptionId, sender, status) {
 	            var currTool = this.toolsInUse[sender];
 
@@ -572,9 +574,9 @@
 	                if (sender === activeTool) {
 	                    activeTool = undefined;
 	                }
-	                currTool.classList.remove('active');
+	                currTool.classList.remove(btnActiveCss);
 	            } else {
-	                currTool.classList.add('active');
+	                currTool.classList.add(btnActiveCss);
 	            }
 	        }, this);
 	    };

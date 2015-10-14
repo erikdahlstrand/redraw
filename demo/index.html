@@ -8,8 +8,11 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css">
 
     <style type="text/css">
-      .active {
-        background-color: #eef !important;
+    .redraw_btn {
+        color: green;
+      }
+      .myActive {
+        color: red;
       }
       pre {
         background: #ccc;
@@ -106,6 +109,13 @@
     });
     </pre>
 
+    When provided <code>buttonActiveCss</code> will change the class added to active tool-buttons.
+    <pre>
+      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
+        buttonActiveCss: 'my-class'
+    });
+    </pre>
+
     When provided <code>tools</code> can accomodate a string array with the names of all tools activated.
     <pre>
       var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
@@ -132,9 +142,10 @@
     <script type="text/javascript">
 
     var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        buttonCss: 'ui black basic button',
+        buttonCss: 'ui button',
         color: '#88b',
-        activeColor: '#99e'
+        activeColor: '#99e',
+        buttonActiveCss: 'black'
     });
 
 
