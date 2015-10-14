@@ -146,8 +146,9 @@
 	        _classCallCheck(this, Redraw);
 
 	        var events = new _eventAggregatorJs2['default']();
-
-	        this._canvas = new _canvasWrapperJs2['default'](imgElement); // Needs defactor
+	        options = options || {};
+	        console.log('options', options);
+	        this._canvas = new _canvasWrapperJs2['default'](imgElement, options); // Needs defactor
 
 	        if (options.jsonContent) {
 	            this._canvas.canvas.loadFromJSON(options.jsonContent);
@@ -159,20 +160,52 @@
 	    }
 
 	    _createClass(Redraw, [{
+<<<<<<< HEAD
+<<<<<<< HEAD
 	        key: 'getCanvasForExport',
 	        value: function getCanvasForExport() {
 	            this._canvas.canvas.deactivateAllWithDispatch();
 	            return this._canvas.canvas;
+=======
+=======
+>>>>>>> e05112d... Build
+	        key: 'getDataUrlForExport',
+	        value: function getDataUrlForExport() {
+	            this._canvas.canvas.deactivateAllWithDispatch();
+	            return this._canvas.canvas.toDataURL({
+	                format: 'png',
+	                multiplier: 1 / this._canvas.scale
+	            });
+<<<<<<< HEAD
+>>>>>>> e05112d... Build
+=======
+>>>>>>> e05112d... Build
 	        }
 	    }, {
 	        key: 'toBase64URL',
 	        value: function toBase64URL() {
+<<<<<<< HEAD
+<<<<<<< HEAD
 	            return this.getCanvasForExport().toDataURL('png');
+=======
+	            return this.getDataUrlForExport();
+>>>>>>> e05112d... Build
+=======
+	            return this.getDataUrlForExport();
+>>>>>>> e05112d... Build
 	        }
 	    }, {
 	        key: 'toDataBlob',
 	        value: function toDataBlob() {
+<<<<<<< HEAD
+<<<<<<< HEAD
 	            return dataURItoBlob(this.getCanvasForExport().toDataURL('png'));
+=======
+	            return dataURItoBlob(this.getDataUrlForExport());
+>>>>>>> e05112d... Build
+=======
+	            return dataURItoBlob(this.getDataUrlForExport());
+>>>>>>> e05112d... Build
 	        }
 	    }, {
 	        key: 'toJson',
@@ -200,7 +233,13 @@
 	            for (var toolName in toolsInUse) {
 	                var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
 	                toolsInUse[toolName].options = passedProps;
+<<<<<<< HEAD
+<<<<<<< HEAD
 	                console.log('TOOl', toolName, toolsInUse[toolName].options, passedProps);
+=======
+>>>>>>> e05112d... Build
+=======
+>>>>>>> e05112d... Build
 	            }
 	            var controls = new _controlsControlsDispatcherJs2['default'](events);
 
@@ -314,37 +353,81 @@
 	}
 
 	var Canvas = (function () {
-		function Canvas(imgElement) {
+		function Canvas(imgElement, options) {
 			_classCallCheck(this, Canvas);
 
 			var parent = imgElement.parentNode;
 			var canvasWrapper = document.createElement("div");
-
+			this.scale = 1;
 			parent.insertBefore(canvasWrapper, imgElement);
 			parent.removeChild(imgElement);
 
 			var canvasElem = document.createElement("canvas");
 			canvasWrapper.appendChild(canvasElem);
 
-			this.setCanvasProps(canvasElem, canvasWrapper, imgElement);
+			this.canvasElem = canvasElem;
 
-			this.canvas = this.initFabricjsCanvas(canvasElem, imgElement);
+			this.canvasTop = this.canvasElem.offsetTop;
+			this.canvasContainer = canvasWrapper;
+
+			this.canvasLeft = canvasElem.offsetLeft;
+<<<<<<< HEAD
+
+			this.image = new fabric.Image(imgElement);
+			console.log('scaler', options.maxWidth, this.image.width);
+			if (options.maxWidth && options.maxWidth < this.image.width) {
+				this.scale = options.maxWidth / this.image.width;
+			}
+			if (options.maxHeight && options.maxHeight < this.image.height) {
+				var scaleY = options.maxHeight / this.image.height;
+				if (this.scale > scaleY) {
+					this.scale = scaleY;
+				}
+			}
+			console.log('calculating scale', this.scale, options);
+			this.width = this.scale * imgElement.width;
+			this.height = this.scale * imgElement.height;
+			// this.canvas = this.initFabricjsCanvas(canvasElem, imgElement);
+
+			this.canvas = new fabric.Canvas(canvasElem);
+			//canvas.setHeight(500);
+			this.canvas.setWidth(200);
+
+			this.canvas.setDimensions({ width: this.width, height: this.height });
+
+=======
+
+			this.image = new fabric.Image(imgElement);
+			console.log('scaler', options.maxWidth, this.image.width);
+			if (options.maxWidth && options.maxWidth < this.image.width) {
+				this.scale = options.maxWidth / this.image.width;
+			}
+			if (options.maxHeight && options.maxHeight < this.image.height) {
+				var scaleY = options.maxHeight / this.image.height;
+				if (this.scale > scaleY) {
+					this.scale = scaleY;
+				}
+			}
+			console.log('calculating scale', this.scale, options);
+			this.width = this.scale * imgElement.width;
+			this.height = this.scale * imgElement.height;
+			// this.canvas = this.initFabricjsCanvas(canvasElem, imgElement);
+
+			this.canvas = new fabric.Canvas(canvasElem);
+			//canvas.setHeight(500);
+			this.canvas.setWidth(200);
+
+			this.canvas.setDimensions({ width: this.width, height: this.height });
+
+>>>>>>> e05112d... Build
+			console.log('using scale', this.scale);
+			this.image.setScaleX(this.scale);
+			this.image.setScaleY(this.scale);
+
+			this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
 		}
 
 		_createClass(Canvas, [{
-			key: "setCanvasProps",
-			value: function setCanvasProps(_canvasElem, canvasWrapper, imgElement) {
-				this.canvasElem = _canvasElem;
-
-				this.width = imgElement.width;
-				this.height = imgElement.height;
-
-				this.canvasTop = this.canvasElem.offsetTop;
-				this.canvasContainer = canvasWrapper;
-
-				this.canvasLeft = _canvasElem.offsetLeft;
-			}
-		}, {
 			key: "getCanvasTop",
 			value: function getCanvasTop() {
 				return this.canvasContainer.offsetTop;
@@ -353,14 +436,18 @@
 			key: "initFabricjsCanvas",
 			value: function initFabricjsCanvas(canvasElem, imgElement) {
 				var fabricCanvas = new fabric.Canvas(canvasElem);
+				//canvas.setHeight(500);
+				fabricCanvas.setWidth(200);
 
 				fabricCanvas.setDimensions({ width: this.width, height: this.height });
 
-				var image = new fabric.Image(imgElement);
-				fabricCanvas.setBackgroundImage(image, fabricCanvas.renderAll.bind(fabricCanvas), {
-					backgroundImageOpacity: 0.5,
-					backgroundImageStretch: false
-				});
+				this.image = new fabric.Image(imgElement);
+
+				console.log('using scale', this.scale);
+				this.image.setScaleX(this.scale);
+				this.image.setScaleY(this.scale);
+
+				fabricCanvas.setBackgroundImage(this.image, fabricCanvas.renderAll.bind(fabricCanvas), {});
 
 				return fabricCanvas;
 			}

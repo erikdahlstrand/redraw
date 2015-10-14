@@ -14,10 +14,10 @@ function scrollPosition(elem) {
 }
 
 class Canvas {
-    constructor(imgElement) {
+    constructor(imgElement, options) {
 		var parent = imgElement.parentNode;
 		var canvasWrapper = document.createElement("div");
-
+		this.scale = 1;
 		parent.insertBefore(canvasWrapper, imgElement);
 		parent.removeChild(imgElement);
 
@@ -25,39 +25,80 @@ class Canvas {
 		var canvasElem = document.createElement("canvas");
 		canvasWrapper.appendChild(canvasElem);
 
-		this.setCanvasProps(canvasElem, canvasWrapper, imgElement);
+		
 
-		this.canvas = this.initFabricjsCanvas(canvasElem, imgElement);
+		this.canvasElem = canvasElem;
+		
+
+		this.canvasContainer = canvasWrapper;
+		this.canvasLeft = canvasElem.offsetLeft;
+
+		this.canvasLeft = canvasElem.offsetLeft;
+
+
+		this.image = new fabric.Image(imgElement);
+		console.log('scaler', options.maxWidth, this.image.width);
+    	if (options.maxWidth && options.maxWidth < this.image.width) {
+	      this.scale =  options.maxWidth / this.image.width;
+	    }
+	    if (options.maxHeight && options.maxHeight < this.image.height) {
+	    	let scaleY = options.maxHeight / this.image.height;
+	    	if (this.scale > scaleY) {
+	    		this.scale = scaleY;
+	    	}
+	    }
+	    console.log('calculating scale', this.scale, options);
+	    this.width = this.scale * imgElement.width;
+		this.height = this.scale * imgElement.height;
+	    // this.canvas = this.initFabricjsCanvas(canvasElem, imgElement);
+
+		this.canvas = new fabric.Canvas(canvasElem);
+		//canvas.setHeight(500);
+		this.canvas.setWidth(200);
+
+		this.canvas.setDimensions({width:this.width, height:this.height});
+
+		console.log('using scale', this.scale);
+		this.image.setScaleX(this.scale);
+    	this.image.setScaleY(this.scale);
+
+		this.canvas.setBackgroundImage(this.image,this.canvas.renderAll.bind(this.canvas), {		    
+		});
     }
 
-	setCanvasProps(_canvasElem, canvasWrapper, imgElement) {
-		this.canvasElem = _canvasElem;
-
-		this.width = imgElement.width;
-		this.height = imgElement.height;
-
-		this.canvasTop = this.canvasElem.offsetTop;
-		this.canvasContainer = canvasWrapper;
-
-		this.canvasLeft = _canvasElem.offsetLeft;
-	}
-
-	getCanvasTop() {
-		return this.canvasContainer.offsetTop;
-	}
+    	if (options.maxWidth && options.maxWidth < this.image.width) {
+	      this.scale =  options.maxWidth / this.image.width;
+	    }
+	    if (options.maxHeight && options.maxHeight < this.image.height) {
+	    	let scaleY = options.maxHeight / this.image.height;
+	    	if (this.scale > scaleY) {
+	    		this.scale = scaleY;
+	    	}
+	    }
+	    this.width = this.scale * imgElement.width;
+		this.height = this.scale * imgElement.height;
 
 	initFabricjsCanvas(canvasElem, imgElement) {		
 		var fabricCanvas = new fabric.Canvas(canvasElem);
+		//canvas.setHeight(500);
+		fabricCanvas.setWidth(200);
 
-		fabricCanvas.setDimensions({width:this.width, height:this.height});
+		this.image.setScaleX(this.scale);
+    	this.image.setScaleY(this.scale);
 
-		var image = new fabric.Image(imgElement);
-		fabricCanvas.setBackgroundImage(image,fabricCanvas.renderAll.bind(fabricCanvas), {
-		    backgroundImageOpacity: 0.5,
-		    backgroundImageStretch: false
+		this.image = new fabric.Image(imgElement);
+
+		console.log('using scale', this.scale);
+		this.image.setScaleX(this.scale);
+    	this.image.setScaleY(this.scale);
+
+		fabricCanvas.setBackgroundImage(this.image,fabricCanvas.renderAll.bind(fabricCanvas), {
+		    
 		});
+    }
 
-		return fabricCanvas;
+	getCanvasTop() {
+		return this.canvasContainer.offsetTop;
 	}
 
 	enableSelection(isEnabled) {
@@ -77,4 +118,3 @@ class Canvas {
 	}
 }
 
-export default Canvas;

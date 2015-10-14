@@ -20,16 +20,16 @@ function dataURItoBlob(encodedData) {
 
 function defineTools(allTools, options) {
 
-	if (options && options.tools) {
-		var definedTools = {};
-		for (let t in options.tools) {
-			let toolName = options.tools[t];
-			definedTools[toolName] = allTools[toolName];
-		}
-		return definedTools;
-	} else {
-		return allTools;
-	}
+    if (options && options.tools) {
+        var definedTools = {};
+        for (let t in options.tools) {
+            let toolName = options.tools[t];
+            definedTools[toolName] = allTools[toolName];
+        }
+        return definedTools;
+    } else {
+        return allTools;
+    }
 }
 
 var globalOverrides = ['color', 'activeColor'];
@@ -64,8 +64,9 @@ class Redraw {
      */
     constructor(imgElement, options) {
         var events = new EventAggregator();
-
-        this._canvas = new Canvas(imgElement); // Needs defactor
+        options = options || {};
+        console.log('options', options)
+        this._canvas = new Canvas(imgElement, options); // Needs defactor
 
         if (options.jsonContent) {
             this._canvas.canvas.loadFromJSON(options.jsonContent);
@@ -76,15 +77,19 @@ class Redraw {
         this.tools = [];
         this.initializeTools(events, options);
     }
-    getCanvasForExport() {
+    getDataUrlForExport() {
         this._canvas.canvas.deactivateAllWithDispatch();
-        return this._canvas.canvas;
+        return this._canvas.canvas.toDataURL(
+            {
+                format:'png',
+                multiplier: 1/this._canvas.scale
+            });
     }
     toBase64URL() {
-        return this.getCanvasForExport().toDataURL('png');
+        return this.getDataUrlForExport();
     }
     toDataBlob() {
-        return dataURItoBlob(this.getCanvasForExport().toDataURL('png'));
+        return dataURItoBlob(this.getDataUrlForExport());
     }
     toJson(includeImage) {
         var x = this._canvas.canvas.toObject();
@@ -108,7 +113,6 @@ class Redraw {
         for (var toolName in toolsInUse) {
             var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
             toolsInUse[toolName].options = passedProps;
-            console.log('TOOl', toolName, toolsInUse[toolName].options, passedProps);
         }
         var controls = new ControlsDispatcher(events);
 
@@ -139,3 +143,6 @@ redrawNs.registerTool = function(_name, _toolFn, _options) {
 var b = new Browser();
 
 b.appendToWindow('redraw', redrawNs);
+
+
+

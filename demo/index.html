@@ -31,29 +31,9 @@
 
 <body>
   <div class="main ui container">
-      <h1>Demo 1</h1>
-      <br><br>
-      <div style="position:absolute">
-        <img src="chart.png" id="srcImage" />
-      </div>
-      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-      <h2 class="ui sub header">Example</h2>
-      <pre>
-        var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-          buttonCss: 'ui button',
-          color: '#1f1',
-          activeColor: '#aea',
-          toolSettings: {
-            arrow: {
-              label:'My custom arrow text',
-              buttonCss: 'ui secondary button',
-              color: 'pink'
-            }
-          }
-      });
-      </pre>
-
-
+      <h1>Elaboration</h1>
+      <img src="chart.png" id="srcImage" />
+      
     <fieldset>
       <legend>As binary</legend>    
       <button class="ui button" onclick="downloadImage()">download image</button>
@@ -83,58 +63,14 @@
       <img id="imageDump" />
     </fieldset>
 
-    <textarea id="text2" style="display:none" cols="80" rows="10"></textarea>
+    <h2 class="ui sub header">Sample</h2>
+      <pre>
+        var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
+          buttonCss: 'ui orange basic button',
+          maxWidth:200
+      });
+      </pre>
 
-    <h1 class="ui header">Documentation</h1>
-    <h2 class="ui header">Initial setup</h2>
-
-    Example:
-    <pre>
-      var redrawInstance = new redraw.Annotation(document.getElementById('srcImage'));
-    </pre>
-
-    <h2 class="ui header">Options</h2>
-    Use <code>buttonCss</code> to assign one of many css-classes to all buttons.
-    <pre>
-      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        buttonCss: 'any-class another-class'
-    });
-    </pre>
-
-    Use <code>color</code> and <code>activeColor</code> to assign colors to the paint work prefomed by each tool.
-    <pre>
-      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        color: '#f00',
-        activeColor: 'green'
-    });
-    </pre>
-
-    When provided <code>buttonActiveCss</code> will change the class added to active tool-buttons.
-    <pre>
-      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        buttonActiveCss: 'my-class'
-    });
-    </pre>
-
-    When provided <code>tools</code> can accomodate a string array with the names of all tools activated.
-    <pre>
-      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        tools: ['arrow', 'box']
-    });
-    </pre>
-    
-    <h2 class="ui header">toolSettings</h2>
-    Settings can be passed per tool. For example <code>color</code> can be set to green for the arrow-tool:
-    <pre>
-      var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        toolSettings: {
-          'arrow': {
-            color: 'green',
-            buttonCss: 'ui button',
-          }
-        }
-    });
-    </pre>
 </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
@@ -142,10 +78,8 @@
     <script type="text/javascript">
 
     var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-        buttonCss: 'ui button',
-        color: '#88b',
-        activeColor: '#99e',
-        buttonActiveCss: 'black'
+        buttonCss: 'ui orange basic button',
+        maxWidth:200
     });
 
 
