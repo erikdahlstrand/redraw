@@ -45,11 +45,10 @@ class TextTool {
 
             var onMove = function(options) {
                 if (editor) {
+                    let pointer = canvas.getPointer(options.e);
                     editor.set({
-                        'top': (options.e.clientY - canvasWrapper.getOffsetTop())
-                    });
-                    editor.set({
-                        'left': options.e.clientX - canvasWrapper.getOffsetLeft()
+                        'top': pointer.y,
+                        'left': pointer.x
                     });
                     editor.setCoords();
                     canvas.renderAll();
