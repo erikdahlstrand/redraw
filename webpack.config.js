@@ -7,7 +7,7 @@ module.exports = {
         './src/js/tools/arrow.js',
         './src/js/tools/box.js',
         './src/js/tools/clear-tool.js',
-        './src/js/tools/hline.js',
+        './src/js/tools/horizontal-line-tool.js',
         './src/js/tools/remove-tool.js',
         './src/js/tools/text.js'
         ],
