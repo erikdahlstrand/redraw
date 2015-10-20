@@ -21,6 +21,7 @@
 </head>
 
 <body>
+
     <div class="main ui container">
       <h1>CSS samples</h1>
 
@@ -111,23 +112,35 @@ var redrawArea = new redraw.Annotation(document.getElementById('preceededImage')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
     <script src="../dist/redraw.js"></script>
     <script type="text/javascript">
-    var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
+    new redraw.Annotation(document.getElementById('srcImage'), {
         maxWidth: 700,
         color:'#5e5'
     });
 
-    var redrawArea = new redraw.Annotation(document.getElementById('anotherImage'), {
+    new redraw.Annotation(document.getElementById('anotherImage'), {
       buttonActiveCss: 'active', buttonCss: 'ui button', toolbarCss: 'ui buttons margined'
     });
 
-    var redrawArea = new redraw.Annotation(document.getElementById('yetAnotherImage'));
+    new redraw.Annotation(document.getElementById('yetAnotherImage'));
 
     var redrawArea = new redraw.Annotation(document.getElementById('preceededImage'),
         {
             toolbarFirst: true,
             buttonActiveCss: 'active',
             buttonCss: 'ui button',
-            toolbarCss: 'ui basic buttons margined'
+            toolbarCss: 'ui basic buttons margined',
+            toolSettings: {
+                arrow: {
+                    label: '<i class="pointing right icon"></i>'
+                },
+                text: {
+                    label: '<i class="font icon"></i>'
+                },
+                delete: {
+                    label: '<i class="trash outline icon"></i>'
+                }
+                
+            }
         });
     
 

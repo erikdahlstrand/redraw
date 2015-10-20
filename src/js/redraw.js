@@ -18,7 +18,7 @@ function dataURItoBlob(encodedData) {
     });
 }
 
-function defineTools(allTools, options) {
+function getToolsFromUserSettings(allTools, options) {
 
     if (options && options.tools) {
         var definedTools = {};
@@ -39,7 +39,7 @@ function overwriteProps(allProps, precedenceProps, globalOptions, toolName) {
 
     for (var p in allProps[toolName].options) {
         if (allProps[toolName].options.hasOwnProperty(p)) {
-            if (precedenceProps && precedenceProps[toolName] && precedenceProps[toolName].hasOwnProperty(p)) {
+            if (precedenceProps[toolName] && precedenceProps[toolName] && precedenceProps[toolName].hasOwnProperty(p)) {
                 results[p] = precedenceProps[toolName][p];
             } else if (globalOverrides.indexOf(p) > -1 && globalOptions.hasOwnProperty(p)){
                 results[p] = globalOptions[p];
@@ -107,21 +107,17 @@ class Redraw {
 
     initializeTools(events, options) {
         var localToolSettings = {};
-        var toolsInUse = defineTools(redrawNs.tools, options);
-
-        console.log('init tools', redrawNs.tools, options.toolSettings, options);
-        for (var toolName in toolsInUse) {
-            // var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
-            // toolsInUse[toolName].options = passedProps;
-        }
-        var controls = new ControlsDispatcher(events, options);
+        options.toolSettings = options.toolSettings || {};
+        var toolsInUse = getToolsFromUserSettings(redrawNs.tools, options);
 
         for (var toolName in toolsInUse) {
-
             var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+
+            redrawNs.tools[toolName].options = passedProps;
 
             new redrawNs.tools[toolName].toolFn(this._canvas, events, passedProps);
         }
+        var controls = new ControlsDispatcher(events, options);
         controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
     }
 }

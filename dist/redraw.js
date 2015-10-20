@@ -50,7 +50,8 @@
 	__webpack_require__(52);
 	__webpack_require__(53);
 	__webpack_require__(54);
-	module.exports = __webpack_require__(55);
+	__webpack_require__(55);
+	module.exports = __webpack_require__(56);
 
 
 /***/ },
@@ -96,7 +97,7 @@
 	    });
 	}
 
-	function defineTools(allTools, options) {
+	function getToolsFromUserSettings(allTools, options) {
 
 	    if (options && options.tools) {
 	        var definedTools = {};
@@ -117,7 +118,7 @@
 
 	    for (var p in allProps[toolName].options) {
 	        if (allProps[toolName].options.hasOwnProperty(p)) {
-	            if (precedenceProps && precedenceProps[toolName] && precedenceProps[toolName].hasOwnProperty(p)) {
+	            if (precedenceProps[toolName] && precedenceProps[toolName] && precedenceProps[toolName].hasOwnProperty(p)) {
 	                results[p] = precedenceProps[toolName][p];
 	            } else if (globalOverrides.indexOf(p) > -1 && globalOptions.hasOwnProperty(p)) {
 	                results[p] = globalOptions[p];
@@ -198,21 +199,16 @@
 	        key: 'initializeTools',
 	        value: function initializeTools(events, options) {
 	            var localToolSettings = {};
-	            var toolsInUse = defineTools(redrawNs.tools, options);
-
-	            console.log('init tools', redrawNs.tools, options.toolSettings, options);
-	            for (var toolName in toolsInUse) {
-	                // var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
-	                // toolsInUse[toolName].options = passedProps;
-	            }
-	            var controls = new _controlsControlsDispatcherJs2['default'](events, options);
+	            var toolsInUse = getToolsFromUserSettings(redrawNs.tools, options);
 
 	            for (var toolName in toolsInUse) {
-
 	                var passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+
+	                redrawNs.tools[toolName].options = passedProps;
 
 	                new redrawNs.tools[toolName].toolFn(this._canvas, events, passedProps);
 	            }
+	            var controls = new _controlsControlsDispatcherJs2['default'](events, options);
 	            controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
 	        }
 	    }]);
@@ -602,7 +598,7 @@
 
 	        for (var toolName in tools) {
 	            var btn = document.createElement('button');
-	            btn.textContent = tools[toolName].options.label;
+	            btn.innerHTML = tools[toolName].options.label;
 
 	            btn.classList.add(_canvasConstJs2['default'].CSS.BUTTON);
 
@@ -14516,6 +14512,150 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _canvasConstJs = __webpack_require__(4);
+
+	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
+
+	var _browserApiJs = __webpack_require__(2);
+
+	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
+
+	var rect;
+
+	var CropTool = function CropTool(canvasWrapper, eventAggregator, toolOptions) {
+	    _classCallCheck(this, CropTool);
+
+	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.CROP, 'CropTool', attachBoxListener);
+	    var callbackCtx = this;
+	    var canvas = canvasWrapper.canvas;
+
+	    function notify(message) {
+	        eventAggregator.notify('TOOL_USAGE', _canvasConstJs2['default'].TOOL.CROP, message);
+	    }
+
+	    function done() {
+	        notify('inactive');
+	        detachBoxListener();
+	        canvasWrapper.enableSelection(true);
+	    }
+
+	    function detachBoxListener() {
+	        if (rect) {
+	            canvas.off('mouse:down', mouseDown);
+	            canvas.off('mouse:move', drawBox);
+	            canvas.off('mouse:up', drawBoxDone);
+
+	            rect = undefined;
+	            eventAggregator.unsubscribeTo('keydown', 'CropTool');
+	        }
+	    }
+	    var currWidth, currHeight;
+
+	    function drawBox(options) {
+	        if (rect) {
+	            var pointer = canvas.getPointer(options.e);
+
+	            currWidth = pointer.x - startLeft;
+	            currHeight = pointer.y - startTop;
+
+	            console.log('move', arguments);
+
+	            rect.set({
+	                'width': currWidth
+	            });
+	            rect.set({
+	                'height': currHeight
+	            });
+	            rect.setCoords();
+	            canvas.renderAll();
+	        }
+	    }
+	    function drawBoxDone(options) {
+	        canvas.off('mouse:move', drawBox);
+	        canvas.off('mouse:up', drawBoxDone);
+
+	        if (Math.abs(currWidth) < 5 && Math.abs(currHeight) < 5) {
+	            canvas.remove(rect);
+	            return;
+	        }
+
+	        rect.set({ opacity: 0.5 });
+	        canvas.renderAll();
+	    }
+
+	    var currWidth, currHeight, startTop, startLeft;
+
+	    function mouseDown(options) {
+	        var pointer = canvas.getPointer(options.e);
+	        console.log('down', pointer);
+	        currWidth = currHeight = 0;
+
+	        startTop = pointer.y;
+	        startLeft = pointer.x;
+
+	        rect = new fabric.Rect({
+	            left: startLeft,
+	            top: startTop,
+	            width: 4,
+	            borderColor: toolOptions.color,
+	            height: 4,
+	            fill: toolOptions.color,
+	            opacity: 0.3,
+	            hasControls: true,
+	            hasRotatingPoint: false,
+	            originX: 'left',
+	            originY: 'top',
+	            selectable: false
+	        });
+
+	        canvas.add(rect);
+	        rect.setCoords();
+	        canvas.renderAll();
+	        canvas.on('mouse:move', drawBox);
+	        canvas.on('mouse:up', drawBoxDone);
+	    }
+
+	    function attachBoxListener(topic, sender, payload) {
+	        if (payload === 'toolbar-deactivate') {
+	            done();
+	            return;
+	        }
+	        eventAggregator.subscribeTo('keydown', 'CropTool', function (topic, sender, keyCode) {
+	            if (keyCode === 27) {
+	                done();
+	            }
+	        }, callbackCtx);
+	        canvasWrapper.enableSelection(false);
+	        notify('active');
+
+	        canvas.on('mouse:down', mouseDown);
+	    }
+	};
+
+	var defaultToolProps = {
+	    label: 'Crop',
+	    color: _canvasConstJs2['default'].DEFAULT_COLOR
+	};
+
+	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.CROP, CropTool, defaultToolProps);
+
+	exports['default'] = CropTool;
+	module.exports = exports['default'];
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
 
@@ -14559,7 +14699,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14583,24 +14723,25 @@
 	var HorizontalLineTool = function HorizontalLineTool(canvasWrapper, eventAggregator, toolOptions) {
 	    _classCallCheck(this, HorizontalLineTool);
 
-	    var movingRect;
 	    var canvas = canvasWrapper.canvas;
+	    var horizontalLine;
 	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.HLINE, 'HorizontalLineTool', _HorizontalLineTool);
 
 	    function notify(message) {
 	        eventAggregator.notify('TOOL_USAGE', _canvasConstJs2['default'].TOOL.HLINE, message);
 	    }
 
-	    function createLineRect() {
-	        return new fabric.Rect({
+	    function createHorizontalLine() {
+
+	        return new fabric.Line([0, 0, canvas.width, 0], {
 	            left: 0,
 	            top: 1,
-	            width: canvasWrapper.getWidth(),
-	            height: 2,
-	            fill: toolOptions.activeColor,
-	            opacity: 0.7,
 	            hasControls: false,
-	            hasBorders: true
+	            lockMovementX: true,
+	            opacity: 0.7,
+	            padding: 4,
+	            stroke: toolOptions.color,
+	            strokeWidth: 2
 	        });
 	    }
 
@@ -14609,58 +14750,49 @@
 	            abort();
 	            return;
 	        }
+
 	        notify('active');
-	        movingRect = createLineRect();
-	        eventAggregator.subscribeTo('keydown', 'HLineTool', function (topic, sender, keyCode) {
+
+	        horizontalLine = createHorizontalLine();
+	        canvas.add(horizontalLine);
+
+	        eventAggregator.subscribeTo('keydown', 'HorizontalLine', function (topic, sender, keyCode) {
 	            if (keyCode === 27) {
 	                abort();
 	            }
 	        });
 
 	        function abort() {
-	            canvas.remove(movingRect);
-	            movingRect = undefined;
-	            eventAggregator.unsubscribe('HLineTool');
+	            canvas.remove(horizontalLine);
+	            horizontalLine = undefined;
+	            eventAggregator.unsubscribe('HorizontalLine');
 
-	            detachHLineListener();
+	            detachHorizontalLineListener();
 	            notify('inactive');
 	        }
 
-	        var onRectMove = function onRectMove(ctx) {
-	            if (movingRect) {
-	                movingRect.set({
-	                    'left': 0
-	                });
-	            }
-	        };
-	        movingRect.on('moving', onRectMove);
-
-	        canvas.add(movingRect);
-
-	        var onMove = function onMove(options) {
-	            if (movingRect) {
-	                movingRect.set({
+	        var onMouseMove = function onMouseMove(options) {
+	            if (horizontalLine) {
+	                horizontalLine.set({
 	                    'top': canvas.getPointer(options.e).y
 	                });
-	                movingRect.setCoords();
+
+	                horizontalLine.setCoords();
 	                canvas.renderAll();
 	            }
 	        };
-	        canvas.on('mouse:move', onMove);
+	        canvas.on('mouse:move', onMouseMove);
 
-	        function detachHLineListener() {
-
-	            canvas.off('mouse:move', onMove);
-	            canvas.off('mouse:up', onMUP);
-	        }
-
-	        var onMUP = function onMUP(options) {
-	            movingRect.fill = toolOptions.color;
-	            movingRect = createLineRect();
-	            canvas.add(movingRect);
+	        var onMouseUp = function onMouseUp(options) {
+	            horizontalLine = createHorizontalLine();
+	            canvas.add(horizontalLine);
 	        };
+	        canvas.on('mouse:up', onMouseUp);
 
-	        canvas.on('mouse:up', onMUP);
+	        function detachHorizontalLineListener() {
+	            canvas.off('mouse:move', onMouseMove);
+	            canvas.off('mouse:up', onMouseUp);
+	        }
 	    };
 	};
 
@@ -14675,7 +14807,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14722,7 +14854,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

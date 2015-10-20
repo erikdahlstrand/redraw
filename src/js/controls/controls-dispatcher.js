@@ -49,14 +49,14 @@ export default class ControlsDispatcher {
             addClasses(container, options.toolbarCss);
 
             if (mainOptions.toolbarFirst === true) {
-                domParent.insertBefore(container, domParent.firstChild)
+                domParent.insertBefore(container, domParent.firstChild);
             } else {
                 domParent.appendChild(container);
             }
 
             for (var toolName in tools) {
                 var btn = document.createElement('button');
-                btn.textContent = tools[toolName].options.label;
+                btn.innerHTML = tools[toolName].options.label;
 
                 btn.classList.add(CONST.CSS.BUTTON);
 
