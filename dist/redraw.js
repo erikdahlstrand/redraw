@@ -199,6 +199,7 @@
 	        key: 'initializeTools',
 	        value: function initializeTools(events, options) {
 	            var localToolSettings = {};
+	            options.toolSettings = options.toolSettings || {};
 	            var toolsInUse = getToolsFromUserSettings(redrawNs.tools, options);
 
 	            for (var toolName in toolsInUse) {
