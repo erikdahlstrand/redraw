@@ -38,8 +38,6 @@ class BoxTool {
                 currWidth = pointer.x - startLeft;
                 currHeight = pointer.y - startTop;                
 
-                console.log('move', arguments);
-
                 rect.set({
                     'width': currWidth
                 });
@@ -67,9 +65,7 @@ class BoxTool {
 
         function mouseDown(options) {
             let pointer = canvas.getPointer(options.e);
-            console.log('down', pointer);
             currWidth = currHeight = 0;
-            
 
             startTop = pointer.y;
             startLeft = pointer.x;
