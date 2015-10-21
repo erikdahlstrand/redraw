@@ -3,6 +3,7 @@ import Browser from '../browser-api.js';
 
 class RemoveTool {
     constructor(canvasWrapper, eventAggregator) {
+        eventAggregator.notify('tool-enabled', CONST.TOOL.REMOVE, false);
         var remove = function() {
             var c = canvasWrapper.canvas;
             if (c.getActiveObject()) {
@@ -11,13 +12,18 @@ class RemoveTool {
         };
 
         eventAggregator.subscribeTo(CONST.TOOL.REMOVE, 'RemoveTool', remove);
+
         eventAggregator.subscribe('RemoveTool', function(eventType, keyCode) {
             if (eventType === 'keydown' && keyCode === 46) {
                 remove();
             }
         });
-
-        
+        canvasWrapper.canvas.on('object:selected', function(o) {
+            eventAggregator.notify('tool-enabled', CONST.TOOL.REMOVE, true);
+        });
+        canvasWrapper.canvas.on('selection:cleared', function(o) {
+            eventAggregator.notify('tool-enabled', CONST.TOOL.REMOVE, false);
+        });
     }
 }
 var toolProps = {

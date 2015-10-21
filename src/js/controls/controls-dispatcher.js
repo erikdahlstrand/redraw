@@ -27,12 +27,6 @@ export default class ControlsDispatcher {
             };
         }
 
-
-        eventAggregator.subscribeTo('canvas-selection', 'toolbar',
-            function(subscriptionId, sender, status) {
-                delBtn.className = status === 'selected' ? '' : 'inactive';
-            });
-
         var manageKeys = function(e) {
             if (e.keyCode === 46 || e.keyCode === 27) {
 
@@ -82,6 +76,16 @@ export default class ControlsDispatcher {
                     } else {
                         currTool.classList.add(btnActiveCss);
                     }
+                }, this);
+
+            eventAggregator.subscribeTo('tool-enabled', 'toolbar',
+                function(subscriptionId, sender, isEnabled) {
+                    if (isEnabled) {
+                        this.toolsInUse[sender].classList.remove('disabled');
+                    } else {
+                        this.toolsInUse[sender].classList.add('disabled');
+                    }
+                    
                 }, this);
 
         };

@@ -50,8 +50,7 @@
 	__webpack_require__(52);
 	__webpack_require__(53);
 	__webpack_require__(54);
-	__webpack_require__(55);
-	module.exports = __webpack_require__(56);
+	module.exports = __webpack_require__(55);
 
 
 /***/ },
@@ -572,10 +571,6 @@
 	        };
 	    }
 
-	    eventAggregator.subscribeTo('canvas-selection', 'toolbar', function (subscriptionId, sender, status) {
-	        delBtn.className = status === 'selected' ? '' : 'inactive';
-	    });
-
 	    var manageKeys = function manageKeys(e) {
 	        if (e.keyCode === 46 || e.keyCode === 27) {
 
@@ -623,6 +618,14 @@
 	                currTool.classList.remove(btnActiveCss);
 	            } else {
 	                currTool.classList.add(btnActiveCss);
+	            }
+	        }, this);
+
+	        eventAggregator.subscribeTo('tool-enabled', 'toolbar', function (subscriptionId, sender, isEnabled) {
+	            if (isEnabled) {
+	                this.toolsInUse[sender].classList.remove('disabled');
+	            } else {
+	                this.toolsInUse[sender].classList.add('disabled');
 	            }
 	        }, this);
 	    };
@@ -14422,8 +14425,6 @@
 	            currWidth = pointer.x - startLeft;
 	            currHeight = pointer.y - startTop;
 
-	            console.log('move', arguments);
-
 	            rect.set({
 	                'width': currWidth
 	            });
@@ -14451,7 +14452,6 @@
 
 	    function mouseDown(options) {
 	        var pointer = canvas.getPointer(options.e);
-	        console.log('down', pointer);
 	        currWidth = currHeight = 0;
 
 	        startTop = pointer.y;
@@ -14513,150 +14513,6 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _canvasConstJs = __webpack_require__(4);
-
-	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
-
-	var _browserApiJs = __webpack_require__(2);
-
-	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
-
-	var rect;
-
-	var CropTool = function CropTool(canvasWrapper, eventAggregator, toolOptions) {
-	    _classCallCheck(this, CropTool);
-
-	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.CROP, 'CropTool', attachBoxListener);
-	    var callbackCtx = this;
-	    var canvas = canvasWrapper.canvas;
-
-	    function notify(message) {
-	        eventAggregator.notify('TOOL_USAGE', _canvasConstJs2['default'].TOOL.CROP, message);
-	    }
-
-	    function done() {
-	        notify('inactive');
-	        detachBoxListener();
-	        canvasWrapper.enableSelection(true);
-	    }
-
-	    function detachBoxListener() {
-	        if (rect) {
-	            canvas.off('mouse:down', mouseDown);
-	            canvas.off('mouse:move', drawBox);
-	            canvas.off('mouse:up', drawBoxDone);
-
-	            rect = undefined;
-	            eventAggregator.unsubscribeTo('keydown', 'CropTool');
-	        }
-	    }
-	    var currWidth, currHeight;
-
-	    function drawBox(options) {
-	        if (rect) {
-	            var pointer = canvas.getPointer(options.e);
-
-	            currWidth = pointer.x - startLeft;
-	            currHeight = pointer.y - startTop;
-
-	            console.log('move', arguments);
-
-	            rect.set({
-	                'width': currWidth
-	            });
-	            rect.set({
-	                'height': currHeight
-	            });
-	            rect.setCoords();
-	            canvas.renderAll();
-	        }
-	    }
-	    function drawBoxDone(options) {
-	        canvas.off('mouse:move', drawBox);
-	        canvas.off('mouse:up', drawBoxDone);
-
-	        if (Math.abs(currWidth) < 5 && Math.abs(currHeight) < 5) {
-	            canvas.remove(rect);
-	            return;
-	        }
-
-	        rect.set({ opacity: 0.5 });
-	        canvas.renderAll();
-	    }
-
-	    var currWidth, currHeight, startTop, startLeft;
-
-	    function mouseDown(options) {
-	        var pointer = canvas.getPointer(options.e);
-	        console.log('down', pointer);
-	        currWidth = currHeight = 0;
-
-	        startTop = pointer.y;
-	        startLeft = pointer.x;
-
-	        rect = new fabric.Rect({
-	            left: startLeft,
-	            top: startTop,
-	            width: 4,
-	            borderColor: toolOptions.color,
-	            height: 4,
-	            fill: toolOptions.color,
-	            opacity: 0.3,
-	            hasControls: true,
-	            hasRotatingPoint: false,
-	            originX: 'left',
-	            originY: 'top',
-	            selectable: false
-	        });
-
-	        canvas.add(rect);
-	        rect.setCoords();
-	        canvas.renderAll();
-	        canvas.on('mouse:move', drawBox);
-	        canvas.on('mouse:up', drawBoxDone);
-	    }
-
-	    function attachBoxListener(topic, sender, payload) {
-	        if (payload === 'toolbar-deactivate') {
-	            done();
-	            return;
-	        }
-	        eventAggregator.subscribeTo('keydown', 'CropTool', function (topic, sender, keyCode) {
-	            if (keyCode === 27) {
-	                done();
-	            }
-	        }, callbackCtx);
-	        canvasWrapper.enableSelection(false);
-	        notify('active');
-
-	        canvas.on('mouse:down', mouseDown);
-	    }
-	};
-
-	var defaultToolProps = {
-	    label: 'Crop',
-	    color: _canvasConstJs2['default'].DEFAULT_COLOR
-	};
-
-	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.CROP, CropTool, defaultToolProps);
-
-	exports['default'] = CropTool;
-	module.exports = exports['default'];
-
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
 
@@ -14700,7 +14556,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 54 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14808,7 +14664,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 55 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14832,6 +14688,7 @@
 	var RemoveTool = function RemoveTool(canvasWrapper, eventAggregator) {
 	    _classCallCheck(this, RemoveTool);
 
+	    eventAggregator.notify('tool-enabled', _canvasConstJs2['default'].TOOL.REMOVE, false);
 	    var remove = function remove() {
 	        var c = canvasWrapper.canvas;
 	        if (c.getActiveObject()) {
@@ -14840,10 +14697,17 @@
 	    };
 
 	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.REMOVE, 'RemoveTool', remove);
+
 	    eventAggregator.subscribe('RemoveTool', function (eventType, keyCode) {
 	        if (eventType === 'keydown' && keyCode === 46) {
 	            remove();
 	        }
+	    });
+	    canvasWrapper.canvas.on('object:selected', function (o) {
+	        eventAggregator.notify('tool-enabled', _canvasConstJs2['default'].TOOL.REMOVE, true);
+	    });
+	    canvasWrapper.canvas.on('selection:cleared', function (o) {
+	        eventAggregator.notify('tool-enabled', _canvasConstJs2['default'].TOOL.REMOVE, false);
 	    });
 	};
 
@@ -14855,7 +14719,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 56 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
