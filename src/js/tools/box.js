@@ -1,8 +1,18 @@
 import CONST from '../canvas-const.js';
 import Browser from '../browser-api.js';
 
+/** used during drag n drop */
 var rect;
-class BoxTool {
+/**
+ * A tool to paint boxes.
+ */
+export default class BoxTool {
+    /**
+     * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+     * @constructor
+     * @param {Canvas} canvasWrapper - Canvas.
+     * @param {EventAggregator} eventAggregator - Event mediator.
+     */
     constructor(canvasWrapper, eventAggregator, toolOptions) {
 
         eventAggregator.subscribeTo(CONST.TOOL.BOX, 'BoxTool', attachBoxListener);
@@ -109,11 +119,12 @@ class BoxTool {
         }
     }
 }
+/**
+ * Default options.
+ */
 var defaultToolProps = {
     label: 'Box',
     color:CONST.DEFAULT_COLOR
 };
 
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.BOX, BoxTool, defaultToolProps);
-
-export default BoxTool;

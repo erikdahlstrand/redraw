@@ -1,6 +1,14 @@
 import CONST from '../canvas-const.js';
 
+/**
+ * Css class for all buttons of the toolbar.
+ */
 const BUTTON_CLASS = 'redraw_btn';
+
+/**
+ * Adds a class to the array of classes.
+ * @private
+ */
 function addClasses(btnObj, classes) {
     if (!classes) return;
     var allClasses = classes.split(' ');
@@ -8,7 +16,16 @@ function addClasses(btnObj, classes) {
     allClasses.forEach((clazz) => {btnObj.classList.add(clazz);})
 }
 
+/**
+ * Main manager for the toolbar.
+ */
 export default class ControlsDispatcher {
+    /**
+     * Controls contructor. Is provided with canvas-wrapper and options to initialize to toolbar.
+     * @constructor
+     * @param {Canvas} canvasWrapper - Canvas.
+     * @param {Object} options - from user.
+     */
     constructor(eventAggregator, options) {
         this.toolsInUse = {};
         var activeTool, delBtn;

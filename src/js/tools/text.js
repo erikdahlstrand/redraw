@@ -3,7 +3,16 @@ import Browser from '../browser-api.js';
 
 var editorHeight = 30;
 
-class TextTool {
+/**
+ * A tool to create a text editor in the canvas.
+ */
+export default class TextTool {
+    /**
+     * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+     * @constructor
+     * @param {Canvas} canvasWrapper - Canvas.
+     * @param {EventAggregator} eventAggregator - Event mediator.
+     */
     constructor(canvasWrapper, eventAggregator, toolOptions) {
         var canvas = canvasWrapper.canvas;
         var editor;
@@ -75,5 +84,3 @@ var toolProps = {
     color:CONST.DEFAULT_COLOR,
 };
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.TEXT, TextTool, toolProps);
-
-export default TextTool;

@@ -81,10 +81,20 @@
 
 	var _controlsControlsDispatcherJs2 = _interopRequireDefault(_controlsControlsDispatcherJs);
 
+	/**
+	 * Namespace-root, that will be set to window-Object.
+	 * @access private
+	 */
 	var redrawNs = {
 	    tools: {}
 	};
 
+	/**
+	 * Makes a blob from eg base64-string.
+	 * @access private
+	 * @param data {string} encodedData - to encode
+	 * @returns {Blob} results
+	 */
 	function dataURItoBlob(encodedData) {
 	    var decodedData = atob(encodedData.split(',')[1]);
 	    var array = []; // 8-bit unsigned array
@@ -96,6 +106,14 @@
 	    });
 	}
 
+	/**
+	 * If the user has defined the options.tools, then use this to
+	 * extract the sepcified subset from allTools.
+	 * @access private
+	 * @param {Object[]} allTools - should be tools to pick from.
+	 * @param {Object} options - with or without property tools.
+	 * @returns {Object} containing all or the selected tools.
+	 */
 	function getToolsFromUserSettings(allTools, options) {
 
 	    if (options && options.tools) {
@@ -110,8 +128,23 @@
 	    }
 	}
 
+	/**
+	 * Defines the options-properties allowed to infect all tools-settings.
+	 * @access private
+	 */
 	var globalOverrides = ['color', 'activeColor'];
 
+	/**
+	 * Figures out which options should be applied for a particular toolName.
+	 * @access private
+	 * @param {Object} allProps - already defined options, that shold not be lost, but perhaps
+	 * replaced if defined in precedenceProps or globalOptions.
+	 * @param {Object} precedenceProps - that may have a property named toolName, that will
+	 * replace options from allProps.
+	 * @param {Object} globalOptions - top-level options that will overwrite allProp but not precedenceProps 
+	 * @param {string} toolName - name of the tool, which options is processed
+	 * @returns {Object} with tool applies options
+	 */
 	function overwriteProps(allProps, precedenceProps, globalOptions, toolName) {
 	    var results = {};
 
@@ -130,7 +163,7 @@
 	}
 
 	/**
-	 * Main module.
+	 * Main module, and the only public api for usage.
 	 * @module redraw
 	 */
 
@@ -154,9 +187,15 @@
 	        }
 
 	        var controlsDispatcher = new _controlsControlsDispatcherJs2['default'](events);
-	        this.tools = [];
+
 	        this.initializeTools(events, options);
 	    }
+
+	    /**
+	     * Get the png-representation of the canvas.
+	     * @access public
+	     * @returns {string} with base64 encoded png.
+	     */
 
 	    _createClass(Redraw, [{
 	        key: 'getDataUrlForExport',
@@ -167,25 +206,50 @@
 	                multiplier: 1 / this._canvas.scale
 	            });
 	        }
+
+	        /**
+	         * Get the base64-encoded png-representation of the canvas.
+	         * @access public
+	         * @returns {string} with base64 encoded png.
+	         */
 	    }, {
 	        key: 'toBase64URL',
 	        value: function toBase64URL() {
 	            return this.getDataUrlForExport();
 	        }
+
+	        /**
+	         * Get the binary png-representation of the canvas.
+	         * @access public
+	         * @returns {Blob} with canvas as png.
+	         */
 	    }, {
 	        key: 'toDataBlob',
 	        value: function toDataBlob() {
 	            return dataURItoBlob(this.getDataUrlForExport());
 	        }
+
+	        /**
+	         * Get the json-representation of the canvas.
+	         * @access public
+	         * @param {boolean} includeImage - true if background-image should be included in the json.
+	         * @returns {string} with json.
+	         */
 	    }, {
 	        key: 'toJson',
 	        value: function toJson(includeImage) {
-	            var x = this._canvas.canvas.toObject();
+	            var jsObj = this._canvas.canvas.toObject();
 	            if (!includeImage) {
-	                delete x.backgroundImage;
+	                delete jsObj.backgroundImage;
 	            }
-	            return JSON.stringify(x);
+	            return JSON.stringify(jsObj);
 	        }
+
+	        /**
+	         * Resets image and loads content from provided json.
+	         * @access public
+	         * @param {string} jsonRepresentation - to provide as current state of the canvas.
+	         */
 	    }, {
 	        key: 'fromJson',
 	        value: function fromJson(jsonRepresentation) {
@@ -194,6 +258,12 @@
 
 	            c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
 	        }
+
+	        /**
+	         * Initializes all selected tools.
+	         * @param {EventAggregator} events - used for all mediated communications.
+	         * @param {Object} options - settings for all tools.
+	         */
 	    }, {
 	        key: 'initializeTools',
 	        value: function initializeTools(events, options) {
@@ -217,6 +287,13 @@
 	})();
 
 	redrawNs.Annotation = Redraw;
+	/**
+	 * Used by tools to register themselves to be available for usage.
+	 * @access public
+	 * @param {string} _name - name of tool.
+	 * @param {function(canvas: CanvasWrapper, events: EventAggregator, passedProps: Object)} _toolFn - callback function, invoked upon initialization of the tools.
+	 * @param {Object} _options - options, to be used as default ones.
+	 */
 	redrawNs.registerTool = function (_name, _toolFn, _options) {
 	    redrawNs.tools[_name] = {
 	        address: _name,
@@ -227,9 +304,7 @@
 	    redrawNs.tools[_name].options.buttonCss = redrawNs.tools[_name].options.buttonCss || '';
 	};
 
-	var b = new _browserApiJs2['default']();
-
-	b.appendToWindow('redraw', redrawNs);
+	new _browserApiJs2['default']().appendToWindow('redraw', redrawNs);
 
 /***/ },
 /* 2 */
@@ -247,13 +322,28 @@
 
 	var isBrowser = typeof window !== 'undefined';
 
+	/**
+	 * Facade of the browser apis. The main purpose id to facilitate testing.
+	 */
+
 	var Browser = (function () {
+	    /**
+	     * Contructor that determines if there is a browser present.
+	     * @constructor
+	     */
+
 	    function Browser() {
 	        _classCallCheck(this, Browser);
 
 	        this.document = isBrowser ? document : {};
 	        this.window = isBrowser ? window : {};
 	    }
+
+	    /**
+	     * Appends property to the browser window object.
+	     * @param {string} attributeName - Name of the property to create/assign.
+	     * @param {Object} obj - value to set.
+	     */
 
 	    _createClass(Browser, [{
 	        key: 'appendToWindow',
@@ -265,6 +355,12 @@
 	            }
 	            return false;
 	        }
+
+	        /**
+	         * Use to retrieve property from the browser window object.
+	         * @param {string} attributeName - Name of the property to create/assign.
+	         * @returns {Object} obj - retrieved value, or mock if not browser.
+	         */
 	    }, {
 	        key: 'getFromWindow',
 	        value: function getFromWindow(attributeName) {
@@ -301,6 +397,11 @@
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
+	/**
+	* Gets the scroll position of a dom element.
+	* @access private
+	* @param {Object} elem - target element.
+	*/
 	function scrollPosition(elem) {
 	    var left = 0,
 	        top = 0;
@@ -313,7 +414,19 @@
 	    return [left, top];
 	}
 
+	/**
+	 * Canvas object that facilitates 
+	 */
+
 	var Canvas = (function () {
+	    /**
+	    * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+	    * @constructor
+	    * @param {Object} imgElement - dom element that will be replaced and
+	    * used as background for canvas.
+	    * @param {Object} options - parameters used to setup looks and all tools preferences.
+	    */
+
 	    function Canvas(imgElement, options) {
 	        _classCallCheck(this, Canvas);
 
@@ -368,15 +481,25 @@
 	                this.scale = scaleY;
 	            }
 	        }
-	        this.width = this.scale * imgElement.width;
-	        this.height = this.scale * imgElement.height;
 	    }
+
+	    /**
+	     * Gets the top position of the canvas dom element.
+	     * @access pulic
+	     * @returns {number} position in pixels?
+	     */
 
 	    _createClass(Canvas, [{
 	        key: "getCanvasTop",
 	        value: function getCanvasTop() {
 	            return this.canvasContainer.offsetTop;
 	        }
+
+	        /**
+	         * Set/unset whether or not it is possible to select objects of the canvas.
+	         * @access pulic
+	         * @param {boolean} isEnabled - true if selection is enabled, false otherwise.
+	         */
 	    }, {
 	        key: "enableSelection",
 	        value: function enableSelection(isEnabled) {
@@ -384,21 +507,6 @@
 	            this.canvas.forEachObject(function (o) {
 	                o.selectable = isEnabled;
 	            });
-	        }
-	    }, {
-	        key: "getWidth",
-	        value: function getWidth() {
-	            return this.width;
-	        }
-	    }, {
-	        key: "getOffsetLeft",
-	        value: function getOffsetLeft() {
-	            return this.canvasLeft - scrollPosition(this.canvasElem)[0];
-	        }
-	    }, {
-	        key: "getOffsetTop",
-	        value: function getOffsetTop() {
-	            return this.getCanvasTop() - scrollPosition(this.canvasElem)[1];
 	        }
 	    }]);
 
@@ -441,6 +549,9 @@
 /* 5 */
 /***/ function(module, exports) {
 
+	/**
+	* Mediator for events.
+	*/
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
@@ -452,19 +563,27 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var EventAggregator = (function () {
+	    /**
+	     * Contructor that initializes internal stuff.
+	     * @constructor
+	     */
+
 	    function EventAggregator() {
 	        _classCallCheck(this, EventAggregator);
 
-	        this.subscriptions = {};
 	        this.subscriptionsByTopic = {};
 	    }
 
+	    /**
+	     * Registers a subscriber for a specific event topic.
+	     * @param {string} topic - name of the event type / topic.
+	     * @param {string} subscriberId - id the subscriber, must be unique.
+	     * @param {function(topic: string, sender: string, payload: Object)} onNotifyFn - callback
+	     * invoked upon when upon notification.
+	     * @param {Object} [_invokationScope] - scope to be used when invoking callback.
+	     */
+
 	    _createClass(EventAggregator, [{
-	        key: "subscribe",
-	        value: function subscribe(subscriber, onNotifyFn) {
-	            this.subscriptions[subscriber] = onNotifyFn;
-	        }
-	    }, {
 	        key: "subscribeTo",
 	        value: function subscribeTo(topic, subscriberId, onNotifyFn, _invokationScope) {
 	            if (!this.subscriptionsByTopic[topic]) {
@@ -475,21 +594,11 @@
 	        }
 
 	        // ToDo needs test
-	    }, {
-	        key: "unsubscribe",
-	        value: function unsubscribe(_subscriber) {
-	            delete this.subscriptions[_subscriber];
-	            for (var i in this.subscriptionsByTopic) {
-
-	                for (var j in this.subscriptionsByTopic[i]) {
-	                    if (this.subscriptionsByTopic[i][j].subscriber === _subscriber) {
-	                        this.subscriptionsByTopic[i].splice(j, 1);
-	                    }
-	                }
-	            }
-	        }
-
-	        // ToDo needs test
+	        /**
+	         * Unregisters a subscriber from a specific event topic.
+	         * @param {string} topic - name of the event type / topic.
+	         * @param {string} _subscriber - id the unique subscriber.
+	         */
 	    }, {
 	        key: "unsubscribeTo",
 	        value: function unsubscribeTo(topic, _subscriber) {
@@ -499,14 +608,16 @@
 	                }
 	            }
 	        }
+
+	        /**
+	         * Called to notify all subscribers of this topic
+	         * @param {string} topic - name of the event type / topic.
+	         * @param {string} sender - address of the sender.
+	         * @param {Object} payload - any data to pass to the subscriber.
+	         */
 	    }, {
 	        key: "notify",
 	        value: function notify(topic, sender, payload) {
-
-	            // for (var s1 in this.subscriptions) {
-	            //     this.subscriptions[s1].apply(undefined, [topic, sender, payload]);
-	            //     console.log('any', s1);
-	            // }
 	            for (var s2 in this.subscriptionsByTopic[topic]) {
 	                var scope = undefined;
 	                if (this.subscriptionsByTopic[topic][s2].invokationScope) {
@@ -541,7 +652,15 @@
 
 	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
 
+	/**
+	 * Css class for all buttons of the toolbar.
+	 */
 	var BUTTON_CLASS = 'redraw_btn';
+
+	/**
+	 * Adds a class to the array of classes.
+	 * @private
+	 */
 	function addClasses(btnObj, classes) {
 	    if (!classes) return;
 	    var allClasses = classes.split(' ');
@@ -551,7 +670,18 @@
 	    });
 	}
 
-	var ControlsDispatcher = function ControlsDispatcher(eventAggregator, options) {
+	/**
+	 * Main manager for the toolbar.
+	 */
+
+	var ControlsDispatcher =
+	/**
+	 * Controls contructor. Is provided with canvas-wrapper and options to initialize to toolbar.
+	 * @constructor
+	 * @param {Canvas} canvasWrapper - Canvas.
+	 * @param {Object} options - from user.
+	 */
+	function ControlsDispatcher(eventAggregator, options) {
 	    _classCallCheck(this, ControlsDispatcher);
 
 	    this.toolsInUse = {};
@@ -640,10 +770,6 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, '__esModule', {
-	    value: true
-	});
-
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -658,19 +784,35 @@
 
 	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
 
+	/** fabric.js */
 	var f = __webpack_require__(8).fabric;
-
+	/** length of arrow head */
 	var indicationLength = 20;
+	/** line used during drag n drop */
+	var line;
 
-	var circleMarker, line;
+	/**
+	 * A tool to paint arrows.
+	 */
 
 	var ArrowTool = (function () {
+	    /**
+	     * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+	     * @constructor
+	     * @param {Canvas} canvasWrapper - Canvas.
+	     * @param {EventAggregator} eventAggregator - Event mediator.
+	     */
+
 	    function ArrowTool(canvasWrapper, eventAggregator, toolOptions) {
 	        _classCallCheck(this, ArrowTool);
 
+	        /** eventAggregator for madiated cummunications */
 	        this.eventAggregator = eventAggregator;
+	        /** main api to use for canvas manipulation */
 	        this.canvasWrapper = canvasWrapper;
+	        /** coords for the elements of the arrow */
 	        this.arrow = this.canvas = this.start = this.end = undefined;
+	        /** options */
 	        this.options = toolOptions;
 
 	        var callee = this;
@@ -678,7 +820,7 @@
 	        this.eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.ARROW, 'ArrowTool', function () {
 	            callee.initListeners.apply(callee, arguments);
 	        });
-
+	        /** shorthand to canvas */
 	        this.canvas = canvasWrapper.canvas;
 
 	        this.moveFn = function (options) {
@@ -701,7 +843,14 @@
 	        };
 	    }
 
-	    // Cred till http://stackoverflow.com/questions/29890294/arrow-shape-using-fabricjs
+	    /** Default options for tools initialization */
+
+	    /**
+	     * Move the head of the arrow.
+	     * Cred for http://stackoverflow.com/questions/29890294/arrow-shape-using-fabricjs
+	     * @private
+	     * @param {Object} points - 4d.
+	     */
 
 	    _createClass(ArrowTool, [{
 	        key: 'moveArrowIndicator',
@@ -733,6 +882,11 @@
 
 	            this.canvas.add(this.arrow);
 	        }
+
+	        /**
+	         * Cancels this paint operation, i.e. removes any ongoing paint-objects och de-registers listeners.
+	         * @private
+	         */
 	    }, {
 	        key: 'abort',
 	        value: function abort() {
@@ -747,6 +901,12 @@
 	            this.eventAggregator.unsubscribeTo('keydown', 'ArrowTool');
 	            this.done();
 	        }
+
+	        /**
+	         * Function callback, invoked when mouse moves, even before mouse has been pressed.
+	         * @private
+	         * @param {Object} options - for the event.
+	         */
 	    }, {
 	        key: 'onMove',
 	        value: function onMove(options) {
@@ -766,6 +926,12 @@
 
 	            this.canvas.renderAll();
 	        }
+
+	        /**
+	         * Function callback, invoked on mouse up.
+	         * @private
+	         * @param {Object} options - for the event.
+	         */
 	    }, {
 	        key: 'onMUP',
 	        value: function onMUP(options) {
@@ -796,6 +962,12 @@
 	            this.arrow = line = this.start = this.end = undefined;
 	            this.canvas.renderAll();
 	        }
+
+	        /**
+	         * Function callback, invoked on mouse down.
+	         * @private
+	         * @param {Object} options - for the event.
+	         */
 	    }, {
 	        key: 'onMouseDown',
 	        value: function onMouseDown(options) {
@@ -817,6 +989,14 @@
 
 	            this.canvas.add(line);
 	        }
+
+	        /**
+	         * Function callback, invoked when toolbar is clicked.
+	         * @private
+	         * @param {string} topic - .
+	         * @param {string} sender - .
+	         * @param {string} payload - value shold be "toolbar-deactivate" if tool is active.
+	         */
 	    }, {
 	        key: 'initListeners',
 	        value: function initListeners(topic, sender, payload) {
@@ -842,6 +1022,11 @@
 	            this.canvas.on('mouse:move', this.moveFn);
 	            this.canvas.on('mouse:up', this.upFn);
 	        }
+
+	        /**
+	         * Removes listeners.
+	         * @private
+	         */
 	    }, {
 	        key: 'removeCanvasListeners',
 	        value: function removeCanvasListeners() {
@@ -861,8 +1046,6 @@
 	};
 
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.ARROW, ArrowTool, toolProps);
-	exports['default'] = ArrowTool;
-	module.exports = exports['default'];
 
 /***/ },
 /* 8 */
@@ -14387,9 +14570,20 @@
 
 	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
 
+	/** used during drag n drop */
 	var rect;
+	/**
+	 * A tool to paint boxes.
+	 */
 
-	var BoxTool = function BoxTool(canvasWrapper, eventAggregator, toolOptions) {
+	var BoxTool =
+	/**
+	 * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+	 * @constructor
+	 * @param {Canvas} canvasWrapper - Canvas.
+	 * @param {EventAggregator} eventAggregator - Event mediator.
+	 */
+	function BoxTool(canvasWrapper, eventAggregator, toolOptions) {
 	    _classCallCheck(this, BoxTool);
 
 	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.BOX, 'BoxTool', attachBoxListener);
@@ -14494,16 +14688,19 @@
 
 	        canvas.on('mouse:down', mouseDown);
 	    }
-	};
+	}
+	/**
+	 * Default options.
+	 */
+	;
 
+	exports['default'] = BoxTool;
 	var defaultToolProps = {
 	    label: 'Box',
 	    color: _canvasConstJs2['default'].DEFAULT_COLOR
 	};
 
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.BOX, BoxTool, defaultToolProps);
-
-	exports['default'] = BoxTool;
 	module.exports = exports['default'];
 
 /***/ },
@@ -14528,7 +14725,18 @@
 
 	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
 
-	var ResetTool = function ResetTool(canvasWrapper, eventAggregator) {
+	/**
+	 * A tool to reset the canvas, i.e. remove all objects.
+	 */
+
+	var ResetTool =
+	/**
+	 * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+	 * @constructor
+	 * @param {Canvas} canvasWrapper - Canvas.
+	 * @param {EventAggregator} eventAggregator - Event mediator.
+	 */
+	function ResetTool(canvasWrapper, eventAggregator) {
 		_classCallCheck(this, ResetTool);
 
 		eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.CLEAR, 'ResetTool', initClear);
@@ -14547,12 +14755,13 @@
 		}
 	};
 
+	exports['default'] = ResetTool;
+
 	var toolProps = {
 		label: 'Clear'
 	};
 
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.CLEAR, ResetTool, toolProps);
-	exports['default'] = ResetTool;
 	module.exports = exports['default'];
 
 /***/ },
@@ -14577,7 +14786,18 @@
 
 	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
 
-	var HorizontalLineTool = function HorizontalLineTool(canvasWrapper, eventAggregator, toolOptions) {
+	/**
+	 * A tool to create horizontal lines.
+	 */
+
+	var HorizontalLineTool =
+	/**
+	 * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+	 * @constructor
+	 * @param {Canvas} canvasWrapper - Canvas.
+	 * @param {EventAggregator} eventAggregator - Event mediator.
+	 */
+	function HorizontalLineTool(canvasWrapper, eventAggregator, toolOptions) {
 	    _classCallCheck(this, HorizontalLineTool);
 
 	    var canvas = canvasWrapper.canvas;
@@ -14622,7 +14842,7 @@
 	        function abort() {
 	            canvas.remove(horizontalLine);
 	            horizontalLine = undefined;
-	            eventAggregator.unsubscribe('HorizontalLine');
+	            // TODO unsubscribe
 
 	            detachHorizontalLineListener();
 	            notify('inactive');
@@ -14653,6 +14873,8 @@
 	    };
 	};
 
+	exports['default'] = HorizontalLineTool;
+
 	var toolProps = {
 	    label: 'Limit line',
 	    color: _canvasConstJs2['default'].DEFAULT_COLOR,
@@ -14660,13 +14882,15 @@
 	};
 
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.HLINE, HorizontalLineTool, toolProps);
-	exports['default'] = HorizontalLineTool;
 	module.exports = exports['default'];
 
 /***/ },
 /* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * A tool to remove selected elements from canvas!
+	 */
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -14685,10 +14909,24 @@
 
 	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
 
-	var RemoveTool = function RemoveTool(canvasWrapper, eventAggregator) {
+	/**
+	 * A tool to remove selected elements from canvas.
+	 */
+
+	var RemoveTool =
+	/**
+	 * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+	 * @constructor
+	 * @param {Canvas} canvasWrapper - Canvas.
+	 * @param {EventAggregator} eventAggregator - Event mediator.
+	 */
+	function RemoveTool(canvasWrapper, eventAggregator) {
 	    _classCallCheck(this, RemoveTool);
 
 	    eventAggregator.notify('tool-enabled', _canvasConstJs2['default'].TOOL.REMOVE, false);
+	    /**
+	    * Called upon removal.
+	    */
 	    var remove = function remove() {
 	        var c = canvasWrapper.canvas;
 	        if (c.getActiveObject()) {
@@ -14698,11 +14936,11 @@
 
 	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.REMOVE, 'RemoveTool', remove);
 
-	    eventAggregator.subscribe('RemoveTool', function (eventType, keyCode) {
-	        if (eventType === 'keydown' && keyCode === 46) {
-	            remove();
-	        }
-	    });
+	    // eventAggregator.subscribe('RemoveTool', function(eventType, keyCode) {
+	    //     if (eventType === 'keydown' && keyCode === 46) {
+	    //         remove();
+	    //     }
+	    // });
 	    canvasWrapper.canvas.on('object:selected', function (o) {
 	        eventAggregator.notify('tool-enabled', _canvasConstJs2['default'].TOOL.REMOVE, true);
 	    });
@@ -14711,11 +14949,15 @@
 	    });
 	};
 
+	exports['default'] = RemoveTool;
+
 	var toolProps = {
 	    label: 'Delete'
 	};
+	/**
+	 * Register tool at the global redraw.registerTool.
+	 */
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.REMOVE, RemoveTool, toolProps);
-	exports['default'] = RemoveTool;
 	module.exports = exports['default'];
 
 /***/ },
@@ -14742,7 +14984,18 @@
 
 	var editorHeight = 30;
 
-	var TextTool = function TextTool(canvasWrapper, eventAggregator, toolOptions) {
+	/**
+	 * A tool to create a text editor in the canvas.
+	 */
+
+	var TextTool =
+	/**
+	 * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+	 * @constructor
+	 * @param {Canvas} canvasWrapper - Canvas.
+	 * @param {EventAggregator} eventAggregator - Event mediator.
+	 */
+	function TextTool(canvasWrapper, eventAggregator, toolOptions) {
 	    _classCallCheck(this, TextTool);
 
 	    var canvas = canvasWrapper.canvas;
@@ -14810,13 +15063,13 @@
 	    }
 	};
 
+	exports['default'] = TextTool;
+
 	var toolProps = {
 	    label: 'Text',
 	    color: _canvasConstJs2['default'].DEFAULT_COLOR
 	};
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.TEXT, TextTool, toolProps);
-
-	exports['default'] = TextTool;
 	module.exports = exports['default'];
 
 /***/ }

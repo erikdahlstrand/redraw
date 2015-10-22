@@ -1,12 +1,23 @@
-class EventAggregator {
+/**
+* Mediator for events.
+*/
+export default class EventAggregator {
+    /**
+     * Contructor that initializes internal stuff.
+     * @constructor
+     */
     constructor() {
-        this.subscriptions = {};
         this.subscriptionsByTopic = {};
     }
 
-    subscribe(subscriber, onNotifyFn) {
-        this.subscriptions[subscriber] = onNotifyFn;
-    }
+    /**
+     * Registers a subscriber for a specific event topic.
+     * @param {string} topic - name of the event type / topic.
+     * @param {string} subscriberId - id the subscriber, must be unique.
+     * @param {function(topic: string, sender: string, payload: Object)} onNotifyFn - callback
+     * invoked upon when upon notification.
+     * @param {Object} [_invokationScope] - scope to be used when invoking callback.
+     */
     subscribeTo(topic, subscriberId, onNotifyFn, _invokationScope) {
         if (!this.subscriptionsByTopic[topic]) {
             this.subscriptionsByTopic[topic] = [];
@@ -16,19 +27,11 @@ class EventAggregator {
     }
 
     // ToDo needs test
-    unsubscribe(_subscriber) {
-        delete this.subscriptions[_subscriber];
-        for (var i in this.subscriptionsByTopic) {
-            
-            for (var j in this.subscriptionsByTopic[i]) {
-                if (this.subscriptionsByTopic[i][j].subscriber === _subscriber) {
-                    this.subscriptionsByTopic[i].splice(j, 1);
-                }
-            }
-        }
-    }
-
-    // ToDo needs test
+    /**
+     * Unregisters a subscriber from a specific event topic.
+     * @param {string} topic - name of the event type / topic.
+     * @param {string} _subscriber - id the unique subscriber.
+     */
     unsubscribeTo(topic, _subscriber) {
         for (var j in this.subscriptionsByTopic[topic]) {
             if (this.subscriptionsByTopic[topic][j].subscriber === _subscriber) {
@@ -37,12 +40,13 @@ class EventAggregator {
         }
     }
 
+    /**
+     * Called to notify all subscribers of this topic
+     * @param {string} topic - name of the event type / topic.
+     * @param {string} sender - address of the sender.
+     * @param {Object} payload - any data to pass to the subscriber.
+     */
     notify(topic, sender, payload) {
-
-        // for (var s1 in this.subscriptions) {
-        //     this.subscriptions[s1].apply(undefined, [topic, sender, payload]);
-        //     console.log('any', s1);
-        // }
         for (var s2 in this.subscriptionsByTopic[topic]) {
             var scope = undefined;
             if (this.subscriptionsByTopic[topic][s2].invokationScope) {
@@ -51,7 +55,4 @@ class EventAggregator {
             this.subscriptionsByTopic[topic][s2].callbackFn.apply(scope, [topic, sender, payload]);
         }
     }
-
 }
-
-export default EventAggregator;

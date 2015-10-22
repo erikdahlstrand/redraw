@@ -1,6 +1,10 @@
 import CONST from './canvas-const.js';
 
-
+ /**
+ * Gets the scroll position of a dom element.
+ * @access private
+ * @param {Object} elem - target element.
+ */
 function scrollPosition(elem) {
     var left = 0,
         top = 0;
@@ -13,7 +17,17 @@ function scrollPosition(elem) {
     return [left, top];
 }
 
-class Canvas {
+/**
+ * Canvas object that facilitates 
+ */
+export default class Canvas {
+     /**
+     * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+     * @constructor
+     * @param {Object} imgElement - dom element that will be replaced and
+     * used as background for canvas.
+     * @param {Object} options - parameters used to setup looks and all tools preferences.
+     */
     constructor(imgElement, options) {
 
         var parent = imgElement.parentNode;
@@ -71,29 +85,26 @@ class Canvas {
                 this.scale = scaleY;
             }
         }
-        this.width = this.scale * imgElement.width;
-        this.height = this.scale * imgElement.height;
     }
 
+    /**
+     * Gets the top position of the canvas dom element.
+     * @access pulic
+     * @returns {number} position in pixels?
+     */
     getCanvasTop() {
         return this.canvasContainer.offsetTop;
     }
 
+    /**
+     * Set/unset whether or not it is possible to select objects of the canvas.
+     * @access pulic
+     * @param {boolean} isEnabled - true if selection is enabled, false otherwise.
+     */
     enableSelection(isEnabled) {
         this.canvas.selection = isEnabled; // Restore fabricjs selection-box
         this.canvas.forEachObject(function(o) {
             o.selectable = isEnabled;
         });
     }
-    getWidth() {
-        return this.width;
-    }
-    getOffsetLeft() {
-        return this.canvasLeft - scrollPosition(this.canvasElem)[0];
-    }
-    getOffsetTop() {
-        return this.getCanvasTop() - scrollPosition(this.canvasElem)[1];
-    }
 }
-
-export default Canvas;

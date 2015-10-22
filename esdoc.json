@@ -1,0 +1,13 @@
+{
+  "source": "./src",
+  "destination": "./dist/doc",
+  "unexportIdentifier": true,
+  "manual": {
+    "overview": ["./manual/overview.md"],
+    "installation": ["./manual/installation.md"],
+    "configuration": ["./manual/configuration.md"],
+    "tutorial": ["./manual/tutorial.md"],
+    "tools": ["./manual/tools.md"]
+  }
+}
+

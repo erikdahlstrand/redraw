@@ -1,7 +1,16 @@
 import CONST from '../canvas-const.js';
 import Browser from '../browser-api.js';
 
-class HorizontalLineTool {
+/**
+ * A tool to create horizontal lines.
+ */
+export default class HorizontalLineTool {
+    /**
+     * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+     * @constructor
+     * @param {Canvas} canvasWrapper - Canvas.
+     * @param {EventAggregator} eventAggregator - Event mediator.
+     */
     constructor(canvasWrapper, eventAggregator, toolOptions) {
         var canvas = canvasWrapper.canvas;
         var horizontalLine;
@@ -45,7 +54,7 @@ class HorizontalLineTool {
             function abort() {
                 canvas.remove(horizontalLine);
                 horizontalLine = undefined;
-                eventAggregator.unsubscribe('HorizontalLine');
+                // TODO unsubscribe
 
                 detachHorizontalLineListener();
                 notify('inactive');
@@ -84,4 +93,3 @@ var toolProps = {
 };
 
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.HLINE, HorizontalLineTool, toolProps);
-export default HorizontalLineTool;

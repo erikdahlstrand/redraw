@@ -1,7 +1,16 @@
 import CONST from '../canvas-const.js';
 import Browser from '../browser-api.js';
 
-class ResetTool {
+/**
+ * A tool to reset the canvas, i.e. remove all objects.
+ */
+export default class ResetTool {
+    /**
+     * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+     * @constructor
+     * @param {Canvas} canvasWrapper - Canvas.
+     * @param {EventAggregator} eventAggregator - Event mediator.
+     */
     constructor(canvasWrapper, eventAggregator) {
     	eventAggregator.subscribeTo(CONST.TOOL.CLEAR, 'ResetTool', initClear);
 		function initClear(topic, sender, payload) {
@@ -25,4 +34,3 @@ var toolProps = {
 };
 
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.CLEAR, ResetTool, toolProps);
-export default ResetTool;

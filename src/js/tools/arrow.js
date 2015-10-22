@@ -1,19 +1,31 @@
 import CONST from '../canvas-const.js';
 import Browser from '../browser-api.js';
 
+/** fabric.js */
 var f = require('fabric').fabric;
-
+/** length of arrow head */
 var indicationLength = 20;
+/** line used during drag n drop */
+var line;
 
-
-
-var circleMarker, line;
-
+/**
+ * A tool to paint arrows.
+ */
 class ArrowTool {
+    /**
+     * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+     * @constructor
+     * @param {Canvas} canvasWrapper - Canvas.
+     * @param {EventAggregator} eventAggregator - Event mediator.
+     */
     constructor(canvasWrapper, eventAggregator, toolOptions) {
+        /** eventAggregator for madiated cummunications */
         this.eventAggregator = eventAggregator;
+        /** main api to use for canvas manipulation */
         this.canvasWrapper = canvasWrapper;
+        /** coords for the elements of the arrow */
         this.arrow = this.canvas = this.start = this.end = undefined;
+        /** options */
         this.options = toolOptions;
 
         var callee = this;
@@ -24,7 +36,7 @@ class ArrowTool {
             function() {
                 callee.initListeners.apply(callee, arguments);
             });
-
+        /** shorthand to canvas */
         this.canvas = canvasWrapper.canvas;
 
         this.moveFn = function(options) {
@@ -47,7 +59,12 @@ class ArrowTool {
         };
     }
 
-    // Cred till http://stackoverflow.com/questions/29890294/arrow-shape-using-fabricjs
+    /**
+     * Move the head of the arrow.
+     * Cred for http://stackoverflow.com/questions/29890294/arrow-shape-using-fabricjs
+     * @private
+     * @param {Object} points - 4d.
+     */
     moveArrowIndicator(points) {
         var x1 = points[0],
             y1 = points[1],
@@ -79,6 +96,10 @@ class ArrowTool {
         this.canvas.add(this.arrow);
     }
 
+    /**
+     * Cancels this paint operation, i.e. removes any ongoing paint-objects och de-registers listeners.
+     * @private
+     */
     abort() {
         if (this.arrow) {
             this.canvas.remove(this.arrow);
@@ -92,6 +113,11 @@ class ArrowTool {
         this.done();
     }
 
+    /**
+     * Function callback, invoked when mouse moves, even before mouse has been pressed.
+     * @private
+     * @param {Object} options - for the event.
+     */
     onMove(options) {
 
         if (this.start && !this.end) {
@@ -110,6 +136,11 @@ class ArrowTool {
         this.canvas.renderAll();
     }
 
+    /**
+     * Function callback, invoked on mouse up.
+     * @private
+     * @param {Object} options - for the event.
+     */
     onMUP(options) {
         let pointer = this.canvas.getPointer(options.e);
         this.end = {
@@ -139,6 +170,11 @@ class ArrowTool {
         this.canvas.renderAll();
     }
 
+    /**
+     * Function callback, invoked on mouse down.
+     * @private
+     * @param {Object} options - for the event.
+     */
     onMouseDown(options) {
         let pointer = this.canvas.getPointer(options.e);
         this.start = {
@@ -160,6 +196,13 @@ class ArrowTool {
         this.canvas.add(line);
     }
 
+    /**
+     * Function callback, invoked when toolbar is clicked.
+     * @private
+     * @param {string} topic - .
+     * @param {string} sender - .
+     * @param {string} payload - value shold be "toolbar-deactivate" if tool is active.
+     */
     initListeners(topic, sender, payload) {
         if (payload === 'toolbar-deactivate'){
             this.abort();
@@ -184,18 +227,21 @@ class ArrowTool {
         this.canvas.on('mouse:move', this.moveFn);
         this.canvas.on('mouse:up', this.upFn);
     }
+    /**
+     * Removes listeners.
+     * @private
+     */
     removeCanvasListeners() {
         this.canvas.off('mouse:down', this.downFn);
         this.canvas.off('mouse:move', this.moveFn);
         this.canvas.off('mouse:up', this.upFn);
     }
 }
+/** Default options for tools initialization */
 var toolProps = {
     label: 'Arrow',
     color:CONST.DEFAULT_COLOR,
     activeColor:'#55f'
 };
 
-
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.ARROW, ArrowTool, toolProps);
-export default ArrowTool;
