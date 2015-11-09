@@ -89,11 +89,20 @@ export default class Canvas {
 
     /**
      * Gets the top position of the canvas dom element.
-     * @access pulic
+     * @access public
      * @returns {number} position in pixels?
      */
     getCanvasTop() {
         return this.canvasContainer.offsetTop;
+    }
+
+    /**
+     * Gets the array of all objects of the canvas.
+     * @access public
+     * @returns {Array} with canvas object, or undefined if empty.
+     */
+    getAllObjects() {
+        return this.canvas.getObjects();
     }
 
     /**

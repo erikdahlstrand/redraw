@@ -168,6 +168,15 @@ class Redraw {
     }
 
     /**
+     * Tells whether or not any objects are present in the canvas, i.e. arrows, boxes other than the image itself.
+     * @access public
+     * @returns {boolean} true if there are obejcts, i.e.
+     */
+    isEmpty() {
+        return (this._canvas.getAllObjects().length === 0);
+    }
+
+    /**
      * Initializes all selected tools.
      * @param {EventAggregator} events - used for all mediated communications.
      * @param {Object} options - settings for all tools.
