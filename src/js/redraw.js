@@ -177,6 +177,15 @@ class Redraw {
     }
 
     /**
+     * Returns the canvas representation, as is from Fabric.js
+     * @access public
+     * @returns {Object} canvas, see http://fabricjs.com/.
+     */
+    getCanvas() {
+        return this._canvas.canvas;
+    }
+
+    /**
      * Initializes all selected tools.
      * @param {EventAggregator} events - used for all mediated communications.
      * @param {Object} options - settings for all tools.
