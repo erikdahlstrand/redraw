@@ -5,20 +5,65 @@
     <meta charset="UTF-8">
     <title>sample</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="green-disease.css">
     <link rel="stylesheet" type="text/css" href="black-flexbox.css">
+    <style type="text/css">
+        .margined {
+            margin-top: 6px !important;
+            margin-bottom: 6px !important;
+        }
+        pre {
+            background-color: #fcfaf3;
+            border-radius: 10px;
+        }
+    </style>
     
 </head>
 
 <body>
 
     <div class="main ui container">
+      <h1>CSS samples</h1>
+
+      <div class="ui horizontal divider">Semantic UI buttons</div>
+
+      <img src="chart.png" id="anotherImage" />
+      <pre>
+var redrawArea = new redraw.Annotation(document.getElementById('anotherImage'), {
+  buttonActiveCss: 'active', buttonCss: 'ui button', toolbarCss: 'ui buttons'
+});        </pre>
+
+
+
       <div class="ui horizontal divider">Semantic UI buttons, with toolbar first in dom</div>
       <img src="chart.png" id="preceededImage" />
+        <pre>
+var redrawArea = new redraw.Annotation(document.getElementById('preceededImage'),
+{
+    toolbarFirst: true,
+    buttonActiveCss: 'active',
+    buttonCss: 'ui button',
+    toolbarCss: 'ui basic buttons'
+});</pre>
+
+
+
+      <div class="ui horizontal divider">Tools on top, see black-flexbox.css</div>
+      <div class="black-mass">
+        <img src="chart.png" id="yetAnotherImage" />
+      </div>
+      <pre>var redrawArea = new redraw.Annotation(document.getElementById('yetAnotherImage'));</pre>
+
+
+        <div class="ui horizontal divider">Own, see green-disease.css</div>
+
 
         <div class="ui basic segment">
-            
+            <div class="ui input green-disease">
+                <img src="chart.png" id="srcImage" />
+            </div>
             <div class="ui horizontal divider">
-                Export
+                Export (from the green one)
             </div>
             <div>
                 <h4 class="ui horizontal divider header">
@@ -78,6 +123,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
     <script src="../dist/redraw.js"></script>
     <script type="text/javascript">
+    new redraw.Annotation(document.getElementById('srcImage'), {
+        maxWidth: 700,
+        color:'#5e5'
+    });
+
+    new redraw.Annotation(document.getElementById('anotherImage'), {
+      buttonActiveCss: 'active', buttonCss: 'ui button', toolbarCss: 'ui buttons margined'
+    });
+
+    new redraw.Annotation(document.getElementById('yetAnotherImage'));
 
     var redrawArea = new redraw.Annotation(document.getElementById('preceededImage'),
         {
