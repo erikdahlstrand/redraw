@@ -157,7 +157,8 @@ class ArrowTool {
             var group = new f.Group([line, this.arrow], {
                 hasControls: false,
                 hasBorders: true,
-                selectable: false
+                selectable: false,
+                fill: this.options.color
             });
             line.stroke = this.options.color;
 

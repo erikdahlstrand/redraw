@@ -148,7 +148,13 @@ class Redraw {
      * @returns {string} with json.
      */
     toJson(includeImage) {
-        var jsObj = this._canvas.canvas.toObject();
+
+
+        var jsObj = this._canvas.canvas.toObject(['lockMovementX', 'lockMovementY',
+            'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling',
+            'hasControls', 'hasRotatingPoint', 'selectable', 'fill']);
+
+        
         if (!includeImage) {
             delete jsObj.backgroundImage;
         }
