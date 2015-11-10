@@ -238,7 +238,9 @@
 	    }, {
 	        key: 'toJson',
 	        value: function toJson(includeImage) {
-	            var jsObj = this._canvas.canvas.toObject();
+
+	            var jsObj = this._canvas.canvas.toObject(['lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling', 'hasControls', 'hasRotatingPoint', 'selectable', 'fill']);
+
 	            if (!includeImage) {
 	                delete jsObj.backgroundImage;
 	            }
@@ -257,6 +259,28 @@
 	            c.clear();
 
 	            c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
+	        }
+
+	        /**
+	         * Tells whether or not any objects are present in the canvas, i.e. arrows, boxes other than the image itself.
+	         * @access public
+	         * @returns {boolean} true if there are obejcts, i.e.
+	         */
+	    }, {
+	        key: 'isEmpty',
+	        value: function isEmpty() {
+	            return this._canvas.getAllObjects().length === 0;
+	        }
+
+	        /**
+	         * Returns the canvas representation, as is from Fabric.js
+	         * @access public
+	         * @returns {Object} canvas, see http://fabricjs.com/.
+	         */
+	    }, {
+	        key: 'getCanvas',
+	        value: function getCanvas() {
+	            return this._canvas.canvas;
 	        }
 
 	        /**
@@ -485,7 +509,7 @@
 
 	    /**
 	     * Gets the top position of the canvas dom element.
-	     * @access pulic
+	     * @access public
 	     * @returns {number} position in pixels?
 	     */
 
@@ -493,6 +517,17 @@
 	        key: "getCanvasTop",
 	        value: function getCanvasTop() {
 	            return this.canvasContainer.offsetTop;
+	        }
+
+	        /**
+	         * Gets the array of all objects of the canvas.
+	         * @access public
+	         * @returns {Array} with canvas object, or undefined if empty.
+	         */
+	    }, {
+	        key: "getAllObjects",
+	        value: function getAllObjects() {
+	            return this.canvas.getObjects();
 	        }
 
 	        /**
@@ -950,7 +985,8 @@
 	                var group = new f.Group([line, this.arrow], {
 	                    hasControls: false,
 	                    hasBorders: true,
-	                    selectable: false
+	                    selectable: false,
+	                    fill: this.options.color
 	                });
 	                line.stroke = this.options.color;
 
