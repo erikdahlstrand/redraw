@@ -152,7 +152,7 @@ class Redraw {
 
         var jsObj = this._canvas.canvas.toObject(['lockMovementX', 'lockMovementY',
             'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling',
-            'hasControls', 'hasRotatingPoint', 'selectable', 'fill']);
+            'hasControls', 'hasRotatingPoint', 'selectable', 'fill', 'padding']);
 
         
         if (!includeImage) {
