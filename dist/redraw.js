@@ -50,7 +50,8 @@
 	__webpack_require__(52);
 	__webpack_require__(53);
 	__webpack_require__(54);
-	module.exports = __webpack_require__(55);
+	__webpack_require__(55);
+	module.exports = __webpack_require__(56);
 
 
 /***/ },
@@ -574,6 +575,7 @@
 		TOOL: {
 			ARROW: 'arrow',
 			BOX: 'box',
+			PIXELATE: 'pixel',
 			CLEAR: 'clear',
 			DUMP: 'dump',
 			HLINE: 'hline',
@@ -14659,6 +14661,7 @@
 	    var currWidth, currHeight;
 
 	    function drawBox(options) {
+	        console.log('drawBox box');
 	        if (rect) {
 	            var pointer = canvas.getPointer(options.e);
 
@@ -14676,6 +14679,7 @@
 	        }
 	    }
 	    function drawBoxDone(options) {
+	        console.log('drawBoxDone box');
 	        canvas.off('mouse:move', drawBox);
 	        canvas.off('mouse:up', drawBoxDone);
 
@@ -14756,6 +14760,194 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _canvasConstJs = __webpack_require__(4);
+
+	var _canvasConstJs2 = _interopRequireDefault(_canvasConstJs);
+
+	var _browserApiJs = __webpack_require__(2);
+
+	var _browserApiJs2 = _interopRequireDefault(_browserApiJs);
+
+	/**
+	 * A tool to pixelate areas.
+	 */
+
+	var PixelateTool =
+	/**
+	 * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
+	 * @constructor
+	 * @param {Canvas} canvasWrapper - Canvas.
+	 * @param {EventAggregator} eventAggregator - Event mediator.
+	 */
+	function PixelateTool(canvasWrapper, eventAggregator, toolOptions) {
+	    _classCallCheck(this, PixelateTool);
+
+	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.PIXELATE, 'PixelateTool', attachBoxListener);
+	    var rect = undefined,
+	        callbackCtx = this;
+	    var startTop = undefined,
+	        startLeft = undefined;
+	    var canvas = canvasWrapper.canvas;
+
+	    function notify(message) {
+	        eventAggregator.notify('TOOL_USAGE', _canvasConstJs2['default'].TOOL.PIXELATE, message);
+	    }
+
+	    function done() {
+	        notify('inactive');
+	        detachBoxListener();
+	        canvasWrapper.enableSelection(true);
+	    }
+
+	    function detachBoxListener() {
+	        canvas.off('mouse:down', mouseDown);
+	        canvas.off('mouse:move', drawBox);
+	        canvas.off('mouse:up', drawBoxDone);
+
+	        rect = undefined;
+	        eventAggregator.unsubscribeTo('keydown', 'PixelateTool');
+	    }
+
+	    function drawBox(options) {
+	        if (rect) {
+	            var pointer = canvas.getPointer(options.e);
+
+	            var currWidth = pointer.x - startLeft;
+	            var currHeight = pointer.y - startTop;
+
+	            rect.set({
+	                'width': currWidth,
+	                'height': currHeight
+	            });
+
+	            rect.setCoords();
+	            canvas.renderAll();
+	        }
+	    }
+
+	    function applyFilter(index, filter, obj) {
+	        obj.filters[index] = filter;
+	        obj.applyFilters(canvas.renderAll.bind(canvas));
+	    }
+
+	    function drawBoxDone(options) {
+	        canvas.off('mouse:move', drawBox);
+	        canvas.off('mouse:up', drawBoxDone);
+	        canvas.remove(rect);
+
+	        var pointer = canvas.getPointer(options.e);
+	        var currWidth = pointer.x - startLeft;
+	        var currHeight = pointer.y - startTop;
+
+	        if (Math.abs(currWidth) > 0 && Math.abs(currHeight) > 0) {
+	            var pixels = canvas.getContext().getImageData(pointer.x, pointer.y, currWidth, currHeight);
+
+	            var object = fabric.util.object.clone(canvasWrapper.image);
+
+	            object.set({
+	                originX: 'left',
+	                originY: 'top',
+	                left: 0,
+	                top: 0,
+	                selectable: false
+	            });
+
+	            object.hasRotatingPoint = true;
+
+	            var x = rect;
+
+	            rect.left = rect.left - object.width / 2;
+	            rect.top = rect.top - object.height / 2;
+
+	            object.clipTo = function (ctx) {
+	                x.render(ctx);
+	            };
+
+	            var f = fabric.Image.filters;
+	            applyFilter(0, new f.Pixelate({
+	                blocksize: 5
+	            }), object);
+
+	            canvas.add(object);
+	            canvas.sendToBack(object);
+	        }
+	        canvas.renderAll();
+
+	        rect = undefined;
+	    }
+
+	    function mouseDown(options) {
+	        var pointer = canvas.getPointer(options.e);
+
+	        startTop = pointer.y;
+	        startLeft = pointer.x;
+
+	        rect = new fabric.Rect({
+	            left: startLeft,
+	            top: startTop,
+	            width: 4,
+	            borderColor: toolOptions.color,
+	            height: 4,
+	            fill: toolOptions.color,
+	            opacity: 0.3,
+	            hasControls: true,
+	            hasRotatingPoint: false,
+	            originX: 'left',
+	            originY: 'top',
+	            selectable: false
+	        });
+
+	        canvas.add(rect);
+	        rect.setCoords();
+	        canvas.renderAll();
+	        canvas.on('mouse:move', drawBox);
+	        canvas.on('mouse:up', drawBoxDone);
+	    }
+
+	    function attachBoxListener(topic, sender, payload) {
+	        if (payload === 'toolbar-deactivate') {
+	            done();
+	            return;
+	        }
+	        eventAggregator.subscribeTo('keydown', 'PixelateTool', function (topic, sender, keyCode) {
+	            if (keyCode === 27) {
+	                done();
+	            }
+	        }, callbackCtx);
+	        canvasWrapper.enableSelection(false);
+	        notify('active');
+
+	        canvas.on('mouse:down', mouseDown);
+	    }
+	}
+	/**
+	 * Default options.
+	 */
+	;
+
+	exports['default'] = PixelateTool;
+	var defaultToolProps = {
+	    label: 'Pixelate',
+	    color: _canvasConstJs2['default'].DEFAULT_COLOR
+	};
+
+	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.PIXELATE, PixelateTool, defaultToolProps);
+	module.exports = exports['default'];
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
 		value: true
 	});
 
@@ -14811,7 +15003,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14931,7 +15123,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15007,7 +15199,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
