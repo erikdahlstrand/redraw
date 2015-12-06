@@ -6,6 +6,7 @@ module.exports = {
         './src/js/redraw.js',
         './src/js/tools/arrow.js',
         './src/js/tools/box.js',
+        './src/js/tools/pixelate.js',
         './src/js/tools/clear-tool.js',
         './src/js/tools/horizontal-line-tool.js',
         './src/js/tools/remove-tool.js',
