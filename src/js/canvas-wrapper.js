@@ -29,7 +29,7 @@ export default class Canvas {
      * @param {Object} options - parameters used to setup looks and all tools preferences.
      */
     constructor(imgElement, options) {
-
+        this.options = options;
         var parent = imgElement.parentNode;
         var canvasWrapper = document.createElement("div");
         canvasWrapper.className = CONST.CSS.PARENT;
@@ -45,42 +45,47 @@ export default class Canvas {
 
         this.canvasContainer = canvasWrapper;
         this.canvasLeft = canvasElem.offsetLeft;
+        this.canvas = new fabric.Canvas(canvasElem);
+        this.imgElement = imgElement;
+        this.setupImage();
+        var theCanvas = this;
+        window.onload = function() {
+            theCanvas.setupImage();
+        };
+    }
 
+    setupImage() {
+        console.log('setting up image');
+        this.image = new fabric.Image(this.imgElement);
 
-        this.image = new fabric.Image(imgElement);
-
-        if (options.maxWidth && options.maxWidth < this.image.width) {
-            this.scale = options.maxWidth / this.image.width;
+        if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
+            this.scale = this.options.maxWidth / this.image.width;
         }
-        if (options.maxHeight && options.maxHeight < this.image.height) {
-            let scaleY = options.maxHeight / this.image.height;
+        if (this.options.maxHeight && this.options.maxHeight < this.image.height) {
+            let scaleY = this.options.maxHeight / this.image.height;
             if (this.scale > scaleY) {
                 this.scale = scaleY;
             }
         }
 
-        this.width = this.scale * imgElement.width;
-        this.height = this.scale * imgElement.height;
-
-        this.canvas = new fabric.Canvas(canvasElem);
+        this.width = this.scale * this.imgElement.width;
+        this.height = this.scale * this.imgElement.height;
 
         this.canvas.setDimensions({
             width: this.width,
             height: this.height
         });
 
-
         this.image.setScaleX(this.scale);
         this.image.setScaleY(this.scale);
 
         this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
 
-
-        if (options.maxWidth && options.maxWidth < this.image.width) {
+        if (this.options.maxWidth && options.maxWidth < this.image.width) {
             this.scale = options.maxWidth / this.image.width;
         }
-        if (options.maxHeight && options.maxHeight < this.image.height) {
-            let scaleY = options.maxHeight / this.image.height;
+        if (this.options.maxHeight && this.options.maxHeight < this.image.height) {
+            let scaleY = this.options.maxHeight / this.image.height;
             if (this.scale > scaleY) {
                 this.scale = scaleY;
             }

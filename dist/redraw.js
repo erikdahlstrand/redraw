@@ -454,6 +454,7 @@
 	    function Canvas(imgElement, options) {
 	        _classCallCheck(this, Canvas);
 
+	        this.options = options;
 	        var parent = imgElement.parentNode;
 	        var canvasWrapper = document.createElement("div");
 	        canvasWrapper.className = _canvasConstJs2["default"].CSS.PARENT;
@@ -468,52 +469,61 @@
 
 	        this.canvasContainer = canvasWrapper;
 	        this.canvasLeft = canvasElem.offsetLeft;
-
-	        this.image = new fabric.Image(imgElement);
-
-	        if (options.maxWidth && options.maxWidth < this.image.width) {
-	            this.scale = options.maxWidth / this.image.width;
-	        }
-	        if (options.maxHeight && options.maxHeight < this.image.height) {
-	            var scaleY = options.maxHeight / this.image.height;
-	            if (this.scale > scaleY) {
-	                this.scale = scaleY;
-	            }
-	        }
-
-	        this.width = this.scale * imgElement.width;
-	        this.height = this.scale * imgElement.height;
-
 	        this.canvas = new fabric.Canvas(canvasElem);
-
-	        this.canvas.setDimensions({
-	            width: this.width,
-	            height: this.height
-	        });
-
-	        this.image.setScaleX(this.scale);
-	        this.image.setScaleY(this.scale);
-
-	        this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
-
-	        if (options.maxWidth && options.maxWidth < this.image.width) {
-	            this.scale = options.maxWidth / this.image.width;
-	        }
-	        if (options.maxHeight && options.maxHeight < this.image.height) {
-	            var scaleY = options.maxHeight / this.image.height;
-	            if (this.scale > scaleY) {
-	                this.scale = scaleY;
-	            }
-	        }
+	        this.imgElement = imgElement;
+	        this.setupImage();
+	        var theCanvas = this;
+	        window.onload = function () {
+	            theCanvas.setupImage();
+	        };
 	    }
 
-	    /**
-	     * Gets the top position of the canvas dom element.
-	     * @access public
-	     * @returns {number} position in pixels?
-	     */
-
 	    _createClass(Canvas, [{
+	        key: "setupImage",
+	        value: function setupImage() {
+	            console.log('setting up image');
+	            this.image = new fabric.Image(this.imgElement);
+
+	            if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
+	                this.scale = this.options.maxWidth / this.image.width;
+	            }
+	            if (this.options.maxHeight && this.options.maxHeight < this.image.height) {
+	                var scaleY = this.options.maxHeight / this.image.height;
+	                if (this.scale > scaleY) {
+	                    this.scale = scaleY;
+	                }
+	            }
+
+	            this.width = this.scale * this.imgElement.width;
+	            this.height = this.scale * this.imgElement.height;
+
+	            this.canvas.setDimensions({
+	                width: this.width,
+	                height: this.height
+	            });
+
+	            this.image.setScaleX(this.scale);
+	            this.image.setScaleY(this.scale);
+
+	            this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
+
+	            if (this.options.maxWidth && options.maxWidth < this.image.width) {
+	                this.scale = options.maxWidth / this.image.width;
+	            }
+	            if (this.options.maxHeight && this.options.maxHeight < this.image.height) {
+	                var scaleY = this.options.maxHeight / this.image.height;
+	                if (this.scale > scaleY) {
+	                    this.scale = scaleY;
+	                }
+	            }
+	        }
+
+	        /**
+	         * Gets the top position of the canvas dom element.
+	         * @access public
+	         * @returns {number} position in pixels?
+	         */
+	    }, {
 	        key: "getCanvasTop",
 	        value: function getCanvasTop() {
 	            return this.canvasContainer.offsetTop;
