@@ -507,8 +507,8 @@
 
 	            this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
 
-	            if (this.options.maxWidth && options.maxWidth < this.image.width) {
-	                this.scale = options.maxWidth / this.image.width;
+	            if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
+	                this.scale = this.options.maxWidth / this.image.width;
 	            }
 	            if (this.options.maxHeight && this.options.maxHeight < this.image.height) {
 	                var scaleY = this.options.maxHeight / this.image.height;
