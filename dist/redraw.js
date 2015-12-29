@@ -406,17 +406,17 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	var _canvasConstJs = __webpack_require__(4);
 
@@ -458,10 +458,14 @@
 	        this.options = options;
 	        var parent = imgElement.parentNode;
 	        var canvasWrapper = document.createElement("div");
-	        canvasWrapper.className = _canvasConstJs2["default"].CSS.PARENT;
+	        canvasWrapper.className = _canvasConstJs2['default'].CSS.PARENT;
 	        this.scale = 1;
 	        parent.insertBefore(canvasWrapper, imgElement);
 	        parent.removeChild(imgElement);
+	        var myFunction = function myFunction(x) {
+	            console.log('load image', x);
+	        };
+	        imgElement.addEventListener('load', myFunction, false);
 
 	        var canvasElem = document.createElement("canvas");
 	        canvasWrapper.appendChild(canvasElem);
@@ -472,17 +476,26 @@
 	        this.canvasLeft = canvasElem.offsetLeft;
 	        this.canvas = new fabric.Canvas(canvasElem);
 	        this.imgElement = imgElement;
-	        this.setupImage();
+
 	        var theCanvas = this;
-	        window.onload = function () {
-	            theCanvas.setupImage();
-	        };
+
+	        if (navigator.vendor.indexOf('Apple') >= 0) {
+	            var delayedSetup = function delayedSetup() {
+	                theCanvas.setupImage();
+	            };
+	            var tmp = new Image();
+	            tmp.addEventListener('load', delayedSetup, false);
+	            tmp.src = this.imgElement.src;
+	        } else {
+	            window.onload = function () {
+	                theCanvas.setupImage();
+	            };
+	        }
 	    }
 
 	    _createClass(Canvas, [{
-	        key: "setupImage",
+	        key: 'setupImage',
 	        value: function setupImage() {
-	            console.log('setting up image');
 	            this.image = new fabric.Image(this.imgElement);
 
 	            if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
@@ -525,7 +538,7 @@
 	         * @returns {number} position in pixels?
 	         */
 	    }, {
-	        key: "getCanvasTop",
+	        key: 'getCanvasTop',
 	        value: function getCanvasTop() {
 	            return this.canvasContainer.offsetTop;
 	        }
@@ -536,7 +549,7 @@
 	         * @returns {Array} with canvas object, or undefined if empty.
 	         */
 	    }, {
-	        key: "getAllObjects",
+	        key: 'getAllObjects',
 	        value: function getAllObjects() {
 	            return this.canvas.getObjects();
 	        }
@@ -547,7 +560,7 @@
 	         * @param {boolean} isEnabled - true if selection is enabled, false otherwise.
 	         */
 	    }, {
-	        key: "enableSelection",
+	        key: 'enableSelection',
 	        value: function enableSelection(isEnabled) {
 	            this.canvas.selection = isEnabled; // Restore fabricjs selection-box
 	            this.canvas.forEachObject(function (o) {
@@ -559,8 +572,8 @@
 	    return Canvas;
 	})();
 
-	exports["default"] = Canvas;
-	module.exports = exports["default"];
+	exports['default'] = Canvas;
+	module.exports = exports['default'];
 
 /***/ },
 /* 4 */
@@ -14661,7 +14674,6 @@
 	    var currWidth, currHeight;
 
 	    function drawBox(options) {
-	        console.log('drawBox box');
 	        if (rect) {
 	            var pointer = canvas.getPointer(options.e);
 
@@ -14679,7 +14691,6 @@
 	        }
 	    }
 	    function drawBoxDone(options) {
-	        console.log('drawBoxDone box');
 	        canvas.off('mouse:move', drawBox);
 	        canvas.off('mouse:up', drawBoxDone);
 

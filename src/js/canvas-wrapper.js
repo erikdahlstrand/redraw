@@ -36,6 +36,10 @@ export default class Canvas {
         this.scale = 1;
         parent.insertBefore(canvasWrapper, imgElement);
         parent.removeChild(imgElement);
+        var myFunction = function(x) {
+            console.log('load image', x);
+        };
+        imgElement.addEventListener('load', myFunction, false);
 
 
         var canvasElem = document.createElement("canvas");
@@ -47,15 +51,25 @@ export default class Canvas {
         this.canvasLeft = canvasElem.offsetLeft;
         this.canvas = new fabric.Canvas(canvasElem);
         this.imgElement = imgElement;
-        this.setupImage();
-        var theCanvas = this;
-        window.onload = function() {
-            theCanvas.setupImage();
-        };
+        
+        let theCanvas = this;
+
+        if (navigator.vendor.indexOf('Apple') >= 0) {
+            let delayedSetup = function () {
+                theCanvas.setupImage();
+            };
+            var tmp = new Image();
+            tmp.addEventListener('load', delayedSetup, false);
+            tmp.src = this.imgElement.src;
+
+        } else {
+            window.onload = function() {
+                theCanvas.setupImage();
+            };    
+        }
     }
 
     setupImage() {
-        console.log('setting up image');
         this.image = new fabric.Image(this.imgElement);
 
         if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
