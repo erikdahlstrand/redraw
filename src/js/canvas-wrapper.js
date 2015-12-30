@@ -26,21 +26,18 @@ export default class Canvas {
      * @constructor
      * @param {Object} imgElement - dom element that will be replaced and
      * used as background for canvas.
+     * @param {EventAggregator} eventAggregator - Event mediator.
      * @param {Object} options - parameters used to setup looks and all tools preferences.
      */
-    constructor(imgElement, options) {
+    constructor(imgElement, eventAggregator, options) {
         this.options = options;
+        this.eventAggregator = eventAggregator;
         var parent = imgElement.parentNode;
         var canvasWrapper = document.createElement("div");
         canvasWrapper.className = CONST.CSS.PARENT;
         this.scale = 1;
         parent.insertBefore(canvasWrapper, imgElement);
         parent.removeChild(imgElement);
-        var myFunction = function(x) {
-            console.log('load image', x);
-        };
-        imgElement.addEventListener('load', myFunction, false);
-
 
         var canvasElem = document.createElement("canvas");
         canvasWrapper.appendChild(canvasElem);
@@ -95,6 +92,7 @@ export default class Canvas {
 
         this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
 
+
         if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
             this.scale = this.options.maxWidth / this.image.width;
         }
@@ -104,6 +102,17 @@ export default class Canvas {
                 this.scale = scaleY;
             }
         }
+
+        this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
+            function(subscriptionId, sender, status) {
+                if (status === 'active') {
+                    console.log('canvas up', status);
+                    this.canvas.defaultCursor='crosshair';
+                } else {
+                    console.log('canvas down');
+                    this.canvas.defaultCursor='default';
+                }
+            }, this);
     }
 
     /**

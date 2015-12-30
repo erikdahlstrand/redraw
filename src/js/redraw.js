@@ -98,14 +98,11 @@ class Redraw {
     constructor(imgElement, options) {
         var events = new EventAggregator();
         options = options || {};
-        this._canvas = new Canvas(imgElement, options); // Needs defactor
+        this._canvas = new Canvas(imgElement, events, options); // Needs defactor
 
         if (options.jsonContent) {
             this._canvas.canvas.loadFromJSON(options.jsonContent);
         }
-
-
-        var controlsDispatcher = new ControlsDispatcher(events);
 
         this.initializeTools(events, options);
     }
