@@ -23,7 +23,7 @@ export default class ControlsDispatcher {
     /**
      * Controls contructor. Is provided with canvas-wrapper and options to initialize to toolbar.
      * @constructor
-     * @param {Canvas} canvasWrapper - Canvas.
+     * @param {EventAggregator} eventAggregator - Event mediator.
      * @param {Object} options - from user.
      */
     constructor(eventAggregator, options) {
@@ -102,9 +102,7 @@ export default class ControlsDispatcher {
                     } else {
                         this.toolsInUse[sender].classList.add('disabled');
                     }
-                    
                 }, this);
-
         };
     }
 }
