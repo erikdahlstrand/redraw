@@ -79,11 +79,9 @@ export default class PixelateTool {
                     originY: 'top',
                     left: 0,
                     top: 0,
-                    selectable: false
+                    lockMovementX:true,
+                    lockMovementY:true
                 });
-
-                object.hasRotatingPoint = true;
-
                 var x = rect;
 
                 rect.left = rect.left - object.width / 2;
