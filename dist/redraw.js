@@ -14867,11 +14867,9 @@
 	                originY: 'top',
 	                left: 0,
 	                top: 0,
-	                selectable: false
+	                lockMovementX: true,
+	                lockMovementY: true
 	            });
-
-	            object.hasRotatingPoint = true;
-
 	            var x = rect;
 
 	            rect.left = rect.left - object.width / 2;
@@ -15184,6 +15182,13 @@
 	    };
 
 	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.REMOVE, 'RemoveTool', remove);
+
+	    eventAggregator.subscribeTo('keydown', 'RemoveTool', function (topic, sender, keyCode) {
+	        if (keyCode === 46) {
+	            console.log('Found key');
+	            remove();
+	        }
+	    });
 
 	    // eventAggregator.subscribe('RemoveTool', function(eventType, keyCode) {
 	    //     if (eventType === 'keydown' && keyCode === 46) {

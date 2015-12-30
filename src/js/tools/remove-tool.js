@@ -28,11 +28,13 @@ export default class RemoveTool {
 
         eventAggregator.subscribeTo(CONST.TOOL.REMOVE, 'RemoveTool', remove);
 
-        // eventAggregator.subscribe('RemoveTool', function(eventType, keyCode) {
-        //     if (eventType === 'keydown' && keyCode === 46) {
-        //         remove();
-        //     }
-        // });
+        eventAggregator.subscribeTo('keydown', 'RemoveTool', function(topic, sender, keyCode) {
+                if (keyCode === 46) {
+                    console.log('Found key')
+                    remove();
+                }
+            });
+
         canvasWrapper.canvas.on('object:selected', function(o) {
             eventAggregator.notify('tool-enabled', CONST.TOOL.REMOVE, true);
         });
@@ -45,6 +47,7 @@ export default class RemoveTool {
 var toolProps = {
     label: 'Delete'
 };
+
 /**
  * Register tool at the global redraw.registerTool.
  */
