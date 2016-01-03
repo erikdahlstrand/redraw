@@ -51,7 +51,7 @@
                 </h4>
                 <pre>redrawArea.toBase64URL();</pre>
                 <button class="ui button" onclick="dumpImage1()">dump base64 string</button>
-                <img id="imageDump" />
+                <img id="imageDump1" />
 
                 <h4 class="ui horizontal divider header">
                   <i class="slack icon"></i>
@@ -103,7 +103,7 @@
 
     function dumpImage1() {
         console.log('image', redrawArea.toBase64URL());
-        document.getElementById('imageDump').src = redrawArea.toBase64URL();
+        document.getElementById('imageDump1').src = redrawArea.toBase64URL();
     }
 
     function checkEmptiness() {

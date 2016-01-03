@@ -187,7 +187,7 @@
 	            this._canvas.canvas.loadFromJSON(options.jsonContent);
 	        }
 
-	        this.initializeTools(events, options);
+	        this.controls = this.initializeTools(events, options);
 	    }
 
 	    /**
@@ -237,7 +237,7 @@
 	    }, {
 	        key: 'toJson',
 	        value: function toJson(includeImage) {
-
+	            this.controls.cancelActiveTool();
 	            var jsObj = this._canvas.canvas.toObject(['lockMovementX', 'lockMovementY', 'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling', 'hasControls', 'hasRotatingPoint', 'selectable', 'fill', 'padding']);
 
 	            if (!includeImage) {
@@ -303,6 +303,7 @@
 	            }
 	            var controls = new _controlsControlsDispatcherJs2['default'](events, options);
 	            controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
+	            return controls;
 	        }
 	    }]);
 
@@ -767,6 +768,14 @@
 	        };
 	    }
 
+	    this.cancelActiveTool = function () {
+
+	        if (activeTool) {
+	            eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
+	            activeTool = undefined;
+	        }
+	    };
+
 	    var manageKeys = function manageKeys(e) {
 	        if (e.keyCode === 46 || e.keyCode === 27) {
 
@@ -814,7 +823,6 @@
 	                currTool.classList.remove(btnActiveCss);
 	            } else {
 	                currTool.classList.add(btnActiveCss);
-	                // todo toolbar-deactivate
 	            }
 	        }, this);
 

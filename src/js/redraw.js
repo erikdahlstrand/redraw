@@ -104,7 +104,7 @@ class Redraw {
             this._canvas.canvas.loadFromJSON(options.jsonContent);
         }
 
-        this.initializeTools(events, options);
+        this.controls = this.initializeTools(events, options);
     }
     /**
      * Get the png-representation of the canvas.
@@ -145,8 +145,7 @@ class Redraw {
      * @returns {string} with json.
      */
     toJson(includeImage) {
-
-
+        this.controls.cancelActiveTool();
         var jsObj = this._canvas.canvas.toObject(['lockMovementX', 'lockMovementY',
             'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling',
             'hasControls', 'hasRotatingPoint', 'selectable', 'fill', 'padding']);
@@ -207,6 +206,7 @@ class Redraw {
         }
         var controls = new ControlsDispatcher(events, options);
         controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
+        return controls;
     }
 }
 
