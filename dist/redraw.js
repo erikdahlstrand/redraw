@@ -283,6 +283,27 @@
 	        }
 
 	        /**
+	         * Register event listener, e.g. var unregisterer = obj.on('canvas-loaded');
+	         * @access public
+	         * @param {string} event - name of event, e.g. 
+	         * @param {function} callbackFn - invoked upon when event fired.
+	         * @param {Object} [scope] - invoke callbackFn with this-variable set, if provided.
+	         * @returns {function} unregister-function, invoke to unregister for topic.
+	         */
+	    }, {
+	        key: 'on',
+	        value: function on(topic, callbackFn, scope) {
+	            var subscriberId = 'client';
+	            var subscriptionTopic = topic;
+	            var evt = this._canvas.eventAggregator;
+	            evt.subscribeTo(subscriptionTopic, subscriberId, callbackFn, scope);
+
+	            return function () {
+	                evt.unsubscribeTo(subscriptionTopic, subscriberId);
+	            };
+	        }
+
+	        /**
 	         * Initializes all selected tools.
 	         * @param {EventAggregator} events - used for all mediated communications.
 	         * @param {Object} options - settings for all tools.
@@ -515,8 +536,16 @@
 
 	            this.image.setScaleX(this.scale);
 	            this.image.setScaleY(this.scale);
+	            var event = this.eventAggregator;
 
-	            this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
+	            function getBinder(_canvas) {
+	                return function () {
+	                    _canvas.renderAll();
+	                    event.notify('canvas-loaded', 'CANVAS');
+	                };
+	            }
+
+	            this.canvas.setBackgroundImage(this.image, getBinder(this.canvas), {});
 
 	            if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
 	                this.scale = this.options.maxWidth / this.image.width;
@@ -530,10 +559,8 @@
 
 	            this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function (subscriptionId, sender, status) {
 	                if (status === 'active') {
-	                    console.log('canvas up', status);
-	                    this.canvas.defaultCursor = 'crosshair';
+	                    canvas.defaultCursor = 'crosshair';
 	                } else {
-	                    console.log('canvas down');
 	                    this.canvas.defaultCursor = 'default';
 	                }
 	            }, this);
@@ -15284,7 +15311,6 @@
 	        }
 	    }
 	    function textTool(topic, sender, payload) {
-	        console.log('TEXT', payload);
 	        if (payload !== 'toolbar-click') {
 	            abort();
 	            return;

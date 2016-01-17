@@ -89,8 +89,16 @@ export default class Canvas {
 
         this.image.setScaleX(this.scale);
         this.image.setScaleY(this.scale);
+        var event = this.eventAggregator;
 
-        this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
+        function getBinder(_canvas) {
+            return function(){
+                _canvas.renderAll();
+                event.notify('canvas-loaded', 'CANVAS');
+            };
+        }
+
+        this.canvas.setBackgroundImage(this.image, getBinder(this.canvas), {});
 
 
         if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
@@ -106,10 +114,8 @@ export default class Canvas {
         this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
             function(subscriptionId, sender, status) {
                 if (status === 'active') {
-                    console.log('canvas up', status);
-                    this.canvas.defaultCursor='crosshair';
+                    canvas.defaultCursor='crosshair';
                 } else {
-                    console.log('canvas down');
                     this.canvas.defaultCursor='default';
                 }
             }, this);
