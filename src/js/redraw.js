@@ -188,32 +188,12 @@ class Redraw {
     }
 
     /**
-     * Register event listener, e.g. var unregisterer = obj.on('canvas-loaded');
-     * @access public
-     * @param {string} event - name of event, e.g. 
-     * @param {function} callbackFn - invoked upon when event fired.
-     * @param {Object} [scope] - invoke callbackFn with this-variable set, if provided.
-     * @returns {function} unregister-function, invoke to unregister for topic.
-     */
-    on(topic, callbackFn, scope) {
-        var subscriberId = 'client';
-        var subscriptionTopic = topic;
-        var evt = this._canvas.eventAggregator;
-        evt.subscribeTo(subscriptionTopic, subscriberId, callbackFn, scope);
-        
-        return function() {
-            evt.unsubscribeTo(subscriptionTopic, subscriberId);
-        };
-    }
-
-    /**
      * Initializes all selected tools.
      * @param {EventAggregator} events - used for all mediated communications.
      * @param {Object} options - settings for all tools.
      */
     initializeTools(events, options) {
-        var localToolSettings = {}
-        ;
+        var localToolSettings = {};
         options.toolSettings = options.toolSettings || {};
         var toolsInUse = getToolsFromUserSettings(redrawNs.tools, options);
 

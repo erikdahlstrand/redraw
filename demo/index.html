@@ -98,12 +98,6 @@
                 
             }
         });
-    var unregister = redrawArea.on('canvas-loaded', function() {
-        alert('canvas-loaded');
-        console.log('canvas-loaded fired', arguments);
-        unregister();
-    });
-
     
 
 
@@ -151,6 +145,7 @@
             window.URL.revokeObjectURL(url);
         };
     }());
+    console.log('redrawNs', window);
     </script>
 </body>
 
