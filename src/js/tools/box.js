@@ -30,14 +30,14 @@ export default class BoxTool {
         }
 
         function detachBoxListener() {
-            if (rect) {
+            
                 canvas.off('mouse:down', mouseDown);
                 canvas.off('mouse:move', drawBox);
                 canvas.off('mouse:up', drawBoxDone);
                 
                 rect = undefined;
                 eventAggregator.unsubscribeTo('keydown', 'BoxTool');
-            }
+            
         }
         var currWidth, currHeight;
 

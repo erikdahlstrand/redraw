@@ -34,8 +34,7 @@ export default class ControlsDispatcher {
             return function() {
                 if (activeTool) {
                     eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
-                }
-                if (activeTool !== topic) {
+                } else if (activeTool !== topic) {
                     activeTool = topic;
                     eventAggregator.notify(topic, 'toolbar', 'toolbar-click');
                 } else {
