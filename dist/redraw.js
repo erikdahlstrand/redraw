@@ -758,8 +758,7 @@
 	        return function () {
 	            if (activeTool) {
 	                eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
-	            }
-	            if (activeTool !== topic) {
+	            } else if (activeTool !== topic) {
 	                activeTool = topic;
 	                eventAggregator.notify(topic, 'toolbar', 'toolbar-click');
 	            } else {
@@ -14677,14 +14676,13 @@
 	    }
 
 	    function detachBoxListener() {
-	        if (rect) {
-	            canvas.off('mouse:down', mouseDown);
-	            canvas.off('mouse:move', drawBox);
-	            canvas.off('mouse:up', drawBoxDone);
 
-	            rect = undefined;
-	            eventAggregator.unsubscribeTo('keydown', 'BoxTool');
-	        }
+	        canvas.off('mouse:down', mouseDown);
+	        canvas.off('mouse:move', drawBox);
+	        canvas.off('mouse:up', drawBoxDone);
+
+	        rect = undefined;
+	        eventAggregator.unsubscribeTo('keydown', 'BoxTool');
 	    }
 	    var currWidth, currHeight;
 
