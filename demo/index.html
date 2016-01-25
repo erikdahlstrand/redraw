@@ -98,7 +98,12 @@
                 
             }
         });
-    
+    function onLoaded( ) {
+        console.log('background image is loaded');
+        redrawArea.off('canvas-loaded', 'a');
+    }
+    redrawArea.on('canvas-loaded', onLoaded, 'a', this);
+
 
 
     function dumpImage1() {
@@ -145,7 +150,6 @@
             window.URL.revokeObjectURL(url);
         };
     }());
-    console.log('redrawNs', window);
     </script>
 </body>
 

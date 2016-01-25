@@ -179,15 +179,15 @@
 	    function Redraw(imgElement, options) {
 	        _classCallCheck(this, Redraw);
 
-	        var events = new _eventAggregatorJs2['default']();
+	        this.events = new _eventAggregatorJs2['default']();
 	        options = options || {};
-	        this._canvas = new _canvasWrapperJs2['default'](imgElement, events, options); // Needs defactor
+	        this._canvas = new _canvasWrapperJs2['default'](imgElement, this.events, options); // Needs defactor
 
 	        if (options.jsonContent) {
 	            this._canvas.canvas.loadFromJSON(options.jsonContent);
 	        }
 
-	        this.controls = this.initializeTools(events, options);
+	        this.controls = this.initializeTools(this.events, options);
 	    }
 
 	    /**
@@ -280,6 +280,16 @@
 	        key: 'getCanvas',
 	        value: function getCanvas() {
 	            return this._canvas.canvas;
+	        }
+	    }, {
+	        key: 'on',
+	        value: function on(topic, callbackFn, subscriberId, scope) {
+	            this.events.subscribeTo(topic, 'cx-' + subscriberId, callbackFn, scope);
+	        }
+	    }, {
+	        key: 'off',
+	        value: function off(topic, subscriberId) {
+	            this.events.unsubscribeTo(topic, 'cx-' + subscriberId);
 	        }
 
 	        /**
@@ -515,8 +525,15 @@
 
 	            this.image.setScaleX(this.scale);
 	            this.image.setScaleY(this.scale);
+	            var event = this.eventAggregator;
 
-	            this.canvas.setBackgroundImage(this.image, this.canvas.renderAll.bind(this.canvas), {});
+	            function getBinder(_canvas) {
+	                return function () {
+	                    _canvas.renderAll();
+	                    event.notify('canvas-loaded', 'CANVAS');
+	                };
+	            }
+	            this.canvas.setBackgroundImage(this.image, getBinder(this.canvas), {});
 
 	            if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
 	                this.scale = this.options.maxWidth / this.image.width;
@@ -530,10 +547,8 @@
 
 	            this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function (subscriptionId, sender, status) {
 	                if (status === 'active') {
-	                    console.log('canvas up', status);
 	                    this.canvas.defaultCursor = 'crosshair';
 	                } else {
-	                    console.log('canvas down');
 	                    this.canvas.defaultCursor = 'default';
 	                }
 	            }, this);

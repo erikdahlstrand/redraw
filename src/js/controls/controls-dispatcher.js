@@ -49,7 +49,7 @@ export default class ControlsDispatcher {
                 eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
                 activeTool = undefined;
             }
-        }
+        };
 
         var manageKeys = function(e) {
             if (e.keyCode === 46 || e.keyCode === 27) {

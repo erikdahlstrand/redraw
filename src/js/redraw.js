@@ -96,15 +96,15 @@ class Redraw {
      * @param {Object} options - Options.
      */
     constructor(imgElement, options) {
-        var events = new EventAggregator();
+        this.events = new EventAggregator();
         options = options || {};
-        this._canvas = new Canvas(imgElement, events, options); // Needs defactor
+        this._canvas = new Canvas(imgElement, this.events, options); // Needs defactor
 
         if (options.jsonContent) {
             this._canvas.canvas.loadFromJSON(options.jsonContent);
         }
 
-        this.controls = this.initializeTools(events, options);
+        this.controls = this.initializeTools(this.events, options);
     }
     /**
      * Get the png-representation of the canvas.
@@ -185,6 +185,14 @@ class Redraw {
      */
     getCanvas() {
         return this._canvas.canvas;
+    }
+
+    on(topic, callbackFn, subscriberId, scope) {
+        this.events.subscribeTo(topic, 'cx-' + subscriberId, callbackFn, scope);
+    }
+
+    off(topic, subscriberId) {
+        this.events.unsubscribeTo(topic, 'cx-' + subscriberId);
     }
 
     /**
