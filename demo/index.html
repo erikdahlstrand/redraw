@@ -13,7 +13,10 @@
 
     <div class="main ui container">
       <div class="ui horizontal divider">Semantic UI buttons, with toolbar first in dom</div>
-      <img src="chart.png" id="preceededImage" />
+      
+        <img src="chart.png" id="demoImage" />
+      
+      <div id="demoGizmo" style="display:block; background:grey; padding:15px; transition:.5s width">Bild</div>
 
         <div class="ui basic segment">
             
@@ -79,7 +82,7 @@
     <script src="../dist/redraw.js"></script>
     <script type="text/javascript">
 
-    var redrawArea = new redraw.Annotation(document.getElementById('preceededImage'),
+    var redrawArea = new redraw.Annotation(document.getElementById('demoImage'),
         {
             toolbarFirst: true,
             buttonActiveCss: 'active',
@@ -98,8 +101,14 @@
                 
             }
         });
-    function onLoaded( ) {
-        console.log('background image is loaded');
+    function onLoaded() {
+        var w = document.getElementsByTagName('canvas')[0].offsetWidth;
+
+        var indicator = document.getElementById('demoGizmo');
+        indicator.style.transition = "all .5s";
+        indicator.style.width = w + 'px';
+        indicator.innerHTML += ': ' + w + 'px';
+
         redrawArea.off('canvas-loaded', 'a');
     }
     redrawArea.on('canvas-loaded', onLoaded, 'a', this);
