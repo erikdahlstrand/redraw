@@ -24,13 +24,13 @@ export default class RemoveTool {
             if (c.getActiveObject()) {
                 c.remove(c.getActiveObject());
             }
+            eventAggregator.notify('TOOL_USAGE', CONST.TOOL.REMOVE, 'inactive');
         };
 
         eventAggregator.subscribeTo(CONST.TOOL.REMOVE, 'RemoveTool', remove);
 
         eventAggregator.subscribeTo('keydown', 'RemoveTool', function(topic, sender, keyCode) {
                 if (keyCode === 46) {
-                    console.log('Found key')
                     remove();
                 }
             });
