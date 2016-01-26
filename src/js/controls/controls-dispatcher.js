@@ -53,7 +53,6 @@ export default class ControlsDispatcher {
 
         var manageKeys = function(e) {
             if (e.keyCode === 46 || e.keyCode === 27) {
-
                 eventAggregator.notify('keydown', 'toolbar', e.keyCode);
             }
         };

@@ -35,7 +35,6 @@ export default class TextTool {
             }
         }
         function textTool(topic, sender, payload) {
-            console.log('TEXT', payload);
             if (payload!=='toolbar-click') {
                 abort();
                 return;
