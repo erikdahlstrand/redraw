@@ -17,8 +17,8 @@ export default class ResetTool {
 			if (payload !== 'toolbar-deactivate' &&
 				confirm('This will restore your image to its default state.\nAll your modifications will be deleted.\nDo you want to continue?')) {
 				clearAllElements();
-				eventAggregator.notify('TOOL_USAGE', CONST.TOOL.CLEAR, 'inactive');
 			}
+			eventAggregator.notify('TOOL_USAGE', CONST.TOOL.CLEAR, 'inactive');
 		}	
 
 		function clearAllElements() {
