@@ -48,22 +48,16 @@ export default class Canvas {
         this.canvasLeft = canvasElem.offsetLeft;
         this.canvas = new fabric.Canvas(canvasElem);
         this.imgElement = imgElement;
-        
+
+        /* wait until the image is surely loaded to make the setup */
         let theCanvas = this;
+        let delayedSetup = function () {
+            theCanvas.setupImage();
+        };
+        var tmp = new Image();
+        tmp.addEventListener('load', delayedSetup, false);
+        tmp.src = this.imgElement.src;
 
-        if (navigator.vendor.indexOf('Apple') >= 0) {
-            let delayedSetup = function () {
-                theCanvas.setupImage();
-            };
-            var tmp = new Image();
-            tmp.addEventListener('load', delayedSetup, false);
-            tmp.src = this.imgElement.src;
-
-        } else {
-            window.onload = function() {
-                theCanvas.setupImage();
-            };    
-        }
     }
 
     setupImage() {
