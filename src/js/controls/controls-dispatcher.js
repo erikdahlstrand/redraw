@@ -33,11 +33,16 @@ export default class ControlsDispatcher {
         function notifyActive(topic) {
             return function() {
                 if (activeTool) {
+                    console.log('deactivate');
                     eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
-                } else if (activeTool !== topic) {
+                }
+                if (activeTool !== topic) {
+                    console.log('click');
                     activeTool = topic;
                     eventAggregator.notify(topic, 'toolbar', 'toolbar-click');
                 } else {
+                    console.log('unknown');
+                    console.log('')
                     activeTool = undefined;
                 }
             };
