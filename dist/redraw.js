@@ -484,27 +484,23 @@
 	        this.canvas = new fabric.Canvas(canvasElem);
 	        this.imgElement = imgElement;
 
+	        /* wait until the image is surely loaded to make the setup */
 	        var theCanvas = this;
-
-	        if (navigator.vendor.indexOf('Apple') >= 0) {
-	            var delayedSetup = function delayedSetup() {
-	                theCanvas.setupImage();
-	            };
-	            var tmp = new Image();
-	            tmp.addEventListener('load', delayedSetup, false);
-	            tmp.src = this.imgElement.src;
-	        } else {
-	            window.onload = function () {
-	                theCanvas.setupImage();
-	            };
-	        }
+	        var delayedSetup = function delayedSetup() {
+	            console.log('construction');
+	            theCanvas.setupImage();
+	        };
+	        var tmp = new Image();
+	        tmp.addEventListener('load', delayedSetup, false);
+	        tmp.src = this.imgElement.src;
 	    }
 
 	    _createClass(Canvas, [{
 	        key: "setupImage",
 	        value: function setupImage() {
+	            console.log('setupImage alpha, this.imgElement', this.imgElement);
 	            this.image = new fabric.Image(this.imgElement);
-
+	            console.log('setupImage bravo, this.image', this.image);
 	            if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
 	                this.scale = this.options.maxWidth / this.image.width;
 	            }
@@ -517,6 +513,7 @@
 
 	            this.width = this.scale * this.imgElement.width;
 	            this.height = this.scale * this.imgElement.height;
+	            console.log('setupImage charlie', this);
 
 	            this.canvas.setDimensions({
 	                width: this.width,
@@ -526,11 +523,13 @@
 	            this.image.setScaleX(this.scale);
 	            this.image.setScaleY(this.scale);
 	            var event = this.eventAggregator;
-
+	            console.log('setupImage delta');
 	            function getBinder(_canvas) {
 	                return function () {
+	                    console.log('setupImage echo');
 	                    _canvas.renderAll();
 	                    event.notify('canvas-loaded', 'CANVAS');
+	                    console.log('setupImage foxtrot');
 	                };
 	            }
 	            this.canvas.setBackgroundImage(this.image, getBinder(this.canvas), {});
@@ -544,7 +543,7 @@
 	                    this.scale = scaleY;
 	                }
 	            }
-
+	            console.log('setupImage golf');
 	            this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function (subscriptionId, sender, status) {
 	                if (status === 'active') {
 	                    this.canvas.defaultCursor = 'crosshair';
@@ -772,11 +771,16 @@
 	    function notifyActive(topic) {
 	        return function () {
 	            if (activeTool) {
+	                console.log('deactivate');
 	                eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
-	            } else if (activeTool !== topic) {
+	            }
+	            if (activeTool !== topic) {
+	                console.log('click');
 	                activeTool = topic;
 	                eventAggregator.notify(topic, 'toolbar', 'toolbar-click');
 	            } else {
+	                console.log('unknown');
+	                console.log('');
 	                activeTool = undefined;
 	            }
 	        };
@@ -792,7 +796,6 @@
 
 	    var manageKeys = function manageKeys(e) {
 	        if (e.keyCode === 46 || e.keyCode === 27) {
-
 	            eventAggregator.notify('keydown', 'toolbar', e.keyCode);
 	        }
 	    };
@@ -10935,11 +10938,18 @@
 	        break;
 	      // slower
 	      default:
-	        args = Array.prototype.slice.call(arguments, 1);
+	        len = arguments.length;
+	        args = new Array(len - 1);
+	        for (i = 1; i < len; i++)
+	          args[i - 1] = arguments[i];
 	        handler.apply(this, args);
 	    }
 	  } else if (isObject(handler)) {
-	    args = Array.prototype.slice.call(arguments, 1);
+	    len = arguments.length;
+	    args = new Array(len - 1);
+	    for (i = 1; i < len; i++)
+	      args[i - 1] = arguments[i];
+
 	    listeners = handler.slice();
 	    len = listeners.length;
 	    for (i = 0; i < len; i++)
@@ -10977,6 +10987,7 @@
 
 	  // Check for listener leak
 	  if (isObject(this._events[type]) && !this._events[type].warned) {
+	    var m;
 	    if (!isUndefined(this._maxListeners)) {
 	      m = this._maxListeners;
 	    } else {
@@ -11098,7 +11109,7 @@
 
 	  if (isFunction(listeners)) {
 	    this.removeListener(type, listeners);
-	  } else if (listeners) {
+	  } else {
 	    // LIFO order
 	    while (listeners.length)
 	      this.removeListener(type, listeners[listeners.length - 1]);
@@ -11119,20 +11130,15 @@
 	  return ret;
 	};
 
-	EventEmitter.prototype.listenerCount = function(type) {
-	  if (this._events) {
-	    var evlistener = this._events[type];
-
-	    if (isFunction(evlistener))
-	      return 1;
-	    else if (evlistener)
-	      return evlistener.length;
-	  }
-	  return 0;
-	};
-
 	EventEmitter.listenerCount = function(emitter, type) {
-	  return emitter.listenerCount(type);
+	  var ret;
+	  if (!emitter._events || !emitter._events[type])
+	    ret = 0;
+	  else if (isFunction(emitter._events[type]))
+	    ret = 1;
+	  else
+	    ret = emitter._events[type].length;
+	  return ret;
 	};
 
 	function isFunction(arg) {
@@ -15019,6 +15025,7 @@
 			if (payload !== 'toolbar-deactivate' && confirm('This will restore your image to its default state.\nAll your modifications will be deleted.\nDo you want to continue?')) {
 				clearAllElements();
 			}
+			eventAggregator.notify('TOOL_USAGE', _canvasConstJs2['default'].TOOL.CLEAR, 'inactive');
 		}
 
 		function clearAllElements() {
@@ -15207,13 +15214,13 @@
 	        if (c.getActiveObject()) {
 	            c.remove(c.getActiveObject());
 	        }
+	        eventAggregator.notify('TOOL_USAGE', _canvasConstJs2['default'].TOOL.REMOVE, 'inactive');
 	    };
 
 	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.REMOVE, 'RemoveTool', remove);
 
 	    eventAggregator.subscribeTo('keydown', 'RemoveTool', function (topic, sender, keyCode) {
 	        if (keyCode === 46) {
-	            console.log('Found key');
 	            remove();
 	        }
 	    });
@@ -15297,7 +15304,6 @@
 	        }
 	    }
 	    function textTool(topic, sender, payload) {
-	        console.log('TEXT', payload);
 	        if (payload !== 'toolbar-click') {
 	            abort();
 	            return;
