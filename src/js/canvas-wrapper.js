@@ -52,17 +52,18 @@ export default class Canvas {
         /* wait until the image is surely loaded to make the setup */
         let theCanvas = this;
         let delayedSetup = function () {
+            console.log('construction');
             theCanvas.setupImage();
         };
         var tmp = new Image();
         tmp.addEventListener('load', delayedSetup, false);
         tmp.src = this.imgElement.src;
-
     }
 
     setupImage() {
+        console.log('setupImage alpha, this.imgElement', this.imgElement);
         this.image = new fabric.Image(this.imgElement);
-
+        console.log('setupImage bravo, this.image', this.image);
         if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
             this.scale = this.options.maxWidth / this.image.width;
         }
@@ -75,6 +76,7 @@ export default class Canvas {
 
         this.width = this.scale * this.imgElement.width;
         this.height = this.scale * this.imgElement.height;
+        console.log('setupImage charlie', this);
 
         this.canvas.setDimensions({
             width: this.width,
@@ -84,11 +86,13 @@ export default class Canvas {
         this.image.setScaleX(this.scale);
         this.image.setScaleY(this.scale);
         var event = this.eventAggregator;
-          
+        console.log('setupImage delta');
         function getBinder(_canvas) {
             return function(){
+                console.log('setupImage echo');
                 _canvas.renderAll();
                 event.notify('canvas-loaded', 'CANVAS');
+                console.log('setupImage foxtrot');
             };
         }
         this.canvas.setBackgroundImage(this.image, getBinder(this.canvas), {});
@@ -102,7 +106,7 @@ export default class Canvas {
                 this.scale = scaleY;
             }
         }
-
+        console.log('setupImage golf');
         this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
             function(subscriptionId, sender, status) {
                 if (status === 'active') {
