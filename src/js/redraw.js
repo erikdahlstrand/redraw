@@ -101,7 +101,7 @@ class Redraw {
         this._canvas = new Canvas(imgElement, this.events, options); // Needs defactor
 
         if (options.jsonContent) {
-            this._canvas.canvas.loadFromJSON(options.jsonContent);
+            this._canvas.loadFromJSON(options.jsonContent);
         }
 
         this.controls = this.initializeTools(this.events, options);
@@ -163,10 +163,7 @@ class Redraw {
      * @param {string} jsonRepresentation - to provide as current state of the canvas.
      */
     fromJson(jsonRepresentation) {
-        var c = this._canvas.canvas;
-        c.clear();
-
-        c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
+        this._canvas.loadFromJSON(jsonRepresentation);
     }
 
     /**
@@ -177,6 +174,11 @@ class Redraw {
     isEmpty() {
         return (this._canvas.getAllObjects().length === 0);
     }
+
+    isDirty() {
+        return this._canvas.canvasIsDirty;
+    }
+    
 
     /**
      * Returns the canvas representation, as is from Fabric.js

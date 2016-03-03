@@ -17,6 +17,16 @@ function scrollPosition(elem) {
     return [left, top];
 }
 
+function setupListener(fabricCanvas, canvasWrapper) {
+    function canvasIsDirty() {
+        canvasWrapper.canvasIsDirty = true;
+        canvasWrapper.canvas.off('object:added', canvasIsDirty);
+    }
+    canvasWrapper.canvas.off('object:added', canvasIsDirty);
+    canvasWrapper.canvasIsDirty = false;
+
+    fabricCanvas.on('object:added', canvasIsDirty);
+}
 /**
  * Canvas object that facilitates 
  */
@@ -57,7 +67,7 @@ export default class Canvas {
         var tmp = new Image();
         tmp.addEventListener('load', delayedSetup, false);
         tmp.src = this.imgElement.src;
-
+        setupListener(this.canvas, this);
     }
 
     setupImage() {
@@ -111,6 +121,12 @@ export default class Canvas {
                     this.canvas.defaultCursor='default';
                 }
             }, this);
+    }
+
+    loadFromJSON(jsonContent) {
+        this.canvas.clear();
+        this.canvas.loadFromJSON(jsonContent, this.canvas.renderAll.bind(this.canvas));
+        setupListener(this.canvas, this);
     }
 
     /**

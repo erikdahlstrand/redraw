@@ -62,6 +62,15 @@
                 </h4>
                 <pre>redrawArea.isEmpty();</pre>
                 <button class="ui button" onclick="checkEmptiness()">is canvas empty?</button>
+
+                <h4 class="ui horizontal divider header">
+                  <i class="slack icon"></i>
+                  Dirty?
+                </h4>
+                <pre>redrawArea.isDirty();</pre>
+                <button class="ui button" onclick="checkDirtyness()">is canvas dirty?</button>
+
+
                 <img id="imageDump" />
             </div>
         </div>
@@ -124,7 +133,12 @@
         console.log('image', redrawArea.isEmpty());
         alert(redrawArea.isEmpty() ? 'Yes, canvas is empty' : 'No');
     }
-    
+
+    function checkDirtyness() {
+        console.log('image', redrawArea.isDirty());
+        alert(redrawArea.isDirty() ? 'Yes, canvas is dirty' : 'No');
+    }
+
 
     function downloadImage() {
         asByteDownload(redrawArea.toDataBlob(), 'sample-chart.png');
