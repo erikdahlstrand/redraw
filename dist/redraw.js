@@ -184,7 +184,7 @@
 	        this._canvas = new _canvasWrapperJs2['default'](imgElement, this.events, options); // Needs defactor
 
 	        if (options.jsonContent) {
-	            this._canvas.canvas.loadFromJSON(options.jsonContent);
+	            this._canvas.loadFromJSON(options.jsonContent);
 	        }
 
 	        this.controls = this.initializeTools(this.events, options);
@@ -254,10 +254,7 @@
 	    }, {
 	        key: 'fromJson',
 	        value: function fromJson(jsonRepresentation) {
-	            var c = this._canvas.canvas;
-	            c.clear();
-
-	            c.loadFromJSON(jsonRepresentation, c.renderAll.bind(c));
+	            this._canvas.loadFromJSON(jsonRepresentation);
 	        }
 
 	        /**
@@ -269,6 +266,11 @@
 	        key: 'isEmpty',
 	        value: function isEmpty() {
 	            return this._canvas.getAllObjects().length === 0;
+	        }
+	    }, {
+	        key: 'isDirty',
+	        value: function isDirty() {
+	            return this._canvas.canvasIsDirty;
 	        }
 
 	        /**
@@ -415,17 +417,17 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 	var _canvasConstJs = __webpack_require__(4);
 
@@ -448,6 +450,16 @@
 	    return [left, top];
 	}
 
+	function setupListener(fabricCanvas, canvasWrapper) {
+	    function canvasIsDirty() {
+	        canvasWrapper.canvasIsDirty = true;
+	        canvasWrapper.canvas.off('object:added', canvasIsDirty);
+	    }
+	    canvasWrapper.canvas.off('object:added', canvasIsDirty);
+	    canvasWrapper.canvasIsDirty = false;
+
+	    fabricCanvas.on('object:added', canvasIsDirty);
+	}
 	/**
 	 * Canvas object that facilitates 
 	 */
@@ -469,7 +481,7 @@
 	        this.eventAggregator = eventAggregator;
 	        var parent = imgElement.parentNode;
 	        var canvasWrapper = document.createElement("div");
-	        canvasWrapper.className = _canvasConstJs2["default"].CSS.PARENT;
+	        canvasWrapper.className = _canvasConstJs2['default'].CSS.PARENT;
 	        this.scale = 1;
 	        parent.insertBefore(canvasWrapper, imgElement);
 	        parent.removeChild(imgElement);
@@ -484,27 +496,24 @@
 	        this.canvas = new fabric.Canvas(canvasElem);
 	        this.imgElement = imgElement;
 
+	        /* wait until the image is surely loaded to make the setup */
 	        var theCanvas = this;
-
-	        if (navigator.vendor.indexOf('Apple') >= 0) {
-	            var delayedSetup = function delayedSetup() {
-	                theCanvas.setupImage();
-	            };
-	            var tmp = new Image();
-	            tmp.addEventListener('load', delayedSetup, false);
-	            tmp.src = this.imgElement.src;
-	        } else {
-	            window.onload = function () {
-	                theCanvas.setupImage();
-	            };
-	        }
+	        var delayedSetup = function delayedSetup() {
+	            console.log('construction');
+	            theCanvas.setupImage();
+	        };
+	        var tmp = new Image();
+	        tmp.addEventListener('load', delayedSetup, false);
+	        tmp.src = this.imgElement.src;
+	        setupListener(this.canvas, this);
 	    }
 
 	    _createClass(Canvas, [{
-	        key: "setupImage",
+	        key: 'setupImage',
 	        value: function setupImage() {
+	            console.log('setupImage alpha, this.imgElement', this.imgElement);
 	            this.image = new fabric.Image(this.imgElement);
-
+	            console.log('setupImage bravo, this.image', this.image);
 	            if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
 	                this.scale = this.options.maxWidth / this.image.width;
 	            }
@@ -517,6 +526,7 @@
 
 	            this.width = this.scale * this.imgElement.width;
 	            this.height = this.scale * this.imgElement.height;
+	            console.log('setupImage charlie', this);
 
 	            this.canvas.setDimensions({
 	                width: this.width,
@@ -526,11 +536,13 @@
 	            this.image.setScaleX(this.scale);
 	            this.image.setScaleY(this.scale);
 	            var event = this.eventAggregator;
-
+	            console.log('setupImage delta');
 	            function getBinder(_canvas) {
 	                return function () {
+	                    console.log('setupImage echo');
 	                    _canvas.renderAll();
 	                    event.notify('canvas-loaded', 'CANVAS');
+	                    console.log('setupImage foxtrot');
 	                };
 	            }
 	            this.canvas.setBackgroundImage(this.image, getBinder(this.canvas), {});
@@ -544,7 +556,7 @@
 	                    this.scale = scaleY;
 	                }
 	            }
-
+	            console.log('setupImage golf');
 	            this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function (subscriptionId, sender, status) {
 	                if (status === 'active') {
 	                    this.canvas.defaultCursor = 'crosshair';
@@ -553,6 +565,13 @@
 	                }
 	            }, this);
 	        }
+	    }, {
+	        key: 'loadFromJSON',
+	        value: function loadFromJSON(jsonContent) {
+	            this.canvas.clear();
+	            this.canvas.loadFromJSON(jsonContent, this.canvas.renderAll.bind(this.canvas));
+	            setupListener(this.canvas, this);
+	        }
 
 	        /**
 	         * Gets the top position of the canvas dom element.
@@ -560,7 +579,7 @@
 	         * @returns {number} position in pixels?
 	         */
 	    }, {
-	        key: "getCanvasTop",
+	        key: 'getCanvasTop',
 	        value: function getCanvasTop() {
 	            return this.canvasContainer.offsetTop;
 	        }
@@ -571,7 +590,7 @@
 	         * @returns {Array} with canvas object, or undefined if empty.
 	         */
 	    }, {
-	        key: "getAllObjects",
+	        key: 'getAllObjects',
 	        value: function getAllObjects() {
 	            return this.canvas.getObjects();
 	        }
@@ -582,7 +601,7 @@
 	         * @param {boolean} isEnabled - true if selection is enabled, false otherwise.
 	         */
 	    }, {
-	        key: "enableSelection",
+	        key: 'enableSelection',
 	        value: function enableSelection(isEnabled) {
 	            this.canvas.selection = isEnabled; // Restore fabricjs selection-box
 	            this.canvas.forEachObject(function (o) {
@@ -594,8 +613,8 @@
 	    return Canvas;
 	})();
 
-	exports["default"] = Canvas;
-	module.exports = exports["default"];
+	exports['default'] = Canvas;
+	module.exports = exports['default'];
 
 /***/ },
 /* 4 */
@@ -772,11 +791,16 @@
 	    function notifyActive(topic) {
 	        return function () {
 	            if (activeTool) {
+	                console.log('deactivate');
 	                eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
-	            } else if (activeTool !== topic) {
+	            }
+	            if (activeTool !== topic) {
+	                console.log('click');
 	                activeTool = topic;
 	                eventAggregator.notify(topic, 'toolbar', 'toolbar-click');
 	            } else {
+	                console.log('unknown');
+	                console.log('');
 	                activeTool = undefined;
 	            }
 	        };
@@ -792,7 +816,6 @@
 
 	    var manageKeys = function manageKeys(e) {
 	        if (e.keyCode === 46 || e.keyCode === 27) {
-
 	            eventAggregator.notify('keydown', 'toolbar', e.keyCode);
 	        }
 	    };
@@ -15019,6 +15042,7 @@
 			if (payload !== 'toolbar-deactivate' && confirm('This will restore your image to its default state.\nAll your modifications will be deleted.\nDo you want to continue?')) {
 				clearAllElements();
 			}
+			eventAggregator.notify('TOOL_USAGE', _canvasConstJs2['default'].TOOL.CLEAR, 'inactive');
 		}
 
 		function clearAllElements() {
@@ -15207,13 +15231,13 @@
 	        if (c.getActiveObject()) {
 	            c.remove(c.getActiveObject());
 	        }
+	        eventAggregator.notify('TOOL_USAGE', _canvasConstJs2['default'].TOOL.REMOVE, 'inactive');
 	    };
 
 	    eventAggregator.subscribeTo(_canvasConstJs2['default'].TOOL.REMOVE, 'RemoveTool', remove);
 
 	    eventAggregator.subscribeTo('keydown', 'RemoveTool', function (topic, sender, keyCode) {
 	        if (keyCode === 46) {
-	            console.log('Found key');
 	            remove();
 	        }
 	    });
@@ -15297,15 +15321,14 @@
 	        }
 	    }
 	    function textTool(topic, sender, payload) {
-	        console.log('TEXT', payload);
 	        if (payload !== 'toolbar-click') {
 	            abort();
 	            return;
 	        }
 	        notify('active');
 	        editor = new fabric.IText('Click to leave a comment', {
-	            fontFamily: 'arial black',
-	            fontSize: 18,
+	            fontFamily: toolOptions.fontFamily,
+	            fontSize: toolOptions.fontSize,
 	            left: 100,
 	            top: -40,
 	            fill: toolOptions.color,
@@ -15339,12 +15362,16 @@
 	        }
 	        canvas.on('mouse:up', detachTextListener);
 	    }
-	};
+	}
+
+	/** Default options for tools initialization */
+	;
 
 	exports['default'] = TextTool;
-
 	var toolProps = {
 	    label: 'Text',
+	    fontFamily: 'arial',
+	    fontSize: 18,
 	    color: _canvasConstJs2['default'].DEFAULT_COLOR
 	};
 	new _browserApiJs2['default']().getFromWindow('redraw').registerTool(_canvasConstJs2['default'].TOOL.TEXT, TextTool, toolProps);

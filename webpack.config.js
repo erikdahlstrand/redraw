@@ -17,8 +17,10 @@ module.exports = {
         filename: './dist/redraw.js'
     },
     plugins: [
-        new webpack.dependencies.LabeledModulesPlugin()
+        new webpack.dependencies.LabeledModulesPlugin()/*,
+        new webpack.optimize.UglifyJsPlugin({minimize: true})*/
     ],
+
     resolve: {
         modulesDirectories: ['bower_components', 'node_modules']
     },
