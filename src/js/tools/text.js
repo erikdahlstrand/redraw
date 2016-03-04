@@ -41,8 +41,8 @@ export default class TextTool {
             }
             notify('active');
             editor = new fabric.IText('Click to leave a comment', {
-                fontFamily: 'arial black',
-                fontSize: 18,
+                fontFamily: toolOptions.fontFamily,
+                fontSize: toolOptions.fontSize,
                 left: 100,
                 top: -40,
                 fill: toolOptions.color,
@@ -78,8 +78,12 @@ export default class TextTool {
         }
     }
 }
+
+/** Default options for tools initialization */
 var toolProps = {
     label: 'Text',
+    fontFamily: 'arial',
+    fontSize: 18,
     color:CONST.DEFAULT_COLOR,
 };
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.TEXT, TextTool, toolProps);
