@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 
+
 module.exports = {
     entry: [
         './src/js/redraw.js',
@@ -20,9 +21,12 @@ module.exports = {
         new webpack.dependencies.LabeledModulesPlugin()/*,
         new webpack.optimize.UglifyJsPlugin({minimize: true})*/
     ],
-
     resolve: {
         modulesDirectories: ['bower_components', 'node_modules']
+    },
+    externals: {
+        // Use external version of React
+        "fabric": "fabric"
     },
     module: {
         loaders: [
@@ -33,7 +37,7 @@ module.exports = {
             { 
                 test: /\.js$/,
                 loader: 'babel-loader',
-                exclude: /node_modules/
+                exclude: /node_modules|bower_components/
             },
             { test: /\.json$/, loader: "json" }
         ]
