@@ -20,12 +20,15 @@ function scrollPosition(elem) {
 function setupListener(fabricCanvas, canvasWrapper) {
     function canvasIsDirty() {
         canvasWrapper.canvasIsDirty = true;
-        canvasWrapper.canvas.off('mouse:down', canvasIsDirty);
+        fabricCanvas.off('object:added', canvasIsDirty);
+        fabricCanvas.off('object:selected', canvasIsDirty);
     }
-    canvasWrapper.canvas.off('mouse:down', canvasIsDirty);
+    fabricCanvas.off('object:added', canvasIsDirty);
+    fabricCanvas.off('object:selected', canvasIsDirty);
     canvasWrapper.canvasIsDirty = false;
 
-    fabricCanvas.on('mouse:down', canvasIsDirty);
+    fabricCanvas.on('object:added', canvasIsDirty);
+    fabricCanvas.on('object:selected', canvasIsDirty);
 }
 /**
  * Canvas object that facilitates 
