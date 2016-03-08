@@ -453,12 +453,12 @@
 	function setupListener(fabricCanvas, canvasWrapper) {
 	    function canvasIsDirty() {
 	        canvasWrapper.canvasIsDirty = true;
-	        canvasWrapper.canvas.off('object:added', canvasIsDirty);
+	        canvasWrapper.canvas.off('mouse:down', canvasIsDirty);
 	    }
-	    canvasWrapper.canvas.off('object:added', canvasIsDirty);
+	    canvasWrapper.canvas.off('mouse:down', canvasIsDirty);
 	    canvasWrapper.canvasIsDirty = false;
 
-	    fabricCanvas.on('object:added', canvasIsDirty);
+	    fabricCanvas.on('mouse:down', canvasIsDirty);
 	}
 	/**
 	 * Canvas object that facilitates 
@@ -499,7 +499,6 @@
 	        /* wait until the image is surely loaded to make the setup */
 	        var theCanvas = this;
 	        var delayedSetup = function delayedSetup() {
-	            console.log('construction');
 	            theCanvas.setupImage();
 	        };
 	        var tmp = new Image();
@@ -511,9 +510,7 @@
 	    _createClass(Canvas, [{
 	        key: 'setupImage',
 	        value: function setupImage() {
-	            console.log('setupImage alpha, this.imgElement', this.imgElement);
 	            this.image = new fabric.Image(this.imgElement);
-	            console.log('setupImage bravo, this.image', this.image);
 	            if (this.options.maxWidth && this.options.maxWidth < this.image.width) {
 	                this.scale = this.options.maxWidth / this.image.width;
 	            }
@@ -526,7 +523,6 @@
 
 	            this.width = this.scale * this.imgElement.width;
 	            this.height = this.scale * this.imgElement.height;
-	            console.log('setupImage charlie', this);
 
 	            this.canvas.setDimensions({
 	                width: this.width,
@@ -536,13 +532,10 @@
 	            this.image.setScaleX(this.scale);
 	            this.image.setScaleY(this.scale);
 	            var event = this.eventAggregator;
-	            console.log('setupImage delta');
 	            function getBinder(_canvas) {
 	                return function () {
-	                    console.log('setupImage echo');
 	                    _canvas.renderAll();
 	                    event.notify('canvas-loaded', 'CANVAS');
-	                    console.log('setupImage foxtrot');
 	                };
 	            }
 	            this.canvas.setBackgroundImage(this.image, getBinder(this.canvas), {});
@@ -556,7 +549,7 @@
 	                    this.scale = scaleY;
 	                }
 	            }
-	            console.log('setupImage golf');
+
 	            this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar', function (subscriptionId, sender, status) {
 	                if (status === 'active') {
 	                    this.canvas.defaultCursor = 'crosshair';
@@ -791,16 +784,12 @@
 	    function notifyActive(topic) {
 	        return function () {
 	            if (activeTool) {
-	                console.log('deactivate');
 	                eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
 	            }
 	            if (activeTool !== topic) {
-	                console.log('click');
 	                activeTool = topic;
 	                eventAggregator.notify(topic, 'toolbar', 'toolbar-click');
 	            } else {
-	                console.log('unknown');
-	                console.log('');
 	                activeTool = undefined;
 	            }
 	        };
