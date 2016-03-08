@@ -2,7 +2,7 @@ import CONST from '../canvas-const.js';
 import Browser from '../browser-api.js';
 
 /** fabric.js */
-var f = require('fabric').fabric;
+var f = fabric;
 /** length of arrow head */
 var indicationLength = 20;
 /** line used during drag n drop */
