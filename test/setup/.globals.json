@@ -1,0 +1,13 @@
+{
+  "globals": {
+    "expect": true,
+    "mock": true,
+    "sandbox": true,
+    "spy": true,
+    "stub": true,
+    "window": true,
+    "useFakeServer": true,
+    "useFakeTimers": true,
+    "useFakeXMLHttpRequest": true
+  }
+}
