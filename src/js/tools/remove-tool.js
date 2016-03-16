@@ -43,12 +43,3 @@ export default class RemoveTool {
         });
     }
 }
-
-var toolProps = {
-    label: 'Delete'
-};
-
-/**
- * Register tool at the global redraw.registerTool.
- */
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.REMOVE, RemoveTool, toolProps);

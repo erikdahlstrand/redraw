@@ -1,8 +1,6 @@
 import CONST from '../canvas-const.js';
 import Browser from '../browser-api.js';
 
-/** fabric.js */
-var f = fabric;
 /** length of arrow head */
 var indicationLength = 20;
 /** line used during drag n drop */
@@ -11,14 +9,14 @@ var line;
 /**
  * A tool to paint arrows.
  */
-class ArrowTool {
+export default class ArrowTool {
     /**
      * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
      * @constructor
      * @param {Canvas} canvasWrapper - Canvas.
      * @param {EventAggregator} eventAggregator - Event mediator.
      */
-    constructor(canvasWrapper, eventAggregator, toolOptions) {
+    constructor(canvasWrapper, eventAggregator, toolOptions, fabric) {
         /** eventAggregator for madiated cummunications */
         this.eventAggregator = eventAggregator;
         /** main api to use for canvas manipulation */
@@ -81,7 +79,7 @@ class ArrowTool {
         if (this.arrow) {
             this.canvas.remove(this.arrow);
         }
-        this.arrow = new f.Triangle({
+        this.arrow = new fabric.Triangle({
             angle: angle,
             fill: this.options.activeColor,
             top: y2,
@@ -103,11 +101,11 @@ class ArrowTool {
     abort() {
         if (this.arrow) {
             this.canvas.remove(this.arrow);
-            this.arrow = undefined;    
+            this.arrow = undefined;
         }
         if (line) {
             this.canvas.remove(line);
-            line = undefined;    
+            line = undefined;
         }
         this.eventAggregator.unsubscribeTo('keydown', 'ArrowTool');
         this.done();
@@ -154,7 +152,7 @@ class ArrowTool {
             if (this.arrow) {
                 this.arrow.fill = this.options.color;
             }
-            var group = new f.Group([line, this.arrow], {
+            var group = new fabric.Group([line, this.arrow], {
                 hasControls: false,
                 hasBorders: true,
                 selectable: false,
@@ -164,7 +162,7 @@ class ArrowTool {
 
             this.canvas.add(group);
         }
-        
+
         this.canvas.remove(line);
         this.canvas.remove(this.arrow);
         this.arrow = line = this.start = this.end = undefined;
@@ -182,9 +180,9 @@ class ArrowTool {
             top: pointer.y,
             left: pointer.x
         };
-        
 
-        line = new f.Line([this.start.left, this.start.top, this.start.left, this.start.top], {
+
+        line = new fabric.Line([this.start.left, this.start.top, this.start.left, this.start.top], {
             strokeWidth: 5,
             stroke: this.options.activeColor,
             originX: 'center',
@@ -238,11 +236,3 @@ class ArrowTool {
         this.canvas.off('mouse:up', this.upFn);
     }
 }
-/** Default options for tools initialization */
-var toolProps = {
-    label: 'Arrow',
-    color:CONST.DEFAULT_COLOR,
-    activeColor:'#55f'
-};
-
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.ARROW, ArrowTool, toolProps);

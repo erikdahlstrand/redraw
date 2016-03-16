@@ -31,7 +31,7 @@ function setupListener(fabricCanvas, canvasWrapper) {
     fabricCanvas.on('object:selected', canvasIsDirty);
 }
 /**
- * Canvas object that facilitates 
+ * Canvas object that facilitates
  */
 export default class Canvas {
      /**
@@ -46,13 +46,13 @@ export default class Canvas {
         this.options = options;
         this.eventAggregator = eventAggregator;
         var parent = imgElement.parentNode;
-        var canvasWrapper = document.createElement("div");
+        var canvasWrapper = document.createElement('div');
         canvasWrapper.className = CONST.CSS.PARENT;
         this.scale = 1;
         parent.insertBefore(canvasWrapper, imgElement);
         parent.removeChild(imgElement);
 
-        var canvasElem = document.createElement("canvas");
+        var canvasElem = document.createElement('canvas');
         canvasWrapper.appendChild(canvasElem);
 
         this.canvasElem = canvasElem;

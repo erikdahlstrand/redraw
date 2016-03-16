@@ -36,14 +36,14 @@ export default class PixelateTool {
             rect = undefined;
             eventAggregator.unsubscribeTo('keydown', 'PixelateTool');
         }
-        
+
 
         function drawBox(options) {
-            if (rect) {                
+            if (rect) {
                 let pointer = canvas.getPointer(options.e);
 
                 let currWidth = pointer.x - startLeft;
-                let currHeight = pointer.y - startTop;                
+                let currHeight = pointer.y - startTop;
 
                 rect.set({
                     'width': currWidth,
@@ -104,7 +104,7 @@ export default class PixelateTool {
             rect = undefined;
         }
 
-        
+
 
         function mouseDown(options) {
             let pointer = canvas.getPointer(options.e);
@@ -146,17 +146,8 @@ export default class PixelateTool {
             }, callbackCtx);
             canvasWrapper.enableSelection(false);
             notify('active');
-            
+
             canvas.on('mouse:down', mouseDown);
         }
     }
 }
-/**
- * Default options.
- */
-var defaultToolProps = {
-    label: 'Pixelate',
-    color:CONST.DEFAULT_COLOR
-};
-
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.PIXELATE, PixelateTool, defaultToolProps);

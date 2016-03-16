@@ -19,7 +19,7 @@ export default class Browser {
      * @param {Object} obj - value to set.
      */
     appendToWindow(attributeName, obj) {
-        
+
         if (isBrowser) {
             window[attributeName] = obj;
             return true;
@@ -33,9 +33,11 @@ export default class Browser {
      * @returns {Object} obj - retrieved value, or mock if not browser.
      */
     getFromWindow(attributeName) {
-        if (isBrowser) {
+        if (window) {
             return window[attributeName];
         }
-        return {tools: []};
+      return {
+        getFromWindow:function() { },
+          tools: []};
     }
 }

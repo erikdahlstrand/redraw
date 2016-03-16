@@ -30,23 +30,22 @@ export default class BoxTool {
         }
 
         function detachBoxListener() {
-            
-                canvas.off('mouse:down', mouseDown);
-                canvas.off('mouse:move', drawBox);
-                canvas.off('mouse:up', drawBoxDone);
-                
-                rect = undefined;
-                eventAggregator.unsubscribeTo('keydown', 'BoxTool');
-            
+            canvas.off('mouse:down', mouseDown);
+            canvas.off('mouse:move', drawBox);
+            canvas.off('mouse:up', drawBoxDone);
+
+            rect = undefined;
+            eventAggregator.unsubscribeTo('keydown', 'BoxTool');
         }
+
         var currWidth, currHeight;
 
         function drawBox(options) {
-            if (rect) {                
+            if (rect) {
                 let pointer = canvas.getPointer(options.e);
 
                 currWidth = pointer.x - startLeft;
-                currHeight = pointer.y - startTop;                
+                currHeight = pointer.y - startTop;
 
                 rect.set({
                     'width': currWidth
@@ -114,17 +113,8 @@ export default class BoxTool {
             }, callbackCtx);
             canvasWrapper.enableSelection(false);
             notify('active');
-            
+
             canvas.on('mouse:down', mouseDown);
         }
     }
 }
-/**
- * Default options.
- */
-var defaultToolProps = {
-    label: 'Box',
-    color:CONST.DEFAULT_COLOR
-};
-
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.BOX, BoxTool, defaultToolProps);
