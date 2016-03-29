@@ -25,7 +25,6 @@ module.exports = {
         modulesDirectories: ['bower_components', 'node_modules']
     },
     externals: {
-        // Use external version of React
         "fabric": "fabric"
     },
     module: {
@@ -34,7 +33,7 @@ module.exports = {
                 test: /\.css$/,
                 loader: "style!css"
             },
-            { 
+            {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules|bower_components/

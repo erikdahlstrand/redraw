@@ -11,6 +11,9 @@ import source  from 'vinyl-source-stream';
 import mochaGlobals from './test/setup/.globals';
 import manifest  from './package.json';
 
+var WebpackDevServer = require('webpack-dev-server');
+var webpackConfig = require('./webpack.config.js');
+
 // Load all of our Gulp plugins
 const $ = loadPlugins();
 
@@ -178,6 +181,26 @@ function testBrowser() {
     .pipe(gulp.dest('./tmp'));
 }
 
+function webpackDevServer(callback) {
+  // modify some webpack config options
+  var myConfig = Object.create(webpackConfig);
+  myConfig.devtool = "eval";
+  myConfig.debug = true;
+
+  // Start a webpack-dev-server
+  new WebpackDevServer(webpack(myConfig), {
+    publicPath: "/" + myConfig.output.publicPath,
+    stats: {
+      colors: true
+    }
+  }).listen(8080, "localhost", function(err) {
+    if(err) {
+      console.log('ERROR', err);
+    }
+    console.log("[webpack-dev-server]", "http://localhost:8080/webpack-dev-server/index.html");
+  });
+}
+
 // Remove the built files
 gulp.task('clean', cleanDist);
 
@@ -198,6 +221,8 @@ gulp.task('lint', ['lint-src', 'lint-test', 'lint-gulpfile']);
 
 // Build two versions of the library
 gulp.task('build', ['clean'], build);
+
+gulp.task('dev', webpackDevServer);
 
 // Lint and run our tests
 gulp.task('test', [], test);
