@@ -1,8 +1,8 @@
 {
-  "name": "chart-test",
+  "name": "redraw",
   "version": "0.0.1",
   "description": "hi there",
-  "main": "dist/chart-test.js",
+  "main": "dist/redraw.js",
   "scripts": {
     "test": "gulp",
     "lint": "gulp lint",
@@ -59,7 +59,7 @@
     "jsdom": "8.1.0"
   },
   "babelBoilerplateOptions": {
-    "entryFileName": "chart-test",
+    "entryFileName": "redraw",
     "mainVarName": "rechart"
   }
 }

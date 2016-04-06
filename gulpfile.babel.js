@@ -22,7 +22,7 @@ const config = manifest.babelBoilerplateOptions;
 const mainFile = manifest.main;
 const destinationFolder = path.dirname(mainFile);
 const exportFileName = path.basename(mainFile, path.extname(mainFile));
-
+console.log('********', mainFile);
 function cleanDist(done) {
   del([destinationFolder]).then(() => done());
 }
@@ -188,8 +188,10 @@ function webpackDevServer(callback) {
   myConfig.debug = true;
 
   // Start a webpack-dev-server
+  console.log('********** publicPath', myConfig.output.publicPath);
   new WebpackDevServer(webpack(myConfig), {
-    publicPath: "/" + myConfig.output.publicPath,
+    publicPath: "/",
+    filename: "/dist/redraw.js",
     stats: {
       colors: true
     }
