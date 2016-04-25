@@ -923,7 +923,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	/** length of arrow head */
-	var indicationLength = 20;
+	var indicationLength = 8;
 	/** line used during drag n drop */
 	var line;
 	
@@ -1008,8 +1008,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                fill: this.options.activeColor,
 	                top: y2,
 	                left: x2,
-	                height: indicationLength,
-	                width: indicationLength,
+	                height: this.options.size,
+	                width: this.options.size,
 	                originX: 'center',
 	                originY: 'center',
 	                selectable: false
@@ -1118,7 +1118,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            };
 	
 	            line = new fabric.Line([this.start.left, this.start.top, this.start.left, this.start.top], {
-	                strokeWidth: 5,
+	                strokeWidth: this.options.lineWidth,
 	                stroke: this.options.activeColor,
 	                originX: 'center',
 	                originY: 'center',
@@ -1843,7 +1843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 	
 	var _canvasConst = __webpack_require__(4);
 	
@@ -1859,16 +1859,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	/** Default options for tools initialization */
-	var toolProps = {
+	/** Default options for arrow tools initialization */
+	var defaultToolProps = {
 	    label: 'Arrow',
 	    color: _canvasConst2.default.DEFAULT_COLOR,
-	    activeColor: '#55f'
+	    activeColor: '#55f',
+	    size: 15,
+	    lineWidth: 4
 	};
-	if (!global && window && window.redraw) {
-	    window.redraw.registerTool(_canvasConst2.default.TOOL.ARROW, _arrow2.default, toolProps);
-	}
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.ARROW, _arrow2.default, defaultToolProps);
 
 /***/ },
 /* 15 */
