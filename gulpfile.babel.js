@@ -22,7 +22,7 @@ const config = manifest.babelBoilerplateOptions;
 const mainFile = manifest.main;
 const destinationFolder = path.dirname(mainFile);
 const exportFileName = path.basename(mainFile, path.extname(mainFile));
-console.log('********', mainFile);
+
 function cleanDist(done) {
   del([destinationFolder]).then(() => done());
 }
@@ -70,7 +70,14 @@ function build() {
       './src/js/tools/clear-tool.js',
       './src/js/tools/horizontal-line-tool.js',
       './src/js/tools/remove-tool.js',
-      './src/js/tools/text.js'
+      './src/js/tools/text.js',
+      './src/js/tools/setup/arrow-setup.js',
+      './src/js/tools/setup/box-setup.js',
+      './src/js/tools/setup/pixelate-setup.js',
+      './src/js/tools/setup/clear-setup.js',
+      './src/js/tools/setup/horizontal-line-setup.js',
+      './src/js/tools/setup/remove-setup.js',
+      './src/js/tools/setup/text-setup.js'
     ]
   };
 

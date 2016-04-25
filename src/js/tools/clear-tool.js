@@ -19,7 +19,7 @@ export default class ResetTool {
 				clearAllElements();
 			}
 			eventAggregator.notify('TOOL_USAGE', CONST.TOOL.CLEAR, 'inactive');
-		}	
+		}
 
 		function clearAllElements() {
 			var c = canvasWrapper.canvas;
@@ -30,8 +30,3 @@ export default class ResetTool {
 		}
     }
 }
-var toolProps = {
-    label: 'Clear'
-};
-
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.CLEAR, ResetTool, toolProps);

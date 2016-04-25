@@ -8,7 +8,6 @@ describe('rechart', () => {
     beforeEach(() => {
       var fabric = {};
       // var triangleSpy = spy(fabric, 'Triangle')
-
       eventAggregatorInvocationCount = 0;
       var eventAggregator = {
         subscribeTo: function () {

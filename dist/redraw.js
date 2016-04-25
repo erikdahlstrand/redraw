@@ -61,7 +61,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	__webpack_require__(10);
 	__webpack_require__(11);
 	__webpack_require__(12);
-	module.exports = __webpack_require__(13);
+	__webpack_require__(13);
+	__webpack_require__(14);
+	__webpack_require__(15);
+	__webpack_require__(16);
+	__webpack_require__(17);
+	__webpack_require__(18);
+	__webpack_require__(19);
+	module.exports = __webpack_require__(20);
 
 
 /***/ },
@@ -484,7 +491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    fabricCanvas.on('object:selected', canvasIsDirty);
 	}
 	/**
-	 * Canvas object that facilitates 
+	 * Canvas object that facilitates
 	 */
 	
 	var Canvas = function () {
@@ -503,13 +510,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.options = options;
 	        this.eventAggregator = eventAggregator;
 	        var parent = imgElement.parentNode;
-	        var canvasWrapper = document.createElement("div");
+	        var canvasWrapper = document.createElement('div');
 	        canvasWrapper.className = _canvasConst2.default.CSS.PARENT;
 	        this.scale = 1;
 	        parent.insertBefore(canvasWrapper, imgElement);
 	        parent.removeChild(imgElement);
 	
-	        var canvasElem = document.createElement("canvas");
+	        var canvasElem = document.createElement('canvas');
 	        canvasWrapper.appendChild(canvasElem);
 	
 	        this.canvasElem = canvasElem;
@@ -935,7 +942,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function ArrowTool(canvasWrapper, eventAggregator, toolOptions, fabric) {
 	        _classCallCheck(this, ArrowTool);
 	
-	        console.log('##### alpha *******************');
 	        /** eventAggregator for madiated cummunications */
 	        this.eventAggregator = eventAggregator;
 	        /** main api to use for canvas manipulation */
@@ -946,7 +952,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.options = toolOptions;
 	
 	        var callee = this;
-	        console.log('##### bravo');
 	
 	        this.eventAggregator.subscribeTo(_canvasConst2.default.TOOL.ARROW, 'ArrowTool', function () {
 	            callee.initListeners.apply(callee, arguments);
@@ -972,7 +977,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.removeCanvasListeners();
 	            this.notify('inactive');
 	        };
-	        console.log('##### charlie');
 	    }
 	
 	    /**
@@ -1175,16 +1179,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    return ArrowTool;
 	}();
-	/** Default options for tools initialization */
-	
-	
+
 	exports.default = ArrowTool;
-	var toolProps = {
-	    label: 'Arrow',
-	    color: _canvasConst2.default.DEFAULT_COLOR,
-	    activeColor: '#55f'
-	};
-	_browserApi2.default.getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.ARROW, ArrowTool, toolProps);
 
 /***/ },
 /* 8 */
@@ -1239,7 +1235,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    function detachBoxListener() {
-	
 	        canvas.off('mouse:down', mouseDown);
 	        canvas.off('mouse:move', drawBox);
 	        canvas.off('mouse:up', drawBoxDone);
@@ -1247,6 +1242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        rect = undefined;
 	        eventAggregator.unsubscribeTo('keydown', 'BoxTool');
 	    }
+	
 	    var currWidth, currHeight;
 	
 	    function drawBox(options) {
@@ -1326,18 +1322,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        canvas.on('mouse:down', mouseDown);
 	    }
 	};
-	/**
-	 * Default options.
-	 */
-	
 	
 	exports.default = BoxTool;
-	var defaultToolProps = {
-	    label: 'Box',
-	    color: _canvasConst2.default.DEFAULT_COLOR
-	};
-	
-	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.BOX, BoxTool, defaultToolProps);
 
 /***/ },
 /* 9 */
@@ -1511,18 +1497,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        canvas.on('mouse:down', mouseDown);
 	    }
 	};
-	/**
-	 * Default options.
-	 */
-	
 	
 	exports.default = PixelateTool;
-	var defaultToolProps = {
-	    label: 'Pixelate',
-	    color: _canvasConst2.default.DEFAULT_COLOR
-	};
-	
-	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.PIXELATE, PixelateTool, defaultToolProps);
 
 /***/ },
 /* 10 */
@@ -1578,12 +1554,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	exports.default = ResetTool;
-	
-	var toolProps = {
-		label: 'Clear'
-	};
-	
-	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.CLEAR, ResetTool, toolProps);
 
 /***/ },
 /* 11 */
@@ -1695,14 +1665,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	exports.default = HorizontalLineTool;
-	
-	var toolProps = {
-	    label: 'Limit line',
-	    color: _canvasConst2.default.DEFAULT_COLOR,
-	    activeColor: '#55f'
-	};
-	
-	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.HLINE, HorizontalLineTool, toolProps);
 
 /***/ },
 /* 12 */
@@ -1772,16 +1734,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	
 	exports.default = RemoveTool;
-	
-	
-	var toolProps = {
-	    label: 'Delete'
-	};
-	
-	/**
-	 * Register tool at the global redraw.registerTool.
-	 */
-	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.REMOVE, RemoveTool, toolProps);
 
 /***/ },
 /* 13 */
@@ -1885,20 +1837,212 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	};
 	
-	/** Default options for tools initialization */
-	
-	
 	exports.default = TextTool;
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	
+	var _canvasConst = __webpack_require__(4);
+	
+	var _canvasConst2 = _interopRequireDefault(_canvasConst);
+	
+	var _browserApi = __webpack_require__(2);
+	
+	var _browserApi2 = _interopRequireDefault(_browserApi);
+	
+	var _arrow = __webpack_require__(7);
+	
+	var _arrow2 = _interopRequireDefault(_arrow);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/** Default options for tools initialization */
+	var toolProps = {
+	    label: 'Arrow',
+	    color: _canvasConst2.default.DEFAULT_COLOR,
+	    activeColor: '#55f'
+	};
+	if (!global && window && window.redraw) {
+	    window.redraw.registerTool(_canvasConst2.default.TOOL.ARROW, _arrow2.default, toolProps);
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _canvasConst = __webpack_require__(4);
+	
+	var _canvasConst2 = _interopRequireDefault(_canvasConst);
+	
+	var _browserApi = __webpack_require__(2);
+	
+	var _browserApi2 = _interopRequireDefault(_browserApi);
+	
+	var _box = __webpack_require__(8);
+	
+	var _box2 = _interopRequireDefault(_box);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * Default options.
+	 */
+	var defaultToolProps = {
+	  label: 'Box',
+	  color: _canvasConst2.default.DEFAULT_COLOR
+	};
+	
+	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.BOX, _box2.default, defaultToolProps);
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _canvasConst = __webpack_require__(4);
+	
+	var _canvasConst2 = _interopRequireDefault(_canvasConst);
+	
+	var _browserApi = __webpack_require__(2);
+	
+	var _browserApi2 = _interopRequireDefault(_browserApi);
+	
+	var _pixelate = __webpack_require__(9);
+	
+	var _pixelate2 = _interopRequireDefault(_pixelate);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * Default pixelate options.
+	 */
+	var defaultToolProps = {
+	  label: 'Pixelate',
+	  color: _canvasConst2.default.DEFAULT_COLOR
+	};
+	
+	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.PIXELATE, _pixelate2.default, defaultToolProps);
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _canvasConst = __webpack_require__(4);
+	
+	var _canvasConst2 = _interopRequireDefault(_canvasConst);
+	
+	var _browserApi = __webpack_require__(2);
+	
+	var _browserApi2 = _interopRequireDefault(_browserApi);
+	
+	var _clearTool = __webpack_require__(10);
+	
+	var _clearTool2 = _interopRequireDefault(_clearTool);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var toolProps = {
+	    label: 'Clear'
+	};
+	
+	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.CLEAR, _clearTool2.default, toolProps);
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _canvasConst = __webpack_require__(4);
+	
+	var _canvasConst2 = _interopRequireDefault(_canvasConst);
+	
+	var _browserApi = __webpack_require__(2);
+	
+	var _browserApi2 = _interopRequireDefault(_browserApi);
+	
+	var _horizontalLineTool = __webpack_require__(11);
+	
+	var _horizontalLineTool2 = _interopRequireDefault(_horizontalLineTool);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var toolProps = {
+	    label: 'Limit line',
+	    color: _canvasConst2.default.DEFAULT_COLOR,
+	    activeColor: '#55f'
+	};
+	
+	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.HLINE, _horizontalLineTool2.default, toolProps);
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _canvasConst = __webpack_require__(4);
+	
+	var _canvasConst2 = _interopRequireDefault(_canvasConst);
+	
+	var _browserApi = __webpack_require__(2);
+	
+	var _browserApi2 = _interopRequireDefault(_browserApi);
+	
+	var _removeTool = __webpack_require__(12);
+	
+	var _removeTool2 = _interopRequireDefault(_removeTool);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var toolProps = {
+	    label: 'Delete'
+	};
+	
+	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.REMOVE, _removeTool2.default, toolProps);
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _canvasConst = __webpack_require__(4);
+	
+	var _canvasConst2 = _interopRequireDefault(_canvasConst);
+	
+	var _browserApi = __webpack_require__(2);
+	
+	var _browserApi2 = _interopRequireDefault(_browserApi);
+	
+	var _text = __webpack_require__(13);
+	
+	var _text2 = _interopRequireDefault(_text);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * Default options for text tools initialization.
+	 */
 	var toolProps = {
 	    label: 'Text',
 	    fontFamily: 'arial',
 	    fontSize: 18,
 	    color: _canvasConst2.default.DEFAULT_COLOR
 	};
-	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.TEXT, TextTool, toolProps);
+	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.TEXT, _text2.default, toolProps);
 
 /***/ }
 /******/ ])
 });
 ;
-//# sourceMappingURL=chart-test.js.map
+//# sourceMappingURL=redraw.js.map

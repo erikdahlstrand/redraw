@@ -236,12 +236,3 @@ export default class ArrowTool {
         this.canvas.off('mouse:up', this.upFn);
     }
 }
-/** Default options for tools initialization */
-var toolProps = {
-    label: 'Arrow',
-    color:CONST.DEFAULT_COLOR,
-    activeColor:'#55f'
-};
-if (!global && window && window.redraw) {
-    window.redraw.registerTool(CONST.TOOL.ARROW, ArrowTool, toolProps);
-}

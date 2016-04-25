@@ -86,10 +86,3 @@ export default class HorizontalLineTool {
         };
     }
 }
-var toolProps = {
-    label: 'Limit line',
-    color:CONST.DEFAULT_COLOR,
-    activeColor:'#55f'
-};
-
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.HLINE, HorizontalLineTool, toolProps);

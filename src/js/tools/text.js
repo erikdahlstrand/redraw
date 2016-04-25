@@ -22,11 +22,11 @@ export default class TextTool {
                 abort();
             }
         });
-    
+
         function notify(message) {
             eventAggregator.notify('TOOL_USAGE', CONST.TOOL.TEXT, message);
         }
-        
+
         function abort() {
             if (editor) {
                 canvas.remove(editor);
@@ -78,12 +78,3 @@ export default class TextTool {
         }
     }
 }
-
-/** Default options for tools initialization */
-var toolProps = {
-    label: 'Text',
-    fontFamily: 'arial',
-    fontSize: 18,
-    color:CONST.DEFAULT_COLOR,
-};
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.TEXT, TextTool, toolProps);
