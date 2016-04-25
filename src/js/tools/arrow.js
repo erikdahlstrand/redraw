@@ -2,7 +2,7 @@ import CONST from '../canvas-const.js';
 import Browser from '../browser-api.js';
 
 /** length of arrow head */
-var indicationLength = 20;
+var indicationLength = 8;
 /** line used during drag n drop */
 var line;
 
@@ -84,8 +84,8 @@ export default class ArrowTool {
             fill: this.options.activeColor,
             top: y2,
             left: x2,
-            height: indicationLength,
-            width: indicationLength,
+            height: this.options.size,
+            width: this.options.size,
             originX: 'center',
             originY: 'center',
             selectable: false
@@ -183,7 +183,7 @@ export default class ArrowTool {
 
 
         line = new fabric.Line([this.start.left, this.start.top, this.start.left, this.start.top], {
-            strokeWidth: 5,
+            strokeWidth: this.options.lineWidth,
             stroke: this.options.activeColor,
             originX: 'center',
             originY: 'center',
