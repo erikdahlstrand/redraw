@@ -140,8 +140,9 @@
     }
 
     function checkDirtyness() {
-        console.log('image', redrawArea.isDirty());
-        alert(redrawArea.isDirty() ? 'Yes, canvas is dirty' : 'No');
+        var x = redrawArea.isDirty();
+        console.log('imagex', x);
+        alert(x ? 'Yes, canvas is dirty' : 'No');
     }
 
 

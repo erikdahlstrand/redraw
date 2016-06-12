@@ -176,7 +176,7 @@ class Redraw {
     }
 
     isDirty() {
-        return this._canvas.canvasIsDirty;
+        return true;
     }
 
 

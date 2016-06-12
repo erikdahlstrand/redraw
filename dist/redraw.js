@@ -292,7 +292,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }, {
 	        key: 'isDirty',
 	        value: function isDirty() {
-	            return this._canvas.canvasIsDirty;
+	            return true;
 	        }
 	
 	        /**
@@ -477,19 +477,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return [left, top];
 	}
 	
-	function setupListener(fabricCanvas, canvasWrapper) {
-	    function canvasIsDirty() {
-	        canvasWrapper.canvasIsDirty = true;
-	        fabricCanvas.off('object:added', canvasIsDirty);
-	        fabricCanvas.off('object:selected', canvasIsDirty);
-	    }
-	    fabricCanvas.off('object:added', canvasIsDirty);
-	    fabricCanvas.off('object:selected', canvasIsDirty);
-	    canvasWrapper.canvasIsDirty = false;
-	
-	    fabricCanvas.on('object:added', canvasIsDirty);
-	    fabricCanvas.on('object:selected', canvasIsDirty);
-	}
 	/**
 	 * Canvas object that facilitates
 	 */
@@ -537,7 +524,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var tmp = new Image();
 	        tmp.addEventListener('load', delayedSetup, false);
 	        tmp.src = this.imgElement.src;
-	        setupListener(this.canvas, this);
 	    }
 	
 	    _createClass(Canvas, [{
@@ -596,7 +582,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        value: function loadFromJSON(jsonContent) {
 	            this.canvas.clear();
 	            this.canvas.loadFromJSON(jsonContent, this.canvas.renderAll.bind(this.canvas));
-	            setupListener(this.canvas, this);
 	        }
 	
 	        /**
