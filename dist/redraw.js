@@ -159,7 +159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * replaced if defined in precedenceProps or globalOptions.
 	 * @param {Object} precedenceProps - that may have a property named toolName, that will
 	 * replace options from allProps.
-	 * @param {Object} globalOptions - top-level options that will overwrite allProp but not precedenceProps 
+	 * @param {Object} globalOptions - top-level options that will overwrite allProp but not precedenceProps
 	 * @param {string} toolName - name of the tool, which options is processed
 	 * @returns {Object} with tool applies options
 	 */
@@ -510,18 +510,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.options = options;
 	        this.eventAggregator = eventAggregator;
 	        var parent = imgElement.parentNode;
-	        var canvasWrapper = document.createElement('div');
-	        canvasWrapper.className = _canvasConst2.default.CSS.PARENT;
+	        var redrawWrapper = document.createElement('div');
+	        redrawWrapper.className = _canvasConst2.default.CSS.PARENT;
 	        this.scale = 1;
-	        parent.insertBefore(canvasWrapper, imgElement);
+	        parent.insertBefore(redrawWrapper, imgElement);
 	        parent.removeChild(imgElement);
 	
 	        var canvasElem = document.createElement('canvas');
+	        var canvasWrapper = document.createElement('div');
+	        canvasWrapper.className = _canvasConst2.default.CSS.CANVAS_WRAPPER;
 	        canvasWrapper.appendChild(canvasElem);
+	        redrawWrapper.appendChild(canvasWrapper);
 	
 	        this.canvasElem = canvasElem;
 	
-	        this.canvasContainer = canvasWrapper;
+	        this.canvasContainer = redrawWrapper;
 	        this.canvasLeft = canvasElem.offsetLeft;
 	        this.canvas = new fabric.Canvas(canvasElem);
 	        this.imgElement = imgElement;
@@ -664,6 +667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		DEFAULT_COLOR: '#33e',
 		CSS: {
 			PARENT: 'redraw_parent',
+			CANVAS_WRAPPER: 'redraw_canvas',
 			TOOLBAR: 'redraw_toolbar',
 			BUTTON: 'redraw_btn',
 			ACTIVE_BUTTON: 'active'

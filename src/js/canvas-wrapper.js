@@ -46,18 +46,21 @@ export default class Canvas {
         this.options = options;
         this.eventAggregator = eventAggregator;
         var parent = imgElement.parentNode;
-        var canvasWrapper = document.createElement('div');
-        canvasWrapper.className = CONST.CSS.PARENT;
+        var redrawWrapper = document.createElement('div');
+        redrawWrapper.className = CONST.CSS.PARENT;
         this.scale = 1;
-        parent.insertBefore(canvasWrapper, imgElement);
+        parent.insertBefore(redrawWrapper, imgElement);
         parent.removeChild(imgElement);
 
         var canvasElem = document.createElement('canvas');
+        let canvasWrapper = document.createElement('div');
+        canvasWrapper.className = CONST.CSS.CANVAS_WRAPPER;
         canvasWrapper.appendChild(canvasElem);
+        redrawWrapper.appendChild(canvasWrapper);
 
         this.canvasElem = canvasElem;
 
-        this.canvasContainer = canvasWrapper;
+        this.canvasContainer = redrawWrapper;
         this.canvasLeft = canvasElem.offsetLeft;
         this.canvas = new fabric.Canvas(canvasElem);
         this.imgElement = imgElement;

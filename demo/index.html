@@ -6,20 +6,26 @@
     <title>sample</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="black-flexbox.css">
-    
+    <style type="text/css">
+        .redraw_canvas {
+            max-width: 450px;
+            overflow: scroll;
+        }
+    </style>
+
 </head>
 
 <body>
 
     <div class="main ui container">
       <div class="ui horizontal divider">Semantic UI buttons, with toolbar first in dom</div>
-      
+
         <img src="chart.png" id="demoImage" />
-      
+
       <div id="demoGizmo" style="display:block; background:grey; padding:15px; transition:.5s width">Bild</div>
 
         <div class="ui basic segment">
-            
+
             <div class="ui horizontal divider">
                 Export
             </div>
@@ -38,7 +44,7 @@
                 <pre>redrawArea.toJson();</pre>
                 <button class="ui button" onclick="showJson()">show json</button>
                 <textarea cols="80" rows="4" id="dumpJson" style="display:none"></textarea>
-                
+
                 <h4 class="ui horizontal divider header">
                   <i class="file code outline icon"></i>
                   Load from Json
@@ -47,7 +53,7 @@
                 <button class="ui button" onclick="showJsonInput(this)">upload</button>
                 <textarea cols="80" rows="4" id="loadJson" style="display:none"></textarea>
                 <button id="loadBtn" onclick="loadFromJson()" style="display:none">load from json</button>
-                
+
                 <h4 class="ui horizontal divider header">
                   <i class="file image outline icon"></i>
                   Show image
@@ -106,7 +112,7 @@
                 delete: {
                     label: '<i class="trash outline icon"></i>'
                 }
-                
+
             }
         });
     function onLoaded() {

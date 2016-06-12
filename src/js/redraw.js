@@ -63,7 +63,7 @@ var globalOverrides = ['color', 'activeColor'];
  * replaced if defined in precedenceProps or globalOptions.
  * @param {Object} precedenceProps - that may have a property named toolName, that will
  * replace options from allProps.
- * @param {Object} globalOptions - top-level options that will overwrite allProp but not precedenceProps 
+ * @param {Object} globalOptions - top-level options that will overwrite allProp but not precedenceProps
  * @param {string} toolName - name of the tool, which options is processed
  * @returns {Object} with tool applies options
  */
@@ -150,7 +150,7 @@ class Redraw {
             'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling',
             'hasControls', 'hasRotatingPoint', 'selectable', 'fill', 'padding']);
 
-        
+
         if (!includeImage) {
             delete jsObj.backgroundImage;
         }
@@ -178,7 +178,7 @@ class Redraw {
     isDirty() {
         return this._canvas.canvasIsDirty;
     }
-    
+
 
     /**
      * Returns the canvas representation, as is from Fabric.js
