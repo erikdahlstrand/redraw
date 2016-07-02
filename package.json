@@ -22,6 +22,9 @@
     "url": "https://github.com/swanmo/chart-test/issues"
   },
   "homepage": "https://github.com/swanmo/chart-test",
+  "dependencies": {
+    "fabric": "1.6.2"
+  },
 
   "devDependencies": {
     "babel-core": "^6.3.26",
