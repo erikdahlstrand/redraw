@@ -39,20 +39,33 @@ export default class PixelateTool {
 
 
         function drawBox(options) {
-            if (rect) {
-                let pointer = canvas.getPointer(options.e);
 
-                let currWidth = pointer.x - startLeft;
-                let currHeight = pointer.y - startTop;
+            let pointer = canvas.getPointer(options.e);
 
-                rect.set({
-                    'width': currWidth,
-                    'height': currHeight
-                });
-
-                rect.setCoords();
-                canvas.renderAll();
+            let top, left,
+              currWidth = pointer.x - startLeft,
+              currHeight = pointer.y - startTop;
+            if (currWidth < 0) {
+              left = pointer.x;
+            } else {
+              left = startLeft;
             }
+
+            if (currHeight < 0) {
+              top = pointer.y;
+            } else {
+              top = startTop;
+            }
+
+            rect.set({
+                'top': top,
+                'left': left,
+                'width': Math.abs(currWidth),
+                'height': Math.abs(currHeight)
+            });
+
+            rect.setCoords();
+            canvas.renderAll();
         }
 
         function applyFilter(index, filter, obj) {
