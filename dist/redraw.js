@@ -1209,6 +1209,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	function BoxTool(canvasWrapper, eventAggregator, toolOptions) {
 	    _classCallCheck(this, BoxTool);
 	
+	    var currWidth, currHeight, startY, startX;
+	
 	    eventAggregator.subscribeTo(_canvasConst2.default.TOOL.BOX, 'BoxTool', attachBoxListener);
 	    var callbackCtx = this;
 	    var canvas = canvasWrapper.canvas;
@@ -1232,24 +1234,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	        eventAggregator.unsubscribeTo('keydown', 'BoxTool');
 	    }
 	
-	    var currWidth, currHeight;
-	
 	    function drawBox(options) {
-	        if (rect) {
-	            var pointer = canvas.getPointer(options.e);
 	
-	            currWidth = pointer.x - startLeft;
-	            currHeight = pointer.y - startTop;
+	        var pointer = canvas.getPointer(options.e);
 	
-	            rect.set({
-	                'width': currWidth
-	            });
-	            rect.set({
-	                'height': currHeight
-	            });
-	            rect.setCoords();
-	            canvas.renderAll();
+	        var top = void 0,
+	            left = void 0,
+	            width = pointer.x - startX,
+	            height = pointer.y - startY;
+	        currHeight = Math.abs(height);
+	        currWidth = Math.abs(width);
+	
+	        if (width < 0) {
+	            left = pointer.x;
+	        } else {
+	            left = startX;
 	        }
+	
+	        if (height < 0) {
+	            top = pointer.y;
+	        } else {
+	            top = startY;
+	        }
+	
+	        rect.set({
+	            'top': top,
+	            'left': left,
+	            'width': currWidth,
+	            'height': currHeight
+	        });
+	
+	        rect.setCoords();
+	        canvas.renderAll();
 	    }
 	    function drawBoxDone(options) {
 	        canvas.off('mouse:move', drawBox);
@@ -1264,18 +1280,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        canvas.renderAll();
 	    }
 	
-	    var currWidth, currHeight, startTop, startLeft;
-	
 	    function mouseDown(options) {
 	        var pointer = canvas.getPointer(options.e);
 	        currWidth = currHeight = 0;
 	
-	        startTop = pointer.y;
-	        startLeft = pointer.x;
+	        startY = pointer.y;
+	        startX = pointer.x;
 	
 	        rect = new fabric.Rect({
-	            left: startLeft,
-	            top: startTop,
+	            left: startX,
+	            top: startY,
 	            width: 4,
 	            borderColor: toolOptions.color,
 	            height: 4,
@@ -1377,20 +1391,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    function drawBox(options) {
-	        if (rect) {
-	            var pointer = canvas.getPointer(options.e);
 	
-	            var currWidth = pointer.x - startLeft;
-	            var currHeight = pointer.y - startTop;
+	        var pointer = canvas.getPointer(options.e);
 	
-	            rect.set({
-	                'width': currWidth,
-	                'height': currHeight
-	            });
-	
-	            rect.setCoords();
-	            canvas.renderAll();
+	        var top = void 0,
+	            left = void 0,
+	            currWidth = pointer.x - startLeft,
+	            currHeight = pointer.y - startTop;
+	        if (currWidth < 0) {
+	            left = pointer.x;
+	        } else {
+	            left = startLeft;
 	        }
+	
+	        if (currHeight < 0) {
+	            top = pointer.y;
+	        } else {
+	            top = startTop;
+	        }
+	
+	        rect.set({
+	            'top': top,
+	            'left': left,
+	            'width': Math.abs(currWidth),
+	            'height': Math.abs(currHeight)
+	        });
+	
+	        rect.setCoords();
+	        canvas.renderAll();
 	    }
 	
 	    function applyFilter(index, filter, obj) {
