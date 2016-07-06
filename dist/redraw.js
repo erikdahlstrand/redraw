@@ -1436,34 +1436,37 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var currHeight = pointer.y - startTop;
 	
 	        if (Math.abs(currWidth) > 0 && Math.abs(currHeight) > 0) {
-	            var pixels = canvas.getContext().getImageData(pointer.x, pointer.y, currWidth, currHeight);
-	
 	            var object = fabric.util.object.clone(canvasWrapper.image);
 	
-	            object.set({
-	                originX: 'left',
-	                originY: 'top',
-	                left: 0,
-	                top: 0,
+	            var cropped = new Image();
+	            cropped.src = object.toDataURL({
+	                left: rect.left,
+	                top: rect.top,
+	                width: rect.width,
+	                height: rect.height
+	            });
+	
+	            var image = new fabric.Image(cropped);
+	
+	            image.set({
+	                left: rect.left,
+	                top: rect.top,
+	                width: rect.width,
+	                height: rect.height,
+	                hasControls: false,
 	                lockMovementX: true,
 	                lockMovementY: true
 	            });
-	            var x = rect;
-	
-	            rect.left = rect.left - object.width / 2;
-	            rect.top = rect.top - object.height / 2;
-	
-	            object.clipTo = function (ctx) {
-	                x.render(ctx);
-	            };
 	
 	            var f = fabric.Image.filters;
 	            applyFilter(0, new f.Pixelate({
-	                blocksize: 5
-	            }), object);
+	                blocksize: 10
+	            }), image);
 	
-	            canvas.add(object);
-	            canvas.sendToBack(object);
+	            image.setCoords();
+	            canvas.add(image);
+	            canvas.sendToBack(image);
+	            canvas.renderAll();
 	        }
 	        canvas.renderAll();
 	
