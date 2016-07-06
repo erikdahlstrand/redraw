@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/swanmo/chart-test",
   "dependencies": {
-    "fabric": "1.6.2"
+    "fabric": "1.6.3"
   },
 
   "devDependencies": {
