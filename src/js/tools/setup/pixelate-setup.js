@@ -7,7 +7,8 @@ import PixelateTool from '../pixelate.js';
  */
 var defaultToolProps = {
     label: 'Pixelate',
-    color: CONST.DEFAULT_COLOR
+    color: CONST.DEFAULT_COLOR,
+    blocksize: 8
 };
 
 (new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.PIXELATE, PixelateTool, defaultToolProps);

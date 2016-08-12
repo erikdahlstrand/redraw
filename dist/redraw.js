@@ -1422,8 +1422,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    function applyFilter(index, filter, obj) {
+	        console.log(obj.filters, index);
+	        console.log('alpha');
 	        obj.filters[index] = filter;
+	        console.log('bravo');
 	        obj.applyFilters(canvas.renderAll.bind(canvas));
+	        console.log('charlie');
 	    }
 	
 	    function drawBoxDone(options) {
@@ -1459,8 +1463,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	
 	            var f = fabric.Image.filters;
+	            console.log('image', image.width, image.height);
 	            applyFilter(0, new f.Pixelate({
-	                blocksize: 10
+	                blocksize: toolOptions.blocksize
 	            }), image);
 	
 	            image.setCoords();
@@ -1943,8 +1948,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Default pixelate options.
 	 */
 	var defaultToolProps = {
-	  label: 'Pixelate',
-	  color: _canvasConst2.default.DEFAULT_COLOR
+	    label: 'Pixelate',
+	    color: _canvasConst2.default.DEFAULT_COLOR,
+	    blocksize: 8
 	};
 	
 	new _browserApi2.default().getFromWindow('redraw').registerTool(_canvasConst2.default.TOOL.PIXELATE, _pixelate2.default, defaultToolProps);

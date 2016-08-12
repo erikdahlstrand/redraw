@@ -69,8 +69,12 @@ export default class PixelateTool {
         }
 
         function applyFilter(index, filter, obj) {
+            console.log(obj.filters, index);
+            console.log('alpha');
             obj.filters[index] = filter;
+            console.log('bravo');
             obj.applyFilters(canvas.renderAll.bind(canvas));
+            console.log('charlie');
         }
 
         function drawBoxDone(options) {
@@ -107,8 +111,9 @@ export default class PixelateTool {
                 });
 
                 let f = fabric.Image.filters;
+                console.log('image', image.width, image.height)
                 applyFilter(0, new f.Pixelate({
-                    blocksize: 10
+                    blocksize: toolOptions.blocksize
                 }), image);
 
                 image.setCoords();
