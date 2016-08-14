@@ -70,10 +70,10 @@ export default class PixelateTool {
 
         function applyFilter(index, filter, obj) {
             console.log(obj.filters, index);
-            console.log('alpha');
+            console.log('alpha 1');
             obj.filters[index] = filter;
             console.log('bravo');
-            obj.applyFilters(canvas.renderAll.bind(canvas));
+            obj.applyFilters(canvas.renderAll.bind(canvas), undefined, obj.getElement());
             console.log('charlie');
         }
 

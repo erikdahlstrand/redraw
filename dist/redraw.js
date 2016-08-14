@@ -642,7 +642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		TOOL: {
 			ARROW: 'arrow',
 			BOX: 'box',
-			PIXELATE: 'pixel',
+			PIXELATE: 'pixelate',
 			CLEAR: 'clear',
 			DUMP: 'dump',
 			HLINE: 'hline',
@@ -1423,10 +1423,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    function applyFilter(index, filter, obj) {
 	        console.log(obj.filters, index);
-	        console.log('alpha');
+	        console.log('alpha 1');
 	        obj.filters[index] = filter;
 	        console.log('bravo');
-	        obj.applyFilters(canvas.renderAll.bind(canvas));
+	        obj.applyFilters(canvas.renderAll.bind(canvas), undefined, obj.getElement());
 	        console.log('charlie');
 	    }
 	

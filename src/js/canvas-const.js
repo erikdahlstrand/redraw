@@ -2,7 +2,7 @@ export default {
 	TOOL: {
 		ARROW:'arrow',
 		BOX:'box',
-		PIXELATE:'pixel',
+		PIXELATE:'pixelate',
 		CLEAR:'clear',
 		DUMP:'dump',
 		HLINE:'hline',
