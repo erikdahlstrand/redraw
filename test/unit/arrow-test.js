@@ -2,8 +2,8 @@ import ArrowTool from '../../src/js/tools/arrow-tool';
 import Browser from '../../src/js/browser-api';
 
 
-describe('rechart', () => {
-  describe('Greet function', () => {
+describe('Tools', () => {
+  describe('Arrow', () => {
     let arrowTool, eventAggregatorInvocationCount;
     beforeEach(() => {
       var fabric = {};

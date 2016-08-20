@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["rechart"] = factory();
+		exports["chartpen"] = factory();
 	else
-		root["rechart"] = factory();
+		root["chartpen"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -1190,10 +1190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } /**
-	                                                                                                                                                           * A tool to remove selected elements from canvas!
-	                                                                                                                                                           */
-	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	/**
 	 * A tool to remove selected elements from canvas.
@@ -1571,6 +1568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/** used during drag n drop */
 	var rect;
+	
 	/**
 	 * A tool to paint rectangles.
 	 */
