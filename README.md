@@ -29,30 +29,30 @@ Instanciate a new Redraw object with a reference to the image element:
 You can also pass some options:
 
 ```javascript
-  var editor = new redraw.Annotation(document.getElementById('target'), {
-    // Canvas size
-    maxHeight: 500,
-    maxWidth: 700,
+var editor = new redraw.Annotation(document.getElementById('target'), {
+  // Canvas size
+  maxHeight: 500,
+  maxWidth: 700
 
-    // Styling
-    buttonCss: 'btn',
-    activeButtonCss: 'active',
+  // Styling
+  buttonCss: 'btn',
+  activeButtonCss: 'active'
 
-    // Tools to show
-    tools: ['arrow', 'text', 'rectangle', 'pixelate', 'delete'],
+  // Tools to show
+  tools: ['arrow', 'text', 'rectangle', 'pixelate', 'delete'],
 
-    // Tool settings
-    toolSettings: {
-      rectangle: {
-        label: "Box",
-      },
-      pixelate: {
-        label: "<i class='icons'>blur</i>",
-        blocksize: 4
-      }
+  // Tool settings
+  toolSettings: {
+    rectangle: {
+      label: "Box",
+    },
+    pixelate: {
+      label: "<i class='icons'>blur</i>",
+      blocksize: 4
     }
-  });
+  }
+});
 ```
 ## License
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+Coded with :heart: by Björn Swanmo and published under the [MIT License](http://opensource.org/licenses/MIT).
