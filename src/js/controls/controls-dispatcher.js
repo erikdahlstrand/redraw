@@ -1,11 +1,6 @@
 import CONST from '../canvas-const.js';
 
 /**
- * Css class for all buttons of the toolbar.
- */
-const BUTTON_CLASS = 'redraw_btn';
-
-/**
  * Adds a class to the array of classes.
  * @private
  */
