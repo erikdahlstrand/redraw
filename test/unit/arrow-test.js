@@ -1,4 +1,4 @@
-import ArrowTool from '../../src/js/tools/arrow';
+import ArrowTool from '../../src/js/tools/arrow-tool';
 import Browser from '../../src/js/browser-api';
 
 
