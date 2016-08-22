@@ -3,10 +3,10 @@ Redraw is a JavaScript library which provides basic image annotation tools in yo
 
 ## Resources
 
-- Documentation: 
+- Documentation:
 - Source: [github.com/chartpen/redraw](https://github.com/chartpen/redraw)
 - Bugs: [github.com/chartpen/redraw/issues](https://github.com/chartpen/redraw/issues)
-- Help & Discussion: 
+- Help & Discussion:
 
 ## Quick start
 
@@ -16,7 +16,7 @@ Simply download and include:
 <script src="./redraw.min.js" />
 ```
 
-Instanciate a new Redraw object with a reference to the image element:
+Create a new Redraw object with a reference to the image element:
 
 ```html
 <img src="demo-image.jpg" id="target" />
@@ -26,7 +26,7 @@ Instanciate a new Redraw object with a reference to the image element:
 </script>
 ```
 
-You can also pass some options:
+You can also pass options:
 
 ```javascript
 var editor = new redraw.Annotation(document.getElementById('target'), {
@@ -34,9 +34,13 @@ var editor = new redraw.Annotation(document.getElementById('target'), {
   maxHeight: 500,
   maxWidth: 700
 
-  // Styling
-  buttonCss: 'btn',
-  activeButtonCss: 'active'
+  // Classes to add
+  buttonCss: 'my-btn',
+  activeButtonCss: 'my-active-btn'
+  toolbarCss: 'my-toolbar',
+
+  // Change DOM insertion order
+  toolbarFirst: true,
 
   // Tools to show
   tools: ['arrow', 'text', 'rectangle', 'pixelate', 'delete'],
@@ -44,10 +48,10 @@ var editor = new redraw.Annotation(document.getElementById('target'), {
   // Tool settings
   toolSettings: {
     rectangle: {
-      label: "Box",
+      label: 'Box',
     },
     pixelate: {
-      label: "<i class='icons'>blur</i>",
+      label: '<i class="icons">blur</i>',
       blocksize: 4
     }
   }
