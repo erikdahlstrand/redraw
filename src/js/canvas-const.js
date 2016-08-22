@@ -1,20 +1,19 @@
 export default {
 	TOOL: {
-		ARROW:'arrow',
-		BOX:'box',
-		PIXELATE:'pixelate',
-		CLEAR:'clear',
-		DUMP:'dump',
-		HLINE:'hline',
-		REMOVE:'delete',
-		TEXT:'text'
+		ARROW: 'arrow',
+		DELETE: 'delete',
+		HORIZONTAL_LINE: 'horizontal_line',
+		PIXELATE: 'pixelate',
+		RECTANGLE: 'rectangle',
+		RESET: 'reset',
+		TEXT: 'text'
 	},
 	DEFAULT_COLOR: '#33e',
 	CSS: {
-		PARENT:'redraw_parent',
-    CANVAS_WRAPPER:'redraw_canvas',
-		TOOLBAR:'redraw_toolbar',
-		BUTTON:'redraw_btn',
-		ACTIVE_BUTTON:'active'
+		ACTIVE_BUTTON: 'active',
+		BUTTON: 'redraw_btn',
+		PARENT: 'redraw_parent',
+		TOOLBAR: 'redraw_toolbar',
+    CANVAS_WRAPPER: 'redraw_canvas'
 	}
 }

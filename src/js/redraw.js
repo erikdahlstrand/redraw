@@ -167,7 +167,7 @@ class Redraw {
     }
 
     /**
-     * Tells whether or not any objects are present in the canvas, i.e. arrows, boxes other than the image itself.
+     * Tells whether or not any objects are present in the canvas, i.e. arrows, rectangles other than the image itself.
      * @access public
      * @returns {boolean} true if there are obejcts, i.e.
      */

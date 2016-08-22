@@ -12,13 +12,13 @@ export default class ResetTool {
      * @param {EventAggregator} eventAggregator - Event mediator.
      */
     constructor(canvasWrapper, eventAggregator) {
-    	eventAggregator.subscribeTo(CONST.TOOL.CLEAR, 'ResetTool', initClear);
+    	eventAggregator.subscribeTo(CONST.TOOL.RESET, 'ResetTool', initClear);
 		function initClear(topic, sender, payload) {
 			if (payload !== 'toolbar-deactivate' &&
 				confirm('This will restore your image to its default state.\nAll your modifications will be deleted.\nDo you want to continue?')) {
 				clearAllElements();
 			}
-			eventAggregator.notify('TOOL_USAGE', CONST.TOOL.CLEAR, 'inactive');
+			eventAggregator.notify('TOOL_USAGE', CONST.TOOL.RESET, 'inactive');
 		}
 
 		function clearAllElements() {

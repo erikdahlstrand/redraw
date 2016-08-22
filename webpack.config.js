@@ -5,22 +5,21 @@ var path = require('path');
 module.exports = {
     entry: [
       './src/js/redraw.js',
-      './src/js/tools/arrow.js',
-      './src/js/tools/box.js',
-      './src/js/tools/pixelate.js',
-      './src/js/tools/clear-tool.js',
+      './src/js/tools/arrow-tool.js',
+      './src/js/tools/delete-tool.js',
       './src/js/tools/horizontal-line-tool.js',
-      './src/js/tools/remove-tool.js',
-      './src/js/tools/text.js',
+      './src/js/tools/pixelate-tool.js',
+      './src/js/tools/rectangle-tool.js',
+      './src/js/tools/reset-tool.js',
+      './src/js/tools/text-tool.js',
       './src/js/tools/setup/arrow-setup.js',
-      './src/js/tools/setup/box-setup.js',
-      './src/js/tools/setup/pixelate-setup.js',
-      './src/js/tools/setup/clear-setup.js',
+      './src/js/tools/setup/delete-setup.js',
       './src/js/tools/setup/horizontal-line-setup.js',
-      './src/js/tools/setup/remove-setup.js',
+      './src/js/tools/setup/pixelate-setup.js',
+      './src/js/tools/setup/rectangle-setup.js',
+      './src/js/tools/setup/reset-setup.js',
       './src/js/tools/setup/text-setup.js'
-
-        ],
+    ],
     output: {
         path: __dirname,
         filename: './dist/redraw.js'

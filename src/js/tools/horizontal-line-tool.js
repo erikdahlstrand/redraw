@@ -14,10 +14,10 @@ export default class HorizontalLineTool {
     constructor(canvasWrapper, eventAggregator, toolOptions) {
         var canvas = canvasWrapper.canvas;
         var horizontalLine;
-        eventAggregator.subscribeTo(CONST.TOOL.HLINE, 'HorizontalLineTool', HorizontalLineTool);
+        eventAggregator.subscribeTo(CONST.TOOL.HORIZONTAL_LINE, 'HorizontalLineTool', HorizontalLineTool);
 
         function notify(message) {
-            eventAggregator.notify('TOOL_USAGE', CONST.TOOL.HLINE, message);
+            eventAggregator.notify('TOOL_USAGE', CONST.TOOL.HORIZONTAL_LINE, message);
         }
 
         function createHorizontalLine() {

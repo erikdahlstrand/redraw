@@ -1,28 +1,58 @@
-# redraw JS
-Simple HTML5 Chart tools for the awesome [FabricJs](http://fabricjs.com/).
+# Redraw
+Redraw is a JavaScript library which provides basic image annotation tools in your browser.
 
-## Setup
-### For development
-```Shell
-npm test
-gulp watch
+## Resources
 
-gulp build
+- Documentation: 
+- Source: [github.com/chartpen/redraw](https://github.com/chartpen/redraw)
+- Bugs: [github.com/chartpen/redraw/issues](https://github.com/chartpen/redraw/issues)
+- Help & Discussion: 
+
+## Quick start
+
+Simply download and include:
+
+```html
+<script src="./redraw.min.js" />
 ```
 
-###
-```Shell
-brew install pkg-config cairo libpng jpeg giflib
-```
-### Build
-```Shell
-webpack --progress --colors
+Instanciate a new Redraw object with a reference to the image element:
+
+```html
+<img src="demo-image.jpg" id="target" />
+
+<script>
+  var editor = new redraw.Annotation(document.getElementById('target'));
+</script>
 ```
 
-## Technology
-### Development
-* https://github.com/babel/generator-babel-boilerplate
+You can also pass some options:
 
-### Settings
-* [Configuring ESLint](http://eslint.org/docs/user-guide/configuring.html)
-* [Sublime Linter User Settings](http://bl.ocks.org/bretdavidson/3189814)
+```javascript
+var editor = new redraw.Annotation(document.getElementById('target'), {
+  // Canvas size
+  maxHeight: 500,
+  maxWidth: 700
+
+  // Styling
+  buttonCss: 'btn',
+  activeButtonCss: 'active'
+
+  // Tools to show
+  tools: ['arrow', 'text', 'rectangle', 'pixelate', 'delete'],
+
+  // Tool settings
+  toolSettings: {
+    rectangle: {
+      label: "Box",
+    },
+    pixelate: {
+      label: "<i class='icons'>blur</i>",
+      blocksize: 4
+    }
+  }
+});
+```
+## License
+
+Coded with :heart: by Björn Swanmo and published under the [MIT License](http://opensource.org/licenses/MIT).

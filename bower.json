@@ -1,6 +1,6 @@
 {
-  "name": "redraw.js",
-  "description": "Redraw is a JavaScript library which provides basic chart editing tools in your browser",
+  "name": "Redraw",
+  "description": "Redraw is a JavaScript library which provides basic image annotation tools in your browser",
   "main": [
     "dist/redraw.js",
     "dist/redraw.css"

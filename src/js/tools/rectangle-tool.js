@@ -3,10 +3,11 @@ import Browser from '../browser-api.js';
 
 /** used during drag n drop */
 var rect;
+
 /**
- * A tool to paint boxes.
+ * A tool to paint rectangles.
  */
-export default class BoxTool {
+export default class RectangleTool {
     /**
      * Tools contructor. Is provided with canvas-wrapper and eventAggregator by contract.
      * @constructor
@@ -16,30 +17,30 @@ export default class BoxTool {
     constructor(canvasWrapper, eventAggregator, toolOptions) {
         var currWidth, currHeight, startY, startX;
 
-        eventAggregator.subscribeTo(CONST.TOOL.BOX, 'BoxTool', attachBoxListener);
+        eventAggregator.subscribeTo(CONST.TOOL.RECTANGLE, 'RectangleTool', attachRectangleListener);
         var callbackCtx = this;
         let canvas = canvasWrapper.canvas;
 
         function notify(message) {
-            eventAggregator.notify('TOOL_USAGE', CONST.TOOL.BOX, message);
+            eventAggregator.notify('TOOL_USAGE', CONST.TOOL.RECTANGLE, message);
         }
 
         function done() {
             notify('inactive');
-            detachBoxListener();
+            detachRectangleListener();
             canvasWrapper.enableSelection(true);
         }
 
-        function detachBoxListener() {
+        function detachRectangleListener() {
             canvas.off('mouse:down', mouseDown);
-            canvas.off('mouse:move', drawBox);
-            canvas.off('mouse:up', drawBoxDone);
+            canvas.off('mouse:move', drawRectangle);
+            canvas.off('mouse:up', drawRectangleDone);
 
             rect = undefined;
-            eventAggregator.unsubscribeTo('keydown', 'BoxTool');
+            eventAggregator.unsubscribeTo('keydown', 'RectangleTool');
         }
 
-        function drawBox(options) {
+        function drawRectangle(options) {
 
               let pointer = canvas.getPointer(options.e);
 
@@ -72,9 +73,9 @@ export default class BoxTool {
               canvas.renderAll();
 
         }
-        function drawBoxDone(options) {
-            canvas.off('mouse:move', drawBox);
-            canvas.off('mouse:up', drawBoxDone);
+        function drawRectangleDone(options) {
+            canvas.off('mouse:move', drawRectangle);
+            canvas.off('mouse:up', drawRectangleDone);
 
             if (Math.abs(currWidth) < 5 && Math.abs(currHeight) < 5) {
                 canvas.remove(rect);
@@ -111,16 +112,16 @@ export default class BoxTool {
             canvas.add(rect);
             rect.setCoords();
             canvas.renderAll();
-            canvas.on('mouse:move', drawBox);
-            canvas.on('mouse:up', drawBoxDone);
+            canvas.on('mouse:move', drawRectangle);
+            canvas.on('mouse:up', drawRectangleDone);
         }
 
-        function attachBoxListener(topic, sender, payload) {
+        function attachRectangleListener(topic, sender, payload) {
             if (payload === 'toolbar-deactivate'){
                 done();
                 return;
             }
-            eventAggregator.subscribeTo('keydown', 'BoxTool', function(topic, sender, keyCode) {
+            eventAggregator.subscribeTo('keydown', 'RectangleTool', function(topic, sender, keyCode) {
                 if (keyCode === 27) {
                     done();
                 }

@@ -13,7 +13,7 @@ export default class PixelateTool {
      */
     constructor(canvasWrapper, eventAggregator, toolOptions) {
 
-        eventAggregator.subscribeTo(CONST.TOOL.PIXELATE, 'PixelateTool', attachBoxListener);
+        eventAggregator.subscribeTo(CONST.TOOL.PIXELATE, 'PixelateTool', attachRectangleListener);
         let rect, callbackCtx = this;
         let startTop, startLeft;
         let canvas = canvasWrapper.canvas;
@@ -24,21 +24,21 @@ export default class PixelateTool {
 
         function done() {
             notify('inactive');
-            detachBoxListener();
+            detachRectangleListener();
             canvasWrapper.enableSelection(true);
         }
 
-        function detachBoxListener() {
+        function detachRectangleListener() {
             canvas.off('mouse:down', mouseDown);
-            canvas.off('mouse:move', drawBox);
-            canvas.off('mouse:up', drawBoxDone);
+            canvas.off('mouse:move', drawRectangle);
+            canvas.off('mouse:up', drawRectangleDone);
 
             rect = undefined;
             eventAggregator.unsubscribeTo('keydown', 'PixelateTool');
         }
 
 
-        function drawBox(options) {
+        function drawRectangle(options) {
 
             let pointer = canvas.getPointer(options.e);
 
@@ -77,9 +77,9 @@ export default class PixelateTool {
             console.log('charlie');
         }
 
-        function drawBoxDone(options) {
-            canvas.off('mouse:move', drawBox);
-            canvas.off('mouse:up', drawBoxDone);
+        function drawRectangleDone(options) {
+            canvas.off('mouse:move', drawRectangle);
+            canvas.off('mouse:up', drawRectangleDone);
             canvas.remove(rect);
 
 
@@ -153,11 +153,11 @@ export default class PixelateTool {
             canvas.add(rect);
             rect.setCoords();
             canvas.renderAll();
-            canvas.on('mouse:move', drawBox);
-            canvas.on('mouse:up', drawBoxDone);
+            canvas.on('mouse:move', drawRectangle);
+            canvas.on('mouse:up', drawRectangleDone);
         }
 
-        function attachBoxListener(topic, sender, payload) {
+        function attachRectangleListener(topic, sender, payload) {
             if (payload === 'toolbar-deactivate'){
                 done();
                 return;
