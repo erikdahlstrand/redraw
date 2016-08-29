@@ -437,7 +437,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    return Browser;
 	}();
-	
+
 	exports.default = Browser;
 
 /***/ },
@@ -626,7 +626,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    return Canvas;
 	}();
-	
+
 	exports.default = Canvas;
 
 /***/ },
@@ -747,7 +747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    return EventAggregator;
 	}();
-	
+
 	exports.default = EventAggregator;
 
 /***/ },
@@ -767,11 +767,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	/**
-	 * Css class for all buttons of the toolbar.
-	 */
-	var BUTTON_CLASS = 'redraw_btn';
 	
 	/**
 	 * Adds a class to the array of classes.
@@ -1167,7 +1162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    return ArrowTool;
 	}();
-	
+
 	exports.default = ArrowTool;
 
 /***/ },
@@ -1441,12 +1436,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    function applyFilter(index, filter, obj) {
-	        console.log(obj.filters, index);
-	        console.log('alpha 1');
 	        obj.filters[index] = filter;
-	        console.log('bravo');
-	        obj.applyFilters(canvas.renderAll.bind(canvas), undefined, obj.getElement());
-	        console.log('charlie');
+	        obj.applyFilters(canvas.renderAll.bind(canvas));
 	    }
 	
 	    function drawRectangleDone(options) {
@@ -1459,38 +1450,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var currHeight = pointer.y - startTop;
 	
 	        if (Math.abs(currWidth) > 0 && Math.abs(currHeight) > 0) {
-	            var object = fabric.util.object.clone(canvasWrapper.image);
+	            (function () {
+	                var object = fabric.util.object.clone(canvasWrapper.image);
 	
-	            var cropped = new Image();
-	            cropped.src = object.toDataURL({
-	                left: rect.left,
-	                top: rect.top,
-	                width: rect.width,
-	                height: rect.height
-	            });
+	                var croppedDomImage = new Image();
+	                croppedDomImage.src = object.toDataURL({
+	                    left: rect.left,
+	                    top: rect.top,
+	                    width: rect.width,
+	                    height: rect.height
+	                });
+	                var userRect = rect;
+	                croppedDomImage.onload = function () {
+	                    var image = new fabric.Image(croppedDomImage);
 	
-	            var image = new fabric.Image(cropped);
+	                    image.set({
+	                        left: userRect.left,
+	                        top: userRect.top,
+	                        width: userRect.width,
+	                        height: userRect.height,
+	                        hasControls: false,
+	                        lockMovementX: true,
+	                        lockMovementY: true
+	                    });
 	
-	            image.set({
-	                left: rect.left,
-	                top: rect.top,
-	                width: rect.width,
-	                height: rect.height,
-	                hasControls: false,
-	                lockMovementX: true,
-	                lockMovementY: true
-	            });
+	                    var f = fabric.Image.filters;
+	                    applyFilter(0, new f.Pixelate({
+	                        blocksize: toolOptions.blocksize
+	                    }), image);
 	
-	            var f = fabric.Image.filters;
-	            console.log('image', image.width, image.height);
-	            applyFilter(0, new f.Pixelate({
-	                blocksize: toolOptions.blocksize
-	            }), image);
-	
-	            image.setCoords();
-	            canvas.add(image);
-	            canvas.sendToBack(image);
-	            canvas.renderAll();
+	                    image.setCoords();
+	                    canvas.add(image);
+	                    canvas.sendToBack(image);
+	                    canvas.renderAll();
+	                };
+	            })();
 	        }
 	        canvas.renderAll();
 	
