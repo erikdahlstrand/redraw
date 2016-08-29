@@ -69,19 +69,14 @@ export default class PixelateTool {
         }
 
         function applyFilter(index, filter, obj) {
-            console.log(obj.filters, index);
-            console.log('alpha 1');
             obj.filters[index] = filter;
-            console.log('bravo');
-            obj.applyFilters(canvas.renderAll.bind(canvas), undefined, obj.getElement());
-            console.log('charlie');
+            obj.applyFilters(canvas.renderAll.bind(canvas));
         }
 
         function drawRectangleDone(options) {
             canvas.off('mouse:move', drawRectangle);
             canvas.off('mouse:up', drawRectangleDone);
             canvas.remove(rect);
-
 
             let pointer = canvas.getPointer(options.e);
             let currWidth = pointer.x - startLeft;
@@ -90,44 +85,42 @@ export default class PixelateTool {
             if (Math.abs(currWidth) > 0 && Math.abs(currHeight) > 0) {
                 let object = fabric.util.object.clone(canvasWrapper.image);
 
-                let cropped = new Image();
-                cropped.src = object.toDataURL({
+                let croppedDomImage = new Image();
+                croppedDomImage.src = object.toDataURL({
                     left: rect.left,
                     top: rect.top,
                     width: rect.width,
                     height: rect.height
                 });
+                let userRect = rect;
+                croppedDomImage.onload = function() {
+                  let image = new fabric.Image(croppedDomImage);
 
-                let image = new fabric.Image(cropped);
+                  image.set({
+                      left: userRect.left,
+                      top: userRect.top,
+                      width: userRect.width,
+                      height: userRect.height,
+                      hasControls: false,
+                      lockMovementX:true,
+                      lockMovementY:true
+                  });
 
-                image.set({
-                    left: rect.left,
-                    top: rect.top,
-                    width: rect.width,
-                    height: rect.height,
-                    hasControls: false,
-                    lockMovementX:true,
-                    lockMovementY:true
-                });
+                  let f = fabric.Image.filters;
+                  applyFilter(0, new f.Pixelate({
+                      blocksize: toolOptions.blocksize
+                  }), image);
 
-                let f = fabric.Image.filters;
-                console.log('image', image.width, image.height)
-                applyFilter(0, new f.Pixelate({
-                    blocksize: toolOptions.blocksize
-                }), image);
-
-                image.setCoords();
-                canvas.add(image);
-                canvas.sendToBack(image);
-                canvas.renderAll();
-
+                  image.setCoords();
+                  canvas.add(image);
+                  canvas.sendToBack(image);
+                  canvas.renderAll();
+                }
             }
             canvas.renderAll();
 
             rect = undefined;
         }
-
-
 
         function mouseDown(options) {
             let pointer = canvas.getPointer(options.e);
