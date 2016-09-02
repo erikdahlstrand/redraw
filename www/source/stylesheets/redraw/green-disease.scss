@@ -1,0 +1,47 @@
+.green-disease>.redraw_parent>.redraw_toolbar {
+    margin-top: 10px;
+    margin-left:0;
+    margin-right: 0;
+    padding-right: 0;
+}
+.green-disease>.redraw_parent>.redraw_toolbar:after {
+    content: ' ';
+    height: 0;
+    position: relative;
+    left:-340px;
+    width: 0;
+    top:-39px;
+    border: 10px solid transparent;
+    border-bottom-color: #92CD00;
+}
+
+.green-disease>.redraw_parent>.redraw_toolbar button {
+    line-height: 40px;
+    background-color: #92CD00;
+    padding-left:1.2em;
+    padding-right:1.2em;
+    color:#E5E4D7;
+    border:none;
+    transition:.3s all;
+    outline: none;
+    margin: 0;
+}
+.green-disease>.redraw_parent>.redraw_toolbar button.active {
+    background-color: #96FF10;
+    color:#2C6700;
+}
+.green-disease>.redraw_parent>.redraw_toolbar button:hover {
+    background-color: #FFCF79;
+    color:#fff;
+    border:none;
+}
+.green-disease>.redraw_parent>.redraw_toolbar button:first-of-type {
+    padding-left:1.8em;
+    border-top-left-radius: 9px;
+    border-bottom-left-radius: 9px;
+}
+.green-disease>.redraw_parent>.redraw_toolbar button:last-of-type {
+    padding-right:1.8em;
+    border-top-right-radius: 9px;
+    border-bottom-right-radius: 9px;
+}
