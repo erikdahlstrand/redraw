@@ -5,18 +5,16 @@ Redraw is a JavaScript library which provides basic image annotation tools in yo
 
 ## Resources
 
-- Documentation:
+- Examples: [chartpen.github.io/redraw](http://chartpen.github.io/redraw)
 - Source: [github.com/chartpen/redraw](https://github.com/chartpen/redraw)
 - Bugs: [github.com/chartpen/redraw/issues](https://github.com/chartpen/redraw/issues)
-- Help & Discussion:
-
-[Imgur](http://i.imgur.com/2mkbrJU.png)
 
 ## Quick start
 
-Simply download and include:
+Load Fabric.js (1.6+) and and include Redraw:
 
 ```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.4/fabric.min.js" />
 <script src="./redraw.min.js" />
 ```
 
