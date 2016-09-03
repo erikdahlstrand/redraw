@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>development sample</title>
+    <style>
+    fieldset {
+        border-radius: 4px;
+        margin-bottom: 2vh;
+    }
+    button.active {
+        background-color: #bbf;
+        margin-bottom: 2vh;
+    }
+    </style>
+</head>
+
+<body>
+    <img src="./chart.png" id="sampleImage" />
+
+      <div id="demoGizmo" style="display:block; background:grey; margin-top:15px; padding: 10px 0 10px 0; transition:.5s width">Image</div>
+
+    <div>
+        <fieldset>
+            <legend>Export (binary download)</legend>
+            <button onclick="downloadImage()">download image</button>
+        </fieldset>
+
+        <fieldset>
+            <legend>Export as json</legend>
+            <button onclick="showJson()">Show json</button>
+                <textarea cols="80" rows="4" id="dumpJson" style="display:none"></textarea>
+        </fieldset>
+
+        <fieldset>
+            <legend>Import from json</legend>
+            <button onclick="showJsonInput(this)">upload</button>
+            <textarea cols="80" rows="4" id="loadJson" style="display:none"></textarea>
+            <button id="loadBtn" onclick="loadFromJson()" style="display:none">load from json</
+        </fieldset>
+
+        <fieldset>
+            <legend>Show image</legend>
+            <pre>redrawArea.toBase64URL();</pre>
+            <button onclick="dumpImage1()">dump base64 string</button>
+            <img id="imageDump1" />
+        </fieldset>
+
+        <fieldset>
+            <legend>Check emptyness</legend>
+            <pre>redrawArea.toBase64URL();</pre>
+            <button onclick="checkEmptiness()">is canvas empty?</button>
+        </fieldset>
+    </div>
+
+    <script src="../node_modules/fabric/dist/fabric.js"></script>
+    <script src="../dist/redraw.js"></script>
+    <script type="text/javascript">
+
+    var redrawArea = new redraw.Annotation(document.getElementById('sampleImage'),
+        {
+            buttonActiveCss: 'active',
+            buttonCss: 'ui button',
+            toolbarCss: 'ui basic buttons margined',
+            toolSettings: {
+                arrow: {
+                    label: 'Arrow!!'
+                },
+                text: {
+                    fontFamily: 'monospace'
+                },
+                pixelate: {
+                    label: 'Pixelate size 30',
+                    blocksize: 30
+                },
+                delete: {
+                    label: 'Remove!!'
+                }
+
+            }
+        });
+    function onLoaded() {
+        var w = document.getElementsByTagName('canvas')[0].offsetWidth;
+
+        var indicator = document.getElementById('demoGizmo');
+        indicator.style.transition = "all .5s";
+        indicator.style.width = w + 'px';
+        indicator.innerHTML += ': ' + w + 'px';
+
+        redrawArea.off('canvas-loaded', 'a');
+    }
+    redrawArea.on('canvas-loaded', onLoaded, 'a', this);
+
+    function dumpImage1() {
+        console.log('image', redrawArea.toBase64URL());
+        document.getElementById('imageDump1').src = redrawArea.toBase64URL();
+    }
+
+    function checkEmptiness() {
+        console.log('image', redrawArea.isEmpty());
+        alert(redrawArea.isEmpty() ? 'Yes, canvas is empty' : 'No');
+    }
+
+    function checkDirtyness() {
+        var x = redrawArea.isDirty();
+        console.log('imagex', x);
+        alert(x ? 'Yes, canvas is dirty' : 'No');
+    }
+
+
+    function downloadImage() {
+        asByteDownload(redrawArea.toDataBlob(), 'sample-chart.png');
+        console.log('2', redrawArea.toDataBlob());
+    }
+
+    function showJson() {
+        document.getElementById('dumpJson').value = redrawArea.toJson();
+        document.getElementById('dumpJson').style.display = 'block';
+    }
+
+    function showJsonInput(btn) {
+        btn.style.display = 'none';
+        document.getElementById('loadJson').style.display = 'block';
+        document.getElementById('loadBtn').style.display = 'block';
+    }
+
+    function loadFromJson() {
+        redrawArea.fromJson(document.getElementById('loadJson').value);
+    }
+
+    var asByteDownload = (function() {
+        var link = document.createElement("a");
+        document.body.appendChild(link);
+        link.style.display = 'none';
+
+        return function(data, name) {
+            url = window.URL.createObjectURL(data);
+            link.href = url;
+            link.download = name;
+            link.click();
+            window.URL.revokeObjectURL(url);
+        };
+    }());
+    </script>
+</body>
+
+</html>

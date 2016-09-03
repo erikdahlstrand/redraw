@@ -3,169 +3,40 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>sample</title>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="black-flexbox.css">
-
+    <title>Redraw demo</title>
 </head>
 
 <body>
-
-    <div class="main ui container">
-      <div class="ui horizontal divider">Semantic UI buttons, with toolbar first in dom</div>
-
-        <img src="chart.png" id="demoImage" />
-
-      <div id="demoGizmo" style="display:block; background:grey; padding:15px; transition:.5s width">Bild</div>
-
-        <div class="ui basic segment">
-
-            <div class="ui horizontal divider">
-                Export
-            </div>
-            <div>
-                <h4 class="ui horizontal divider header">
-                  <i class="cloud download icon"></i>
-                  Binary download
-                </h4>
-                <button class="ui button" onclick="downloadImage()">download image</button>
-                <pre>redrawArea.toDataBlob()</pre>
-
-                <h4 class="ui horizontal divider header">
-                  <i class="file code outline icon"></i>
-                  Show Json
-                </h4>
-                <pre>redrawArea.toJson();</pre>
-                <button class="ui button" onclick="showJson()">show json</button>
-                <textarea cols="80" rows="4" id="dumpJson" style="display:none"></textarea>
-
-                <h4 class="ui horizontal divider header">
-                  <i class="file code outline icon"></i>
-                  Load from Json
-                </h4>
-                <pre>redrawArea.fromJson(document.getElementById('loadJson').value);</pre>
-                <button class="ui button" onclick="showJsonInput(this)">upload</button>
-                <textarea cols="80" rows="4" id="loadJson" style="display:none"></textarea>
-                <button id="loadBtn" onclick="loadFromJson()" style="display:none">load from json</button>
-
-                <h4 class="ui horizontal divider header">
-                  <i class="file image outline icon"></i>
-                  Show image
-                </h4>
-                <pre>redrawArea.toBase64URL();</pre>
-                <button class="ui button" onclick="dumpImage1()">dump base64 string</button>
-                <img id="imageDump1" />
-
-                <h4 class="ui horizontal divider header">
-                  <i class="slack icon"></i>
-                  Empty?
-                </h4>
-                <pre>redrawArea.isEmpty();</pre>
-                <button class="ui button" onclick="checkEmptiness()">is canvas empty?</button>
-
-                <h4 class="ui horizontal divider header">
-                  <i class="slack icon"></i>
-                  Dirty?
-                </h4>
-                <pre>redrawArea.isDirty();</pre>
-                <button class="ui button" onclick="checkDirtyness()">is canvas dirty?</button>
-
-
-                <img id="imageDump" />
-            </div>
-        </div>
-
-        <h2 class="ui sub header">Sample</h2>
-        <pre>
-        var redrawArea = new redraw.Annotation(document.getElementById('srcImage'), {
-          buttonCss: 'ui orange basic button',
-          maxWidth:200
-      });
+    <h1>Redraw</h1>
+    <div>
+        <img src="blue.jpg" id="demoImage" />
+    </div>
+    <button class="download" onclick="downloadImage()">download image (png)</button>
+    <h2>Example</h2>
+    <pre>
+        var redrawArea = new redraw.Annotation(document.getElementById('demoImage'),
+        {
+            buttonActiveCss: 'active'
+        });
       </pre>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.1.4/semantic.min.js"></script>
-    <script src="../node_modules/fabric/dist/fabric.js"></script>
+    <!-- Include fabric js from cdn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.4/fabric.min.js"></script>
     <script src="../dist/redraw.js"></script>
+
     <script type="text/javascript">
-
-    var redrawArea = new redraw.Annotation(document.getElementById('demoImage'),
-        {
-            toolbarFirst: true,
-            buttonActiveCss: 'active',
-            buttonCss: 'ui button',
-            toolbarCss: 'ui basic buttons margined',
-            toolSettings: {
-                arrow: {
-                    label: '<i class="pointing right icon"></i>'
-                },
-                text: {
-                    fontFamily: 'monospace'
-                },
-                pixelate: {
-                    label: 'Pixelate size 30',
-                    blocksize: 30
-                },
-                delete: {
-                    label: '<i class="trash outline icon"></i>'
-                }
-
-            }
-        });
-    function onLoaded() {
-        var w = document.getElementsByTagName('canvas')[0].offsetWidth;
-
-        var indicator = document.getElementById('demoGizmo');
-        indicator.style.transition = "all .5s";
-        indicator.style.width = w + 'px';
-        indicator.innerHTML += ': ' + w + 'px';
-
-        redrawArea.off('canvas-loaded', 'a');
-    }
-    redrawArea.on('canvas-loaded', onLoaded, 'a', this);
-
-
-
-    function dumpImage1() {
-        console.log('image', redrawArea.toBase64URL());
-        document.getElementById('imageDump1').src = redrawArea.toBase64URL();
-    }
-
-    function checkEmptiness() {
-        console.log('image', redrawArea.isEmpty());
-        alert(redrawArea.isEmpty() ? 'Yes, canvas is empty' : 'No');
-    }
-
-    function checkDirtyness() {
-        var x = redrawArea.isDirty();
-        console.log('imagex', x);
-        alert(x ? 'Yes, canvas is dirty' : 'No');
-    }
-
+    // Init redraw!
+    var redrawArea = new redraw.Annotation(document.getElementById('demoImage'), {
+        buttonActiveCss: 'active'
+    });
 
     function downloadImage() {
         asByteDownload(redrawArea.toDataBlob(), 'sample-chart.png');
-        console.log('2', redrawArea.toDataBlob());
-    }
-
-    function showJson() {
-        document.getElementById('dumpJson').value = redrawArea.toJson();
-        document.getElementById('dumpJson').style.display = 'block';
-    }
-
-    function showJsonInput(btn) {
-        btn.style.display = 'none';
-        document.getElementById('loadJson').style.display = 'block';
-        document.getElementById('loadBtn').style.display = 'block';
-    }
-
-    function loadFromJson() {
-        redrawArea.fromJson(document.getElementById('loadJson').value);
     }
 
     var asByteDownload = (function() {
-        var link = document.createElement("a");
+        var link = document.createElement('a');
         document.body.appendChild(link);
         link.style.display = 'none';
 
@@ -178,6 +49,55 @@
         };
     }());
     </script>
+
+    <style type="text/css">
+    body {
+        font-family: sans-serif;
+    }
+
+    button {
+        font-size: 115%;
+    }
+
+    .redraw_parent>.redraw_toolbar {
+        margin-top: 1vh;
+    }
+
+    .redraw_parent>.redraw_toolbar button {
+        color: #eee;
+        margin: 4px 2px 0 0;
+        padding: 12px;
+        border-radius: 4px;
+        border: 1px solid #a5b;
+        background: #a5b;
+    }
+
+    .redraw_parent>.redraw_toolbar button.active {
+        color: #fff;
+        border-color: #94a;
+        background: #839;
+    }
+
+    .redraw_parent>.redraw_toolbar button.disabled {
+        color: #ccc;
+        border: 1px solid #96a;
+        background: #96a;
+    }
+
+    button.download {
+        color: #eee;
+        margin: 4px 2px 0 0;
+        padding: 12px;
+        border-radius: 4px;
+        border: 1px solid #ec1;
+
+        background-color: #ec1;
+    }
+    button:hover {
+        opacity: .8;
+        cursor: pointer;
+    }
+    </style>
 </body>
 
 </html>

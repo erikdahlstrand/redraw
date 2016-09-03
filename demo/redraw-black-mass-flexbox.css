@@ -1,12 +1,11 @@
 .black-mass>.redraw_parent {
-    display: flex;
-    flex-direction: column-reverse;
+
 }
 .black-mass>.redraw_parent>.redraw_toolbar {
     margin-bottom: 12px;
 }
 .black-mass>.redraw_parent>.canvas-container {
-    
+
 }
 .black-mass>.redraw_parent>.redraw_toolbar:after {
     content: ' ';
@@ -30,7 +29,7 @@
     outline: none;
 }
 .black-mass>.redraw_parent>.redraw_toolbar button.active {
-    color:#f50;
+    color:#fff;
     background: linear-gradient(to bottom, #767676 0%,#6f6f6f 10%,#646464 25%,#666666 37%,#686868 50%,#5b5b5b 51%,#6e6e6e 83%,#777777 100%); /* W3C */
 }
 .black-mass>.redraw_parent>.redraw_toolbar button:hover {
