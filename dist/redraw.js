@@ -642,7 +642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		TOOL: {
 			ARROW: 'arrow',
 			DELETE: 'delete',
-			HORIZONTAL_LINE: 'horizontal_line',
+			HORIZONTAL_LINE: 'horizontalLine',
 			PIXELATE: 'pixelate',
 			RECTANGLE: 'rectangle',
 			RESET: 'reset',
