@@ -117,7 +117,7 @@ Specifies enabled tools. If omitted all registered tools will be enabled.
 Valid string values
 * 'arrow'
 * 'delete',
-* 'horizontal_line',
+* 'horizontalLine',
 * 'pixelate',
 * 'rectangle',
 * 'reset',
@@ -201,7 +201,7 @@ Default: `Delete`
 
 Sets the value of the button element, i.e. the text of the button.
 
-#### horizontal_line
+#### horizontalLine
 
 The tools that places horizontal lines.
 
