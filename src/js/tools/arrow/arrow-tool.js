@@ -1,8 +1,6 @@
 import CONST from '../../canvas-const.js';
 import Browser from '../../browser-api.js';
 
-/** length of arrow head */
-var indicationLength = 8;
 /** line used during drag n drop */
 var line;
 
