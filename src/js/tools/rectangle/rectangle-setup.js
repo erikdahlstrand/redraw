@@ -1,6 +1,6 @@
 import CONST from '../../canvas-const.js';
 import Browser from '../../browser-api.js';
-import RectangleTool from '../rectangle-tool.js';
+import RectangleTool from './rectangle-tool.js';
 
 /**
  * Default Rectangle options.

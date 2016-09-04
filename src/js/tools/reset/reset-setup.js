@@ -1,6 +1,6 @@
 import CONST from '../../canvas-const.js';
 import Browser from '../../browser-api.js';
-import ResetTool from '../reset-tool.js';
+import ResetTool from './reset-tool.js';
 
 /**
  * Default Reset options.

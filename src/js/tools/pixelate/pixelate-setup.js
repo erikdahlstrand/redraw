@@ -1,6 +1,6 @@
 import CONST from '../../canvas-const.js';
 import Browser from '../../browser-api.js';
-import PixelateTool from '../pixelate-tool.js';
+import PixelateTool from './pixelate-tool.js';
 
 /**
  * Default Pixelate options.

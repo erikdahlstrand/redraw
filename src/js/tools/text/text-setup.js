@@ -1,6 +1,6 @@
 import CONST from '../../canvas-const.js';
 import Browser from '../../browser-api.js';
-import TextTool from '../text-tool.js';
+import TextTool from './text-tool.js';
 
 /**
  * Default Text options.

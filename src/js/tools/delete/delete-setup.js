@@ -1,6 +1,6 @@
 import CONST from '../../canvas-const.js';
 import Browser from '../../browser-api.js';
-import DeleteTool from '../delete-tool.js';
+import DeleteTool from './delete-tool.js';
 
 /**
  * Default Delete options.

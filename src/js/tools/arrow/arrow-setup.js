@@ -1,6 +1,6 @@
 import CONST from '../../canvas-const.js';
 import Browser from '../../browser-api.js';
-import ArrowTool from '../arrow-tool.js';
+import ArrowTool from './arrow-tool.js';
 
 /**
  * Default Arrow options.

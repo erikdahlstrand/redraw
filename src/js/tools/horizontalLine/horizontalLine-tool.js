@@ -1,5 +1,5 @@
-import CONST from '../canvas-const.js';
-import Browser from '../browser-api.js';
+import CONST from '../../canvas-const.js';
+import Browser from '../../browser-api.js';
 
 /**
  * A tool to create horizontal lines.

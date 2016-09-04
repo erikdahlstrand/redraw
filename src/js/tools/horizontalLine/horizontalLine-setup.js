@@ -1,6 +1,6 @@
 import CONST from '../../canvas-const.js';
 import Browser from '../../browser-api.js';
-import HorizontalLineTool from '../horizontal-line-tool.js';
+import HorizontalLineTool from './horizontalLine-tool.js';
 
 /**
  * Default Horizontal Line options.
