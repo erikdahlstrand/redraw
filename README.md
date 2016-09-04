@@ -11,7 +11,7 @@ Redraw is a JavaScript library which provides basic image annotation tools in yo
 
 ## Quick start
 
-Load Fabric.js (1.6+) and and include Redraw:
+Load Fabric.js (1.6+) and include Redraw:
 
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.6.4/fabric.min.js" />
