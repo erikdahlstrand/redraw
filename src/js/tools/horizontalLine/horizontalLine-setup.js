@@ -11,4 +11,7 @@ var defaultToolProps = {
   activeColor: '#55f'
 };
 
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.HORIZONTAL_LINE, HorizontalLineTool, defaultToolProps);
+(new Browser())
+.getFromWindow('redraw')
+  .registerTool(CONST.TOOL.HORIZONTAL_LINE, HorizontalLineTool, defaultToolProps);
+

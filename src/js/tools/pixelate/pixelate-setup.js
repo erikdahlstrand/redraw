@@ -11,4 +11,7 @@ var defaultToolProps = {
   blocksize: 8
 };
 
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.PIXELATE, PixelateTool, defaultToolProps);
+(new Browser())
+.getFromWindow('redraw')
+  .registerTool(CONST.TOOL.PIXELATE, PixelateTool, defaultToolProps);
+

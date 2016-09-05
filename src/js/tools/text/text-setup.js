@@ -12,4 +12,7 @@ var defaultToolProps = {
   color: CONST.DEFAULT_COLOR,
 };
 
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.TEXT, TextTool, defaultToolProps);
+(new Browser())
+.getFromWindow('redraw')
+  .registerTool(CONST.TOOL.TEXT, TextTool, defaultToolProps);
+

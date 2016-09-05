@@ -9,4 +9,7 @@ var defaultToolProps = {
   label: 'Delete'
 };
 
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.DELETE, DeleteTool, defaultToolProps);
+(new Browser())
+.getFromWindow('redraw')
+  .registerTool(CONST.TOOL.DELETE, DeleteTool, defaultToolProps);
+

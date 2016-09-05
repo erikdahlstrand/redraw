@@ -23,6 +23,7 @@ const mainFile = manifest.main;
 const destinationFolder = path.dirname(mainFile);
 const exportFileName = path.basename(mainFile, path.extname(mainFile));
 
+
 function cleanDist(done) {
   del([destinationFolder]).then(() => done());
 }
@@ -49,7 +50,7 @@ function lint(files) {
 }
 
 function lintSrc() {
-  return lint('src/**/*.js');
+  return lint('src/js/**/*.js');
 }
 
 function lintTest() {
@@ -235,6 +236,13 @@ gulp.task('dev', webpackDevServer);
 
 // Lint and run our tests
 gulp.task('test', [], test);
+
+// gulp.task('abc', () => {
+//     return gulp.src('src/js/tools/text/text-tool.js')
+//         .pipe($.jscs())
+//         .pipe($.jscs.reporter());
+// });
+
 
 // Set up coverage and run tests
 gulp.task('coverage', ['lint'], coverage);

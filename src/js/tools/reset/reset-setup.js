@@ -9,4 +9,7 @@ var defaultToolProps = {
   label: 'Reset'
 };
 
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.RESET, ResetTool, defaultToolProps);
+(new Browser())
+.getFromWindow('redraw')
+  .registerTool(CONST.TOOL.RESET, ResetTool, defaultToolProps);
+

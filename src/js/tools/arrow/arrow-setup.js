@@ -13,4 +13,7 @@ var defaultToolProps = {
   lineWidth: 4
 };
 
-(new Browser()).getFromWindow('redraw').registerTool(CONST.TOOL.ARROW, ArrowTool, defaultToolProps);
+(new Browser())
+.getFromWindow('redraw')
+  .registerTool(CONST.TOOL.ARROW, ArrowTool, defaultToolProps);
+
