@@ -266,7 +266,23 @@ Sets the size of the mozaic pattern.
 
 The tools that draw a rectangle.
 
+
+##### activeColor
+Type: `string` (optional)
+
+Default: `#55f`
+
+Sets the color of the element in canvas, before it is complete, i.e. while it is being dragged.
+
+##### activeOpacity
+Type: `number` (optional)
+
+Default: `0.3`
+
+Sets the opacity of the element in canvas, before it is complete, i.e. while it is being dragged.
+
 ##### color
+
 Type: `string` (optional)
 
 Default: `#33e`
@@ -280,6 +296,14 @@ Type: `string` (optional)
 Default: `Rectangle`
 
 Sets the value of the button element, i.e. the text of the button.
+
+##### opacity
+
+Type: `number` (optional)
+
+Default: `0.5`
+
+Sets the opacity (transparancy) of the element in canvas.
 
 #### reset
 

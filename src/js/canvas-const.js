@@ -9,6 +9,7 @@ export default {
     TEXT: 'text'
   },
   DEFAULT_COLOR: '#33e',
+  DEFAULT_ACTIVE_COLOR: '#55f',
   CSS: {
     ACTIVE_BUTTON: 'active',
     DISABLED_BUTTON: 'disabled',

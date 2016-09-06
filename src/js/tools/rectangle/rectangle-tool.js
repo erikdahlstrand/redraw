@@ -88,7 +88,9 @@ export default class RectangleTool {
       }
 
       rect.set({
-        opacity: 0.5
+        borderColor: toolOptions.color,
+        fill: toolOptions.color,
+        opacity: toolOptions.opacity
       });
       canvas.renderAll();
     }
@@ -104,10 +106,10 @@ export default class RectangleTool {
         left: startX,
         top: startY,
         width: 4,
-        borderColor: toolOptions.color,
+        borderColor: toolOptions.activeColor,
         height: 4,
-        fill: toolOptions.color,
-        opacity: 0.3,
+        fill: toolOptions.activeColor,
+        opacity: toolOptions.activeOpacity,
         hasControls: true,
         hasRotatingPoint: false,
         originX: 'left',

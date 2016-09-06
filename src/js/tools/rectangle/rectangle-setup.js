@@ -7,7 +7,10 @@ import RectangleTool from './rectangle-tool.js';
  */
 var defaultToolProps = {
   label: 'Rectangle',
-  color: CONST.DEFAULT_COLOR
+  color: CONST.DEFAULT_COLOR,
+  activeColor: CONST.DEFAULT_ACTIVE_COLOR,
+  opacity: 0.5,
+  activeOpacity: 0.3
 };
 
 (new Browser())
