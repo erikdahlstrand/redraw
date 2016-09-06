@@ -1,16 +1,16 @@
-.green-disease>.redraw_parent {
+.green-disease>.redraw-parent {
     padding: 3em;
     border-radius: 1em;
     background:#eee;
 }
 
-.green-disease>.redraw_parent>.redraw_toolbar {
+.green-disease>.redraw-parent>.redraw-toolbar {
     margin-top: 10px;
     margin-left:0;
     margin-right: 0;
     padding-right: 0;
 }
-.green-disease>.redraw_parent>.redraw_toolbar:after {
+.green-disease>.redraw-parent>.redraw-toolbar:after {
     content: ' ';
     height: 0;
     position: relative;
@@ -21,7 +21,7 @@
     border-bottom-color: #92CD00;
 }
 
-.green-disease>.redraw_parent>.redraw_toolbar button {
+.green-disease>.redraw-parent>.redraw-toolbar button {
     line-height: 40px;
     background-color: #92CD00;
     padding-left:1.2em;
@@ -31,21 +31,21 @@
     transition:.3s all;
     outline: none;
 }
-.green-disease>.redraw_parent>.redraw_toolbar button.active {
+.green-disease>.redraw-parent>.redraw-toolbar button.active {
     background-color: #96FF10;
     color:#2C6700;
 }
-.green-disease>.redraw_parent>.redraw_toolbar button:hover {
+.green-disease>.redraw-parent>.redraw-toolbar button:hover {
     background-color: #FFCF79;
     color:#fff;
     border:none;
 }
-.green-disease>.redraw_parent>.redraw_toolbar button:first-of-type {
+.green-disease>.redraw-parent>.redraw-toolbar button:first-of-type {
     padding-left:1.8em;
     border-top-left-radius: 9px;
     border-bottom-left-radius: 9px;
 }
-.green-disease>.redraw_parent>.redraw_toolbar button:last-of-type {
+.green-disease>.redraw-parent>.redraw-toolbar button:last-of-type {
     padding-right:1.8em;
     border-top-right-radius: 9px;
     border-bottom-right-radius: 9px;

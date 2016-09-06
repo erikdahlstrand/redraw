@@ -69,8 +69,8 @@ var editor = new redraw.Annotation(document.getElementById('target'), {
 
 Type: `string` (optional)
 
-Adds css attribute to the toolbar button elements.
-Default button class is *redraw_btn*. Additional classes specified by buttonCss will not replace it.
+Adds class attribute to the toolbar button elements.
+Default button class is *redraw-btn*. Additional classes specified by buttonCss will not replace it.
 
 ##### buttonActiveClass
 
@@ -323,6 +323,28 @@ Type: `number` pixels (optional)
 Default: `18`
 
 Sets the font size of the text-box element in canvas.
+
+## Style
+
+There is no styling included in redraw by default, but css-classes are applied.
+
+### CSS
+
+#### redraw-btn
+
+This class attribute is applied to buttons of the toolbar, if not overridden by option `buttonClass`.
+
+#### redraw-parent
+
+This class attribute is applied to the top level div element, that wraps both canvas and toolbar.
+
+#### redraw-toolbar
+
+This class attribute is applied to the div element, wrapping the toolbar buttons.
+
+#### redraw-canvas
+
+This class attribute is applied to the div element, wrapping the canvas.
 
 ## License
 

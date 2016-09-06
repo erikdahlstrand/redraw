@@ -12,9 +12,9 @@ export default {
   CSS: {
     ACTIVE_BUTTON: 'active',
     DISABLED_BUTTON: 'disabled',
-    BUTTON: 'redraw_btn',
-    PARENT: 'redraw_parent',
-    TOOLBAR: 'redraw_toolbar',
-    CANVAS_WRAPPER: 'redraw_canvas'
+    BUTTON: 'redraw-btn',
+    PARENT: 'redraw-parent',
+    TOOLBAR: 'redraw-toolbar',
+    CANVAS_WRAPPER: 'redraw-canvas'
   }
 };

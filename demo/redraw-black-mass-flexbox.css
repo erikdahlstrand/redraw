@@ -1,13 +1,13 @@
-.black-mass>.redraw_parent {
+.black-mass>.redraw-parent {
 
 }
-.black-mass>.redraw_parent>.redraw_toolbar {
+.black-mass>.redraw-parent>.redraw-toolbar {
     margin-bottom: 12px;
 }
-.black-mass>.redraw_parent>.canvas-container {
+.black-mass>.redraw-parent>.canvas-container {
 
 }
-.black-mass>.redraw_parent>.redraw_toolbar:after {
+.black-mass>.redraw-parent>.redraw-toolbar:after {
     content: ' ';
     height: 0;
     position: relative;
@@ -18,7 +18,7 @@
     border-top-color: #575757;
 }
 
-.black-mass>.redraw_parent>.redraw_toolbar button {
+.black-mass>.redraw-parent>.redraw-toolbar button {
     line-height: 40px;
     background: #575757;
     background: linear-gradient(to bottom, #575757 0%,#525252 10%,#4a4a4a 25%,#4c4c4c 37%,#4d4d4d 50%,#434343 51%,#525252 83%,#585858 100%);
@@ -28,23 +28,23 @@
     border:none;
     outline: none;
 }
-.black-mass>.redraw_parent>.redraw_toolbar button.active {
+.black-mass>.redraw-parent>.redraw-toolbar button.active {
     color:#fff;
     background: linear-gradient(to bottom, #767676 0%,#6f6f6f 10%,#646464 25%,#666666 37%,#686868 50%,#5b5b5b 51%,#6e6e6e 83%,#777777 100%); /* W3C */
 }
-.black-mass>.redraw_parent>.redraw_toolbar button:hover {
+.black-mass>.redraw-parent>.redraw-toolbar button:hover {
 
     background: #898989; /* Old browsers */
     background: linear-gradient(to bottom, #898989 0%,#828282 10%,#757575 25%,#777777 37%,#797979 50%,#6a6a6a 51%,#818181 83%,#8b8b8b 100%);
     color:#000;
     border:none;
 }
-.black-mass>.redraw_parent>.redraw_toolbar button:first-of-type {
+.black-mass>.redraw-parent>.redraw-toolbar button:first-of-type {
     padding-left:1.4em;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
 }
-.black-mass>.redraw_parent>.redraw_toolbar button:last-of-type {
+.black-mass>.redraw-parent>.redraw-toolbar button:last-of-type {
     padding-right:1.4em;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
