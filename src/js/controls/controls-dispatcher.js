@@ -62,7 +62,7 @@ export default class ControlsDispatcher {
       var container = document.createElement('div');
 
       addClasses(container, CONST.CSS.TOOLBAR);
-      addClasses(container, options.toolbarCss);
+      addClasses(container, options.toolbarClass);
 
       if (mainOptions.toolbarFirst === true) {
         domParent.insertBefore(container, domParent.firstChild);
@@ -76,15 +76,16 @@ export default class ControlsDispatcher {
 
         btn.classList.add(CONST.CSS.BUTTON);
 
-        addClasses(btn, mainOptions.buttonCss);
-        addClasses(btn, tools[toolName].options.buttonCss);
+        addClasses(btn, mainOptions.buttonClass);
+        addClasses(btn, tools[toolName].options.buttonClass);
 
         btn.onclick = notifyActive(tools[toolName].address);
         this.toolsInUse[tools[toolName].address] = btn;
         container.appendChild(btn);
       }
 
-      var btnActiveCss = mainOptions.buttonActiveCss || CONST.CSS.ACTIVE_BUTTON;
+      var btnActiveCss = mainOptions.buttonActiveClass || CONST.CSS.ACTIVE_BUTTON;
+      var btnDisabledCss = mainOptions.buttonDisabledClass || CONST.CSS.DISABLED_BUTTON;
 
       eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
         function (subscriptionId, sender, status) {
@@ -104,9 +105,9 @@ export default class ControlsDispatcher {
       eventAggregator.subscribeTo('tool-enabled', 'toolbar',
         function (subscriptionId, sender, isEnabled) {
           if (isEnabled) {
-            this.toolsInUse[sender].classList.remove('disabled');
+            this.toolsInUse[sender].classList.remove(btnDisabledCss);
           } else {
-            this.toolsInUse[sender].classList.add('disabled');
+            this.toolsInUse[sender].classList.add(btnDisabledCss);
           }
         }, this);
     };

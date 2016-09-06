@@ -241,8 +241,8 @@ redrawNs.registerTool = function (_name, _toolFn, _options) {
     options: _options
   };
 
-  // buttonCss is an attribute that applies to all tools
-  redrawNs.tools[_name].options.buttonCss = redrawNs.tools[_name].options.buttonCss ||  '';
+  // buttonClass is an attribute that applies to all tools
+  redrawNs.tools[_name].options.buttonClass = redrawNs.tools[_name].options.buttonClass ||  '';
 };
 
 (new Browser())

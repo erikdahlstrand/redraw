@@ -11,6 +11,7 @@ export default {
   DEFAULT_COLOR: '#33e',
   CSS: {
     ACTIVE_BUTTON: 'active',
+    DISABLED_BUTTON: 'disabled',
     BUTTON: 'redraw_btn',
     PARENT: 'redraw_parent',
     TOOLBAR: 'redraw_toolbar',

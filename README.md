@@ -37,9 +37,9 @@ var editor = new redraw.Annotation(document.getElementById('target'), {
   maxWidth: 700
 
   // Classes to add
-  buttonCss: 'my-btn',
-  activeButtonCss: 'my-active-btn'
-  toolbarCss: 'my-toolbar',
+  buttonClass: 'my-btn',
+  buttonActiveClass: 'my-active-btn'
+  toolbarClass: 'my-toolbar',
 
   // Change DOM insertion order
   toolbarFirst: true,
@@ -59,25 +59,36 @@ var editor = new redraw.Annotation(document.getElementById('target'), {
   }
 });
 ```
+
 ## API
 
 ### redraw.Annotation
 #### options
-##### buttonCss
+
+##### buttonClass
 
 Type: `string` (optional)
 
 Adds css attribute to the toolbar button elements.
 Default button class is *redraw_btn*. Additional classes specified by buttonCss will not replace it.
 
-##### activeButtonCss
+##### buttonActiveClass
 
 Type: `string` (optional)
 
 Default: `active`
 
-Adds css attribute to the active toolbar button elements, i.e. while the tool is active.
-Default button class is *active*. Classes specified by activeButtonCss *will* replace it.
+Adds class attribute to the active toolbar button elements, i.e. while the tool is active.
+Default button class is *active*. Classes specified by buttonActiveClass *will* replace it.
+
+##### buttonDisabledClass
+
+Type: `string` (optional)
+
+Default: `disabled`
+
+Adds class attribute to a disabled toolbar button element, e.g. delete-button when there is nothing to delete.
+Default button class is *disabled*. Classes specified by buttonDisabledClass *will* replace it.
 
 ##### maxHeight
 
@@ -93,11 +104,11 @@ Type: `number` pixels (optional)
 Makes sure that the annotated image does not exceed this number of pixels in width.
 Useful for applying scaling to large images.
 
-##### toolbarCss
+##### toolbarClass
 
 Type: `string` (optional)
 
-Appends css attribute to the toolbar div element.
+Appends class attribute to the toolbar div element.
 Useful for applying custom styles.
 
 ##### toolbarFirst
@@ -109,7 +120,7 @@ Default: `false`
 Appends the toolbar div element, before the canvas element.
 Useful to ease the style setup, if the toolbar should be ontop.
 
-##### toolbarFirst
+##### tools
 
 Type: `Array` (optional)
 
