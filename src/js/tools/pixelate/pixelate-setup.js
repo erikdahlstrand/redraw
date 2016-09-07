@@ -7,7 +7,8 @@ import PixelateTool from './pixelate-tool.js';
  */
 var defaultToolProps = {
   label: 'Pixelate',
-  color: CONST.DEFAULT_COLOR,
+  activeColor: CONST.DEFAULT_COLOR,
+  activeOpacity: 0.3,
   blocksize: 8
 };
 

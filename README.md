@@ -241,12 +241,19 @@ Sets the value of the button element, i.e. the text of the button.
 
 The tools that blurs image content, by applying a pixelate-filter.
 
-##### color
+##### activeColor
 Type: `string` (optional)
 
 Default: `#33e`
 
-Sets the color of the element in canvas, but only before it is defined, no color is applied once complete.
+Sets the color of the element in canvas, but only before it is complete and the pixelate effect is applied.
+
+##### activeOpacity
+Type: `number` (optional)
+
+Default: `0.3`
+
+Sets the color of the marker element in canvas, before it is complete, i.e. while it is being dragged.
 
 ##### label
 Type: `string` (optional)
