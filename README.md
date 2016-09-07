@@ -1,7 +1,7 @@
 # Redraw
 Redraw is a JavaScript library which provides basic image annotation tools in your browser.
 
-![Imgur](http://i.imgur.com/2mkbrJU.png)
+![Imgur](http://i.imgur.com/PLd9jZP.jpg)
 
 ## Resources
 
