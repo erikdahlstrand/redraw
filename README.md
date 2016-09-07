@@ -327,6 +327,13 @@ Sets the value of the button element, i.e. the text of the button.
 
 The tools that adds a text-box to the canvas.
 
+##### activeColor
+Type: `string` (optional)
+
+Default: `#55f`
+
+Sets the color of the element in canvas, while it's being dragged.
+
 ##### label
 Type: `string` (optional)
 

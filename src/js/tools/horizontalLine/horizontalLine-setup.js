@@ -8,7 +8,7 @@ import HorizontalLineTool from './horizontalLine-tool.js';
 var defaultToolProps = {
   label: 'Horizontal Line',
   color: CONST.DEFAULT_COLOR,
-  activeColor: '#55f'
+  activeColor: CONST.DEFAULT_ACTIVE_COLOR
 };
 
 (new Browser())

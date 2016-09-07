@@ -8,7 +8,7 @@ import ArrowTool from './arrow-tool.js';
 var defaultToolProps = {
   label: 'Arrow',
   color: CONST.DEFAULT_COLOR,
-  activeColor: '#55f',
+  activeColor: CONST.DEFAULT_ACTIVE_COLOR,
   size: 15,
   lineWidth: 4
 };

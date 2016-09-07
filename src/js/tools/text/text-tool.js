@@ -48,7 +48,7 @@ export default class TextTool {
         fontSize: toolOptions.fontSize,
         left: 100,
         top: -40,
-        fill: toolOptions.color,
+        fill: toolOptions.activeColor,
         hasControls: false
       });
 
@@ -70,6 +70,9 @@ export default class TextTool {
 
       function detachTextListener() {
         if (editor) {
+          editor.set({
+            fill: toolOptions.color,
+          });
           canvas.off('mouse:move', onMove);
           canvas.off('mouse:up', detachTextListener);
           editor.setCoords();

@@ -10,6 +10,7 @@ var defaultToolProps = {
   fontFamily: 'arial',
   fontSize: 18,
   color: CONST.DEFAULT_COLOR,
+  activeColor: CONST.DEFAULT_ACTIVE_COLOR
 };
 
 (new Browser())
