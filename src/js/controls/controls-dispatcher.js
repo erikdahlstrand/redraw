@@ -51,7 +51,10 @@ export default class ControlsDispatcher {
     };
 
     var manageKeys = function (e) {
-      if (e.keyCode === 46 || e.keyCode === 27) {
+      if (e.keyCode === 8 ||
+          e.keyCode === 13 ||
+          e.keyCode === 27 ||
+          e.keyCode === 46) {
         eventAggregator.notify('keydown', 'toolbar', e.keyCode);
       }
     };
