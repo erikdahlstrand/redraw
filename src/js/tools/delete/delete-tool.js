@@ -28,7 +28,7 @@ export default class DeleteTool {
     eventAggregator.subscribeTo(CONST.TOOL.DELETE, 'DeleteTool', remove);
 
     eventAggregator.subscribeTo('keydown', 'DeleteTool', function (topic, sender, keyCode) {
-      if (keyCode === 46) {
+      if (keyCode === 8 || keyCode === 46) {
         remove();
       }
 
