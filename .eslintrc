@@ -1,11 +1,26 @@
 {
-  "parser": "babel-eslint",
-  "rules": {
-    "strict": 0,
-    "quotes": [2, "single"]
-  },
+  "extends": "airbnb",
   "env": {
-    "browser": true,
-    "node": true
+    "jasmine": true,
+    "browser": true
+  },
+  "rules": {
+    "no-console": 0,
+    "comma-dangle": 0,
+    "new-cap": 0,
+    "no-multi-spaces": 0,
+    "arrow-body-style": 0,
+    "no-return-assign": 1,
+    "no-param-reassign": [2, { "props": false }],
+    "global-require": 0,
+    "import/no-unresolved": 0,
+    "no-underscore-dangle": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/imports-first": 0,
+    "import/no-named-as-default": 0,
+    "import/no-named-as-default-member": 0,
+    "object-shorthand": 1,
+    "no-global-assign": 0,
+    "no-unsafe-negation": 0
   }
 }
