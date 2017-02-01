@@ -4,7 +4,7 @@ global.chai.use(require('sinon-chai'));
 
 require('babel-core/register');
 require('./setup')();
-// global.fabric = require('../../bower_components/fabric/dist/fabric').fabric;
+global.fabric = require('node_modules/fabric/dist/fabric').fabric;
 global.jsdom = require('jsdom').jsdom;
 
 /*

@@ -25,11 +25,12 @@ module.exports = {
         filename: './dist/redraw.js'
     },
     plugins: [
-        new webpack.dependencies.LabeledModulesPlugin()/*,
+        new webpack.dependencies.LabeledModulesPlugin(),
+        new webpack.IgnorePlugin(/jsdom$/)/*,
         new webpack.optimize.UglifyJsPlugin({minimize: true})*/
     ],
     resolve: {
-        modulesDirectories: ['bower_components', 'node_modules']
+        modulesDirectories: ['node_modules']
     },
     externals: {
         "fabric": "fabric"
@@ -42,7 +43,7 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
+                loader: 'babel',
                 exclude: /node_modules|bower_components/
             },
             { test: /\.json$/, loader: "json" }
