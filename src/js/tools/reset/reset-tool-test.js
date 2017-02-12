@@ -3,10 +3,10 @@ import ResetTool from './reset-tool';
 describe('Reset tool', () => {
   let subscribeToSpy;
   beforeEach(() => {
-    let fabric = {};
-    subscribeToSpy = sinon.spy();
+    const fabric = {};
+    subscribeToSpy = jasmine.createSpy();
 
-    let eventAggregator = {
+    const eventAggregator = {
       subscribeTo: subscribeToSpy
     };
 
@@ -16,15 +16,6 @@ describe('Reset tool', () => {
   });
 
   it('should register for tool activation event', () => {
-    expect(subscribeToSpy.calledOnce)
-      .to.equal(true);
-    expect(subscribeToSpy.args[0][0])
-      .to.equal('reset');
-    expect(subscribeToSpy.args[0][1])
-      .to.equal('ResetTool');
-    expect(subscribeToSpy.args[0][2])
-      .to.be.a('function');
+    expect(subscribeToSpy).toHaveBeenCalledWith('reset', 'ResetTool', jasmine.any(Function));
   });
-
 });
-

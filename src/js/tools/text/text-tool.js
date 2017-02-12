@@ -1,7 +1,4 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
-
-var editorHeight = 30;
+import CONST from '../../canvas-const';
 
 /**
  * A tool to create a text editor in the canvas.
@@ -14,15 +11,8 @@ export default class TextTool {
    * @param {EventAggregator} eventAggregator - Event mediator.
    */
   constructor(canvasWrapper, eventAggregator, toolOptions) {
-    var canvas = canvasWrapper.canvas;
-    var editor;
-
-    eventAggregator.subscribeTo(CONST.TOOL.TEXT, 'TextTool', textTool);
-    eventAggregator.subscribeTo('keydown', 'TextTool', function (topic, sender, keyCode) {
-      if (keyCode === 27) {
-        abort();
-      }
-    });
+    const canvas = canvasWrapper.canvas;
+    let editor;
 
     function notify(message) {
       eventAggregator.notify('TOOL_USAGE', CONST.TOOL.TEXT, message);
@@ -35,6 +25,13 @@ export default class TextTool {
         notify('inactive');
       }
     }
+
+    eventAggregator.subscribeTo(CONST.TOOL.TEXT, 'TextTool', textTool);
+    eventAggregator.subscribeTo('keydown', 'TextTool', (topic, sender, keyCode) => {
+      if (keyCode === 27) {
+        abort();
+      }
+    });
 
     function textTool(topic, sender, payload) {
       if (payload !== 'toolbar-click') {
@@ -54,9 +51,9 @@ export default class TextTool {
 
       canvas.add(editor);
 
-      var onMove = function (options) {
+      const onMove = (options) => {
         if (editor) {
-          let pointer = canvas.getPointer(options.e);
+          const pointer = canvas.getPointer(options.e);
           editor.set({
             top: pointer.y,
             left: pointer.x
@@ -71,7 +68,7 @@ export default class TextTool {
       function detachTextListener() {
         if (editor) {
           editor.set({
-            fill: toolOptions.color,
+            fill: toolOptions.color
           });
           canvas.off('mouse:move', onMove);
           canvas.off('mouse:up', detachTextListener);

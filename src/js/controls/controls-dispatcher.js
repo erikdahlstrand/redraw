@@ -1,4 +1,4 @@
-import CONST from '../canvas-const.js';
+import CONST from '../canvas-const';
 
 /**
  * Adds a class to the array of classes.
@@ -6,7 +6,7 @@ import CONST from '../canvas-const.js';
  */
 function addClasses(btnObj, classes) {
   if (!classes) return;
-  var allClasses = classes.split(' ');
+  const allClasses = classes.split(' ');
 
   allClasses.forEach((clazz) => {
     btnObj.classList.add(clazz);
@@ -28,7 +28,7 @@ export default class ControlsDispatcher {
     let activeTool;
 
     function notifyActive(topic) {
-      return function () {
+      return () => {
         if (activeTool) {
           eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
         }
@@ -42,15 +42,14 @@ export default class ControlsDispatcher {
       };
     }
 
-    this.cancelActiveTool = function () {
-
+    this.cancelActiveTool = () => {
       if (activeTool) {
         eventAggregator.notify(activeTool, 'toolbar', 'toolbar-deactivate');
         activeTool = undefined;
       }
     };
 
-    var manageKeys = function (e) {
+    const manageKeys = (e) => {
       if (e.keyCode === 8 ||
           e.keyCode === 13 ||
           e.keyCode === 27 ||
@@ -61,8 +60,8 @@ export default class ControlsDispatcher {
 
     window.addEventListener('keydown', manageKeys, false);
 
-    this.setupTools = function (tools, domParent, mainOptions) {
-      var container = document.createElement('div');
+    this.setupTools = (tools, domParent, mainOptions) => {
+      const container = document.createElement('div');
 
       addClasses(container, CONST.CSS.TOOLBAR);
       addClasses(container, options.toolbarClass);
@@ -73,8 +72,8 @@ export default class ControlsDispatcher {
         domParent.appendChild(container);
       }
 
-      for (var toolName in tools) {
-        var btn = document.createElement('button');
+      Object.keys(tools).forEach((toolName) => {
+        const btn = document.createElement('button');
         btn.innerHTML = tools[toolName].options.label;
 
         btn.classList.add(CONST.CSS.BUTTON);
@@ -85,14 +84,14 @@ export default class ControlsDispatcher {
         btn.onclick = notifyActive(tools[toolName].address);
         this.toolsInUse[tools[toolName].address] = btn;
         container.appendChild(btn);
-      }
+      });
 
-      var btnActiveCss = mainOptions.buttonActiveClass || CONST.CSS.ACTIVE_BUTTON;
-      var btnDisabledCss = mainOptions.buttonDisabledClass || CONST.CSS.DISABLED_BUTTON;
+      const btnActiveCss = mainOptions.buttonActiveClass || CONST.CSS.ACTIVE_BUTTON;
+      const btnDisabledCss = mainOptions.buttonDisabledClass || CONST.CSS.DISABLED_BUTTON;
 
       eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
-        function (subscriptionId, sender, status) {
-          var currTool = this.toolsInUse[sender];
+        (subscriptionId, sender, status) => {
+          const currTool = this.toolsInUse[sender];
 
           if (status !== 'active') {
             if (sender === activeTool) {
@@ -106,7 +105,7 @@ export default class ControlsDispatcher {
         }, this);
 
       eventAggregator.subscribeTo('tool-enabled', 'toolbar',
-        function (subscriptionId, sender, isEnabled) {
+        (subscriptionId, sender, isEnabled) => {
           if (isEnabled) {
             this.toolsInUse[sender].classList.remove(btnDisabledCss);
           } else {

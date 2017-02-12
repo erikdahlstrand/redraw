@@ -1,15 +1,14 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
-import DeleteTool from './delete-tool.js';
+import CONST from '../../canvas-const';
+import Browser from '../../browser-api';
+import DeleteTool from './delete-tool';
 
 /**
  * Default Delete options.
  */
-var defaultToolProps = {
+const defaultToolProps = {
   label: 'Delete'
 };
 
-(new Browser())
-.getFromWindow('redraw')
+Browser.getFromWindow('redraw')
   .registerTool(CONST.TOOL.DELETE, DeleteTool, defaultToolProps);
 

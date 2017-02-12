@@ -1,5 +1,4 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
+import CONST from '../../canvas-const';
 
 /**
  * A tool to reset the canvas, i.e. remove all objects.
@@ -16,7 +15,7 @@ export default class ResetTool {
 
     function initClear(topic, sender, payload) {
       if (payload !== 'toolbar-deactivate' &&
-        confirm('This will restore your image to its default state.\n' +
+        window.confirm('This will restore your image to its default state.\n' +
             'All your modifications will be deleted.\nDo you want to continue?')) {
         clearAllElements();
       }
@@ -25,9 +24,9 @@ export default class ResetTool {
     }
 
     function clearAllElements() {
-      var c = canvasWrapper.canvas;
-      var all = c.getObjects();
-      for (var i = all.length - 1; i >= 0; i--) {
+      const c = canvasWrapper.canvas;
+      const all = c.getObjects();
+      for (let i = all.length - 1; i >= 0; i -= 1) {
         c.remove(all[i]);
       }
     }

@@ -1,5 +1,4 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
+import CONST from '../../canvas-const';
 
 /**
  * A tool to create horizontal lines.
@@ -12,17 +11,16 @@ export default class HorizontalLineTool {
    * @param {EventAggregator} eventAggregator - Event mediator.
    */
   constructor(canvasWrapper, eventAggregator, toolOptions) {
-    var canvas = canvasWrapper.canvas;
-    var horizontalLine;
+    const canvas = canvasWrapper.canvas;
+    let horizontalLine;
     eventAggregator.subscribeTo(CONST.TOOL.HORIZONTAL_LINE,
-      'HorizontalLineTool', HorizontalLineTool);
+      'HorizontalLineTool', activateHorizontalLineTool);
 
     function notify(message) {
       eventAggregator.notify('TOOL_USAGE', CONST.TOOL.HORIZONTAL_LINE, message);
     }
 
     function createHorizontalLine() {
-
       return new fabric.Line([0, 0, canvas.width, 0], {
         left: 0,
         top: 1,
@@ -35,7 +33,7 @@ export default class HorizontalLineTool {
       });
     }
 
-    function HorizontalLineTool(addr, sender, action) {
+    function activateHorizontalLineTool(addr, sender, action) {
       if (action !== 'toolbar-click') {
         abort();
         return;
@@ -46,8 +44,8 @@ export default class HorizontalLineTool {
       horizontalLine = createHorizontalLine();
       canvas.add(horizontalLine);
 
-      eventAggregator.subscribeTo('keydown', 'HorizontalLine', function (topic, sender, keyCode) {
-        if (keyCode === 27) {
+      eventAggregator.subscribeTo('keydown', 'HorizontalLine', (abortTopic, abortSender, abortKeyCode) => {
+        if (abortKeyCode === 27) {
           abort();
         }
       });
@@ -62,7 +60,7 @@ export default class HorizontalLineTool {
         notify('inactive');
       }
 
-      var onMouseMove = function (options) {
+      const onMouseMove = (options) => {
         if (horizontalLine) {
           horizontalLine.set({
             top: canvas.getPointer(options.e).y
@@ -75,7 +73,7 @@ export default class HorizontalLineTool {
 
       canvas.on('mouse:move', onMouseMove);
 
-      var onMouseUp = function (options) {
+      const onMouseUp = () => {
         horizontalLine = createHorizontalLine();
         canvas.add(horizontalLine);
       };
@@ -86,7 +84,6 @@ export default class HorizontalLineTool {
         canvas.off('mouse:move', onMouseMove);
         canvas.off('mouse:up', onMouseUp);
       }
-    };
+    }
   }
 }
-

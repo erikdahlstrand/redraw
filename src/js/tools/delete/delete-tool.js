@@ -1,5 +1,4 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
+import CONST from '../../canvas-const';
 
 /**
  * A tool to remove selected elements from canvas.
@@ -16,8 +15,8 @@ export default class DeleteTool {
     /**
      * Called upon removal.
      */
-    var remove = function () {
-      var c = canvasWrapper.canvas;
+    const remove = () => {
+      const c = canvasWrapper.canvas;
       if (c.getActiveObject()) {
         c.remove(c.getActiveObject());
       }
@@ -27,18 +26,17 @@ export default class DeleteTool {
 
     eventAggregator.subscribeTo(CONST.TOOL.DELETE, 'DeleteTool', remove);
 
-    eventAggregator.subscribeTo('keydown', 'DeleteTool', function (topic, sender, keyCode) {
+    eventAggregator.subscribeTo('keydown', 'DeleteTool', (topic, sender, keyCode) => {
       if (keyCode === 8 || keyCode === 46) {
         remove();
       }
-
     });
 
-    canvasWrapper.canvas.on('object:selected', function (o) {
+    canvasWrapper.canvas.on('object:selected', () => {
       eventAggregator.notify('tool-enabled', CONST.TOOL.DELETE, true);
     });
 
-    canvasWrapper.canvas.on('selection:cleared', function (o) {
+    canvasWrapper.canvas.on('selection:cleared', () => {
       eventAggregator.notify('tool-enabled', CONST.TOOL.DELETE, false);
     });
   }

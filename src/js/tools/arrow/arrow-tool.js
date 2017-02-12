@@ -1,8 +1,6 @@
+import CONST from '../../canvas-const';
 
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
-
-var line;
+let line;
 /**
  * A tool to paint arrows.
  */
@@ -13,44 +11,47 @@ export default class ArrowTool {
    * @param {Canvas} canvasWrapper - Canvas.
    * @param {EventAggregator} eventAggregator - Event mediator.
    */
-  constructor(canvasWrapper, eventAggregator, toolOptions, fabric) {
-    var _this = this;
+  constructor(canvasWrapper, eventAggregator, toolOptions) {
+    const _this = this;
 
     /** eventAggregator for madiated cummunications */
     this.eventAggregator = eventAggregator;
     /** main api to use for canvas manipulation */
     this.canvasWrapper = canvasWrapper;
     /** coords for the elements of the arrow */
-    this.arrow = this.canvas = this.start = this.end = undefined;
+    this.arrow = undefined;
+    this.canvas = undefined;
+    this.start = undefined;
+    this.end = undefined;
     /** options */
     this.options = toolOptions;
 
     this.eventAggregator.subscribeTo(
       CONST.TOOL.ARROW,
       'ArrowTool',
-      function () {
-        _this.initListeners.apply(_this, arguments);
+      (...args) => {
+        _this.initListeners(...args);
       });
     /** shorthand to canvas */
     this.canvas = canvasWrapper.canvas;
 
-    this.moveFn = function (options) {
+    this.moveFn = (options) => {
       _this.onMove(options);
     };
 
-    this.downFn = function (options) {
+    this.downFn = (options) => {
       _this.onMouseDown(options);
     };
 
-    this.upFn = function (options) {
+    this.upFn = (options) => {
       _this.onMUP(options);
     };
 
-    this.notify = function (message) {
+    this.notify = (message) => {
       _this.eventAggregator.notify('TOOL_USAGE', CONST.TOOL.ARROW, message);
     };
 
-    this.done = function () {
+    this.done = () => {
       _this.canvasWrapper.enableSelection(true);
       _this.removeCanvasListeners();
       _this.notify('inactive');
@@ -64,12 +65,12 @@ export default class ArrowTool {
    * @param {Object} points - 4d.
    */
   moveArrowIndicator(points) {
-    let x1 = points[0];
-    let y1 = points[1];
-    let x2 = points[2];
-    let y2 = points[3];
-    let dx = x2 - x1;
-    let dy = y2 - y1;
+    const x1 = points[0];
+    const y1 = points[1];
+    const x2 = points[2];
+    const y2 = points[3];
+    const dx = x2 - x1;
+    const dy = y2 - y1;
     let angle = Math.atan2(dy, dx);
 
     angle *= 180 / Math.PI;
@@ -80,7 +81,7 @@ export default class ArrowTool {
     }
 
     this.arrow = new fabric.Triangle({
-      angle: angle,
+      angle,
       fill: this.options.activeColor,
       top: y2,
       left: x2,
@@ -95,7 +96,8 @@ export default class ArrowTool {
   }
 
   /**
-   * Cancels this paint operation, i.e. removes any ongoing paint-objects och de-registers listeners.
+   * Cancels this paint operation, i.e. removes any ongoing paint-objects och de-registers
+   * listeners.
    * @private
    */
   abort() {
@@ -119,9 +121,8 @@ export default class ArrowTool {
    * @param {Object} options - for the event.
    */
   onMove(options) {
-
-    if (this.start && !this.end) {
-      let pointer = this.canvas.getPointer(options.e);
+    if (this.start && !this.end && line) {
+      const pointer = this.canvas.getPointer(options.e);
 
       line.set({
         x2: pointer.x,
@@ -140,13 +141,13 @@ export default class ArrowTool {
    * @param {Object} options - for the event.
    */
   onMUP(options) {
-    let pointer = this.canvas.getPointer(options.e);
+    const pointer = this.canvas.getPointer(options.e);
     this.end = {
       top: pointer.y,
       left: pointer.x
     };
 
-    let perimeter = Math.abs(this.end.top - this.start.top) +
+    const perimeter = Math.abs(this.end.top - this.start.top) +
       Math.abs(this.end.left - this.start.left);
 
     if (perimeter > 10) {
@@ -154,7 +155,7 @@ export default class ArrowTool {
         this.arrow.fill = this.options.color;
       }
 
-      let group = new fabric.Group([line, this.arrow], {
+      const group = new fabric.Group([line, this.arrow], {
         hasControls: false,
         hasBorders: true,
         selectable: false,
@@ -167,7 +168,10 @@ export default class ArrowTool {
 
     this.canvas.remove(line);
     this.canvas.remove(this.arrow);
-    this.arrow = line = this.start = this.end = undefined;
+    this.arrowd = undefined;
+    line = undefined;
+    this.startd = undefined;
+    this.end = undefined;
     this.canvas.renderAll();
   }
 
@@ -177,7 +181,7 @@ export default class ArrowTool {
    * @param {Object} options - for the event.
    */
   onMouseDown(options) {
-    let pointer = this.canvas.getPointer(options.e);
+    const pointer = this.canvas.getPointer(options.e);
     this.start = {
       top: pointer.y,
       left: pointer.x
@@ -197,7 +201,7 @@ export default class ArrowTool {
   }
 
   initListeners(topic, sender, payload) {
-    var _this = this;
+    const _this = this;
 
     if (payload === 'toolbar-deactivate') {
       this.abort();
@@ -205,14 +209,14 @@ export default class ArrowTool {
     }
 
     this.eventAggregator.subscribeTo('keydown', 'ArrowTool',
-      function (topic, sender, keyCode) {
-
-        if (keyCode === 27) {
+      (abortionTopic, abortionSender, abortionKeyCode) => {
+        if (abortionKeyCode === 27) {
           _this.abort.apply(_this);
         }
       });
 
-    this.start = this.end = undefined;
+    this.start = undefined;
+    this.end = undefined;
 
     this.canvasWrapper.enableSelection(false);
 

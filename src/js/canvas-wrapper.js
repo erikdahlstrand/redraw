@@ -1,21 +1,4 @@
-import CONST from './canvas-const.js';
-
-/**
- * Gets the scroll position of a dom element.
- * @access private
- * @param {Object} elem - target element.
- */
-function scrollPosition(elem) {
-  var left = 0;
-  var top = 0;
-
-  do {
-    left += elem.scrollLeft;
-    top += elem.scrollTop;
-  } while (elem = elem.offsetParent);
-
-  return [left, top];
-}
+import CONST from './canvas-const';
 
 /**
  * Canvas object that facilitates
@@ -32,15 +15,15 @@ export default class Canvas {
   constructor(imgElement, eventAggregator, options) {
     this.options = options;
     this.eventAggregator = eventAggregator;
-    var parent = imgElement.parentNode;
-    var redrawWrapper = document.createElement('div');
+    const parent = imgElement.parentNode;
+    const redrawWrapper = document.createElement('div');
     redrawWrapper.className = CONST.CSS.PARENT;
     this.scale = 1;
     parent.insertBefore(redrawWrapper, imgElement);
     parent.removeChild(imgElement);
 
-    var canvasElem = document.createElement('canvas');
-    let canvasWrapper = document.createElement('div');
+    const canvasElem = document.createElement('canvas');
+    const canvasWrapper = document.createElement('div');
     canvasWrapper.className = CONST.CSS.CANVAS_WRAPPER;
     canvasWrapper.appendChild(canvasElem);
     redrawWrapper.appendChild(canvasWrapper);
@@ -53,12 +36,12 @@ export default class Canvas {
     this.imgElement = imgElement;
 
     /* wait until the image is surely loaded to make the setup */
-    let _this = this;
-    let delayedSetup = function () {
+    const _this = this;
+    const delayedSetup = () => {
       _this.setupImage();
     };
 
-    var tmp = new Image();
+    const tmp = new Image();
     tmp.addEventListener('load', delayedSetup, false);
     tmp.src = this.imgElement.src;
   }
@@ -70,7 +53,7 @@ export default class Canvas {
     }
 
     if (this.options.maxHeight && this.options.maxHeight < this.image.height) {
-      let scaleY = this.options.maxHeight / this.image.height;
+      const scaleY = this.options.maxHeight / this.image.height;
       if (this.scale > scaleY) {
         this.scale = scaleY;
       }
@@ -86,10 +69,10 @@ export default class Canvas {
 
     this.image.setScaleX(this.scale);
     this.image.setScaleY(this.scale);
-    var event = this.eventAggregator;
+    const event = this.eventAggregator;
 
     function getBinder(_canvas) {
-      return function () {
+      return () => {
         _canvas.renderAll();
         event.notify('canvas-loaded', 'CANVAS');
       };
@@ -102,14 +85,14 @@ export default class Canvas {
     }
 
     if (this.options.maxHeight && this.options.maxHeight < this.image.height) {
-      let scaleY = this.options.maxHeight / this.image.height;
+      const scaleY = this.options.maxHeight / this.image.height;
       if (this.scale > scaleY) {
         this.scale = scaleY;
       }
     }
 
     this.eventAggregator.subscribeTo('TOOL_USAGE', 'toolbar',
-      function (subscriptionId, sender, status) {
+      (subscriptionId, sender, status) => {
         if (status === 'active') {
           this.canvas.defaultCursor = 'crosshair';
         } else {
@@ -148,8 +131,8 @@ export default class Canvas {
    */
   enableSelection(isEnabled) {
     this.canvas.selection = isEnabled; // Restore fabricjs selection-box
-    this.canvas.forEachObject(function (o) {
-      o.selectable = isEnabled;
+    this.canvas.forEachObject((o) => {
+      o.selectable = isEnabled; // eslint-disable-line no-param-reassign
     });
   }
 }

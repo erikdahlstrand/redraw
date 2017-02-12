@@ -1,5 +1,4 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
+import CONST from '../../canvas-const';
 
 /**
  * A tool to pixelate areas.
@@ -13,10 +12,10 @@ export default class PixelateTool {
    */
   constructor(canvasWrapper, eventAggregator, toolOptions) {
     let rect;
-    let _this = this;
+    const _this = this;
     let startTop;
     let startLeft;
-    let canvas = canvasWrapper.canvas;
+    const canvas = canvasWrapper.canvas;
 
     eventAggregator.subscribeTo(CONST.TOOL.PIXELATE, 'PixelateTool', attachRectangleListener);
 
@@ -24,27 +23,12 @@ export default class PixelateTool {
       eventAggregator.notify('TOOL_USAGE', CONST.TOOL.PIXELATE, message);
     }
 
-    function done() {
-      notify('inactive');
-      detachRectangleListener();
-      canvasWrapper.enableSelection(true);
-    }
-
-    function detachRectangleListener() {
-      canvas.off('mouse:down', mouseDown);
-      canvas.off('mouse:move', drawRectangle);
-      canvas.off('mouse:up', drawRectangleDone);
-
-      rect = undefined;
-      eventAggregator.unsubscribeTo('keydown', 'PixelateTool');
-    }
-
     function drawRectangle(options) {
-      let pointer = canvas.getPointer(options.e);
+      const pointer = canvas.getPointer(options.e);
       let top;
       let left;
-      let currWidth = pointer.x - startLeft;
-      let currHeight = pointer.y - startTop;
+      const currWidth = pointer.x - startLeft;
+      const currHeight = pointer.y - startTop;
 
       if (currWidth < 0) {
         left = pointer.x;
@@ -59,8 +43,8 @@ export default class PixelateTool {
       }
 
       rect.set({
-        top: top,
-        left: left,
+        top,
+        left,
         width: Math.abs(currWidth),
         height: Math.abs(currHeight)
       });
@@ -69,33 +53,33 @@ export default class PixelateTool {
       canvas.renderAll();
     }
 
-    function applyFilter(index, filter, obj) {
-      obj.filters[index] = filter;
+    const applyFilter = (index, filter, obj) => {
+      obj.filters[index] = filter;// eslint-disable-line no-param-reassign
       obj.applyFilters(canvas.renderAll.bind(canvas));
-    }
+    };
 
-    function drawRectangleDone(options) {
+    const drawRectangleDone = (options) => {
       canvas.off('mouse:move', drawRectangle);
       canvas.off('mouse:up', drawRectangleDone);
       canvas.remove(rect);
 
-      let pointer = canvas.getPointer(options.e);
-      let currWidth = pointer.x - startLeft;
-      let currHeight = pointer.y - startTop;
+      const pointer = canvas.getPointer(options.e);
+      const currWidth = pointer.x - startLeft;
+      const currHeight = pointer.y - startTop;
 
       if (Math.abs(currWidth) > 0 && Math.abs(currHeight) > 0) {
-        let object = fabric.util.object.clone(canvasWrapper.image);
+        const object = fabric.util.object.clone(canvasWrapper.image);
 
-        let croppedDomImage = new Image();
+        const croppedDomImage = new Image();
         croppedDomImage.src = object.toDataURL({
           left: rect.left,
           top: rect.top,
           width: rect.width,
           height: rect.height
         });
-        let userRect = rect;
-        croppedDomImage.onload = function () {
-          let image = new fabric.Image(croppedDomImage);
+        const userRect = rect;
+        croppedDomImage.onload = () => {
+          const image = new fabric.Image(croppedDomImage);
 
           image.set({
             left: userRect.left,
@@ -107,7 +91,7 @@ export default class PixelateTool {
             lockMovementY: true
           });
 
-          let f = fabric.Image.filters;
+          const f = fabric.Image.filters;
           applyFilter(0, new f.Pixelate({
             blocksize: toolOptions.blocksize
           }), image);
@@ -121,10 +105,10 @@ export default class PixelateTool {
 
       canvas.renderAll();
       rect = undefined;
-    }
+    };
 
     function mouseDown(options) {
-      let pointer = canvas.getPointer(options.e);
+      const pointer = canvas.getPointer(options.e);
 
       startTop = pointer.y;
       startLeft = pointer.x;
@@ -151,17 +135,33 @@ export default class PixelateTool {
       canvas.on('mouse:up', drawRectangleDone);
     }
 
+    function detachRectangleListener() {
+      canvas.off('mouse:down', mouseDown);
+      canvas.off('mouse:move', drawRectangle);
+      canvas.off('mouse:up', drawRectangleDone);
+
+      rect = undefined;
+      eventAggregator.unsubscribeTo('keydown', 'PixelateTool');
+    }
+
+    function done() {
+      notify('inactive');
+      detachRectangleListener();
+      canvasWrapper.enableSelection(true);
+    }
+
     function attachRectangleListener(topic, sender, payload) {
       if (payload === 'toolbar-deactivate') {
         done();
         return;
       }
 
-      eventAggregator.subscribeTo('keydown', 'PixelateTool', function (topic, sender, keyCode) {
-        if (keyCode === 27) {
-          done();
-        }
-      }, _this);
+      eventAggregator.subscribeTo('keydown', 'PixelateTool',
+        (abortTopic, abortSender, abortKeyCode) => {
+          if (abortKeyCode === 27) {
+            done();
+          }
+        }, _this);
 
       canvasWrapper.enableSelection(false);
       notify('active');

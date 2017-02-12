@@ -1,4 +1,4 @@
-var isBrowser = typeof window !== 'undefined';
+const isBrowser = typeof window !== 'undefined';
 
 /**
  * Facade of the browser apis. The main purpose id to facilitate testing.
@@ -18,8 +18,7 @@ export default class Browser {
    * @param {string} attributeName - Name of the property to create/assign.
    * @param {Object} obj - value to set.
    */
-  appendToWindow(attributeName, obj) {
-
+  static appendToWindow(attributeName, obj) {
     if (isBrowser) {
       window[attributeName] = obj;
       return true;
@@ -32,13 +31,13 @@ export default class Browser {
    * @param {string} attributeName - Name of the property to create/assign.
    * @returns {Object} obj - retrieved value, or mock if not browser.
    */
-  getFromWindow(attributeName) {
+  static getFromWindow(attributeName) {
     if (window) {
       return window[attributeName];
     }
 
     return {
-      getFromWindow: function () {},
+      getFromWindow: () => {},
       tools: []
     };
   }

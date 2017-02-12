@@ -1,11 +1,11 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
-import TextTool from './text-tool.js';
+import CONST from '../../canvas-const';
+import Browser from '../../browser-api';
+import TextTool from './text-tool';
 
 /**
  * Default Text options.
  */
-var defaultToolProps = {
+const defaultToolProps = {
   label: 'Text',
   fontFamily: 'arial',
   fontSize: 18,
@@ -13,7 +13,6 @@ var defaultToolProps = {
   activeColor: CONST.DEFAULT_ACTIVE_COLOR
 };
 
-(new Browser())
-.getFromWindow('redraw')
+Browser.getFromWindow('redraw')
   .registerTool(CONST.TOOL.TEXT, TextTool, defaultToolProps);
 

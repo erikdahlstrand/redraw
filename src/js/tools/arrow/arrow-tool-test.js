@@ -3,24 +3,20 @@ import ArrowTool from './arrow-tool';
 describe('Arrow tool', () => {
   let subscribeToSpy;
   beforeEach(() => {
-    let fabric = {};
-    subscribeToSpy = sinon.spy();
+    const fabric = {};
+    subscribeToSpy = jasmine.createSpy();
 
-    let eventAggregator = {
+    const eventAggregator = {
       subscribeTo: subscribeToSpy
     };
 
-    let arrowTool = new ArrowTool({
+    new ArrowTool({
       canvas: {}
     }, eventAggregator, {}, fabric);
   });
 
   it('should register for event', () => {
-    expect(subscribeToSpy.calledOnce).to.equal(true);
-    expect(subscribeToSpy.args[0][0]).to.equal('arrow');
-    expect(subscribeToSpy.args[0][1]).to.equal('ArrowTool');
-    expect(subscribeToSpy.args[0][2]).to.be.a('function');
+    expect(subscribeToSpy).toHaveBeenCalled();
+    expect(subscribeToSpy).toHaveBeenCalledWith('arrow', 'ArrowTool', jasmine.any(Function));
   });
-
 });
-

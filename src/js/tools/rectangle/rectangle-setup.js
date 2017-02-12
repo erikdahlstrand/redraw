@@ -1,11 +1,11 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
-import RectangleTool from './rectangle-tool.js';
+import CONST from '../../canvas-const';
+import Browser from '../../browser-api';
+import RectangleTool from './rectangle-tool';
 
 /**
  * Default Rectangle options.
  */
-var defaultToolProps = {
+const defaultToolProps = {
   label: 'Rectangle',
   color: CONST.DEFAULT_COLOR,
   activeColor: CONST.DEFAULT_ACTIVE_COLOR,
@@ -13,7 +13,6 @@ var defaultToolProps = {
   activeOpacity: 0.3
 };
 
-(new Browser())
-.getFromWindow('redraw')
+Browser.getFromWindow('redraw')
   .registerTool(CONST.TOOL.RECTANGLE, RectangleTool, defaultToolProps);
 

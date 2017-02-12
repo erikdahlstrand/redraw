@@ -1,14 +1,16 @@
 import DeleteTool from './delete-tool';
 
-describe('Rectangle tool', () => {
-  let subscribeToSpy, canvasOnSpy, eaNotifySpy;
+describe('DeleteTool', () => {
+  let subscribeToSpy;
+  let canvasOnSpy;
+  let eaNotifySpy;
   beforeEach(() => {
-    let fabric = {};
-    subscribeToSpy = sinon.spy();
-    canvasOnSpy = sinon.spy();
-    eaNotifySpy = sinon.spy();
+    const fabric = {};
+    subscribeToSpy = jasmine.createSpy();
+    canvasOnSpy = jasmine.createSpy();
+    eaNotifySpy = jasmine.createSpy();
 
-    let eventAggregator = {
+    const eventAggregator = {
       subscribeTo: subscribeToSpy,
       notify: eaNotifySpy
     };
@@ -21,44 +23,44 @@ describe('Rectangle tool', () => {
   });
 
   it('should register for tool activation event', () => {
-    expect(subscribeToSpy.args[0][0])
-      .to.equal('delete');
-    expect(subscribeToSpy.args[0][1])
-      .to.equal('DeleteTool');
-    expect(subscribeToSpy.args[0][2])
-      .to.be.a('function');
+    expect(subscribeToSpy.calls.argsFor(0)[0])
+      .toEqual('delete');
+    expect(subscribeToSpy.calls.argsFor(0)[1])
+      .toEqual('DeleteTool');
+    expect(subscribeToSpy.calls.argsFor(0)[2])
+      .toEqual(jasmine.any(Function));
   });
 
   it('should register for keydown event', () => {
-    expect(subscribeToSpy.args[1][0])
-      .to.equal('keydown');
-    expect(subscribeToSpy.args[1][1])
-      .to.equal('DeleteTool');
-    expect(subscribeToSpy.args[1][2])
-      .to.be.a('function');
+    expect(subscribeToSpy.calls.argsFor(1)[0])
+      .toEqual('keydown');
+    expect(subscribeToSpy.calls.argsFor(1)[1])
+      .toEqual('DeleteTool');
+    expect(subscribeToSpy.calls.argsFor(1)[2])
+      .toEqual(jasmine.any(Function));
   });
 
   it('should register for "object:selected" event', () => {
-    expect(canvasOnSpy.args[0][0])
-      .to.equal('object:selected');
-    expect(canvasOnSpy.args[0][1])
-      .to.be.a('function');
+    expect(canvasOnSpy.calls.argsFor(0)[0])
+      .toEqual('object:selected');
+    expect(canvasOnSpy.calls.argsFor(0)[1])
+      .toEqual(jasmine.any(Function));
   });
 
-  it('should notify "tool-enabled=false" upon initialization (but there may not be anyone out there listening)', () => {
-    expect(eaNotifySpy.args[0][0])
-      .to.equal('tool-enabled');
-    expect(eaNotifySpy.args[0][2])
-      .to.equal(false);
+  it('should notify "tool-enabled=false" upon initialization (but there may not be anyone '
+    + 'out there listening)', () => {
+    expect(eaNotifySpy.calls.argsFor(0)[0])
+      .toEqual('tool-enabled');
+    expect(eaNotifySpy.calls.argsFor(0)[2])
+      .toEqual(false);
   });
 
   it('should notify "tool-enabled=true" when an object is eligible for deletion', () => {
-    let callsBefore = eaNotifySpy.callCount;
-    canvasOnSpy.args[0][1].apply(this, {});
-    expect(eaNotifySpy.args[callsBefore][0])
-      .to.equal('tool-enabled');
-    expect(eaNotifySpy.args[callsBefore][2])
-      .to.equal(true);
+    const callsBefore = eaNotifySpy.calls.count();
+    canvasOnSpy.calls.argsFor(0)[1].apply(this, {});
+    expect(eaNotifySpy.calls.argsFor(callsBefore)[0])
+      .toEqual('tool-enabled');
+    expect(eaNotifySpy.calls.argsFor(callsBefore)[2])
+      .toEqual(true);
   });
-
 });

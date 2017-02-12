@@ -1,13 +1,13 @@
-import Browser from './browser-api.js';
-import Canvas from './canvas-wrapper.js';
-import EventAggregator from './event-aggregator.js';
-import ControlsDispatcher from './controls/controls-dispatcher.js';
+import Browser from './browser-api';
+import Canvas from './canvas-wrapper';
+import EventAggregator from './event-aggregator';
+import ControlsDispatcher from './controls/controls-dispatcher';
 
 /**
  * Namespace-root, that will be set to window-Object.
  * @access private
  */
-var redrawNs = {
+const RedrawNs = {
   tools: {}
 };
 
@@ -18,9 +18,9 @@ var redrawNs = {
  * @returns {Blob} results
  */
 function dataURItoBlob(encodedData) {
-  var decodedData = atob(encodedData.split(',')[1]);
-  var array = []; // 8-bit unsigned array
-  for (var i = 0; i < decodedData.length; i++) {
+  const decodedData = atob(encodedData.split(',')[1]);
+  const array = []; // 8-bit unsigned array
+  for (let i = 0; i < decodedData.length; i += 1) {
     array.push(decodedData.charCodeAt(i));
   }
 
@@ -38,25 +38,23 @@ function dataURItoBlob(encodedData) {
  * @returns {Object} containing all or the selected tools.
  */
 function getToolsFromUserSettings(allTools, options) {
-
   if (options && options.tools) {
-    var definedTools = {};
-    for (let t in options.tools) {
-      let toolName = options.tools[t];
+    const definedTools = {};
+    Object.keys(options.tools).forEach((t) => {
+      const toolName = options.tools[t];
       definedTools[toolName] = allTools[toolName];
-    }
+    });
 
     return definedTools;
-  } else {
-    return allTools;
   }
+  return allTools;
 }
 
 /**
  * Defines the options-properties allowed to infect all tools-settings.
  * @access private
  */
-var globalOverrides = ['color', 'activeColor'];
+const globalOverrides = ['color', 'activeColor'];
 
 /**
  * Figures out which options should be applied for a particular toolName.
@@ -65,26 +63,26 @@ var globalOverrides = ['color', 'activeColor'];
  * replaced if defined in precedenceProps or globalOptions.
  * @param {Object} precedenceProps - that may have a property named toolName, that will
  * replace options from allProps.
- * @param {Object} globalOptions - top-level options that will overwrite allProp but not precedenceProps
+ * @param {Object} globalOptions - top-level options that will overwrite allProp
+ * but not precedenceProps
  * @param {string} toolName - name of the tool, which options is processed
  * @returns {Object} with tool applies options
  */
 function overwriteProps(allProps, precedenceProps, globalOptions, toolName) {
-  var results = {};
-
-  for (var p in allProps[toolName].options) {
-    if (allProps[toolName].options.hasOwnProperty(p)) {
-      if (precedenceProps[toolName] && precedenceProps[toolName] &&
-          precedenceProps[toolName].hasOwnProperty(p)) {
+  const results = {};
+  Object.keys(allProps[toolName].options).forEach((p) => {
+    if (Object.prototype.hasOwnProperty.call(allProps[toolName].options, p)) {
+      if (precedenceProps && precedenceProps[toolName] &&
+      Object.prototype.hasOwnProperty.call(precedenceProps[toolName], p)) {
         results[p] = precedenceProps[toolName][p];
       } else if (globalOverrides.indexOf(p) > -1 &&
-          globalOptions.hasOwnProperty(p)) {
+          Object.prototype.hasOwnProperty.call(globalOptions, p)) {
         results[p] = globalOptions[p];
       } else {
         results[p] = allProps[toolName].options[p];
       }
     }
-  }
+  });
 
   return results;
 }
@@ -100,13 +98,12 @@ class Redraw {
    * @param {Object} imgElement - The dom element that holds the image.
    * @param {Object} options - Options.
    */
-  constructor(imgElement, options) {
+  constructor(imgElement, options = {}) {
     this.events = new EventAggregator();
-    options = options || {};
-    this._canvas = new Canvas(imgElement, this.events, options); // Needs defactor
+    this.canvasWrapper = new Canvas(imgElement, this.events, options); // Needs defactor
 
     if (options.jsonContent) {
-      this._canvas.loadFromJSON(options.jsonContent);
+      this.canvasWrapper.loadFromJSON(options.jsonContent);
     }
 
     this.controls = this.initializeTools(this.events, options);
@@ -117,10 +114,10 @@ class Redraw {
    * @returns {string} with base64 encoded png.
    */
   getDataUrlForExport() {
-    this._canvas.canvas.deactivateAllWithDispatch();
-    return this._canvas.canvas.toDataURL({
+    this.canvasWrapper.canvas.deactivateAllWithDispatch();
+    return this.canvasWrapper.canvas.toDataURL({
       format: 'png',
-      multiplier: 1 / this._canvas.scale
+      multiplier: 1 / this.canvasWrapper.scale
     });
   }
 
@@ -150,7 +147,7 @@ class Redraw {
    */
   toJson(includeImage) {
     this.controls.cancelActiveTool();
-    var jsObj = this._canvas.canvas.toObject(['lockMovementX', 'lockMovementY',
+    const jsObj = this.canvasWrapper.canvas.toObject(['lockMovementX', 'lockMovementY',
       'lockRotation', 'lockScalingX', 'lockScalingY', 'lockUniScaling',
       'hasControls', 'hasRotatingPoint', 'selectable', 'fill', 'padding'
     ]);
@@ -168,20 +165,21 @@ class Redraw {
    * @param {string} jsonRepresentation - to provide as current state of the canvas.
    */
   fromJson(jsonRepresentation) {
-    this._canvas.loadFromJSON(jsonRepresentation);
+    this.canvasWrapper.loadFromJSON(jsonRepresentation);
   }
 
   /**
-   * Tells whether or not any objects are present in the canvas, i.e. arrows, rectangles other than the image itself.
+   * Tells whether or not any objects are present in the canvas, i.e. arrows, rectangles other
+   * than the image itself.
    * @access public
    * @returns {boolean} true if there are obejcts, i.e.
    */
   isEmpty() {
-    return (this._canvas.getAllObjects()
+    return (this.canvasWrapper.getAllObjects()
       .length === 0);
   }
 
-  isDirty() {
+  isDirty() { // eslint-disable-line class-methods-use-this
     return true;
   }
 
@@ -191,15 +189,15 @@ class Redraw {
    * @returns {Object} canvas, see http://fabricjs.com/.
    */
   getCanvas() {
-    return this._canvas.canvas;
+    return this.canvasWrapper.canvas;
   }
 
   on(topic, callbackFn, subscriberId, scope) {
-    this.events.subscribeTo(topic, 'cx-' + subscriberId, callbackFn, scope);
+    this.events.subscribeTo(topic, `cx-${subscriberId}`, callbackFn, scope);
   }
 
   off(topic, subscriberId) {
-    this.events.unsubscribeTo(topic, 'cx-' + subscriberId);
+    this.events.unsubscribeTo(topic, `cx-${subscriberId}`);
   }
 
   /**
@@ -207,44 +205,40 @@ class Redraw {
    * @param {EventAggregator} events - used for all mediated communications.
    * @param {Object} options - settings for all tools.
    */
-  initializeTools(events, options) {
-    var localToolSettings = {};
-    options.toolSettings = options.toolSettings || {};
-    var toolsInUse = getToolsFromUserSettings(redrawNs.tools, options);
+  initializeTools(events, options = {}) {
+    const toolsInUse = getToolsFromUserSettings(RedrawNs.tools, options);
 
-    for (var toolName in toolsInUse) {
-      let passedProps = overwriteProps(redrawNs.tools, options.toolSettings, options, toolName);
+    Object.keys(toolsInUse).forEach((toolName) => {
+      const passedProps = overwriteProps(RedrawNs.tools, options.toolSettings, options, toolName);
+      RedrawNs.tools[toolName].options = passedProps;
+      new RedrawNs.tools[toolName].toolFn(this.canvasWrapper, events, passedProps);
+    });
 
-      redrawNs.tools[toolName].options = passedProps;
-
-      new redrawNs.tools[toolName].toolFn(this._canvas, events, passedProps);
-    }
-
-    var controls = new ControlsDispatcher(events, options);
-    controls.setupTools(toolsInUse, this._canvas.canvasContainer, options);
+    const controls = new ControlsDispatcher(events, options);
+    controls.setupTools(toolsInUse, this.canvasWrapper.canvasContainer, options);
     return controls;
   }
 }
 
-redrawNs.Annotation = Redraw;
+RedrawNs.Annotation = Redraw;
 /**
  * Used by tools to register themselves to be available for usage.
  * @access public
- * @param {string} _name - name of tool.
- * @param {function(canvas: CanvasWrapper, events: EventAggregator, passedProps: Object)} _toolFn - callback function, invoked upon initialization of the tools.
- * @param {Object} _options - options, to be used as default ones.
+ * @param {string} inName - name of tool.
+ * @param {function(canvas: CanvasWrapper, events: EventAggregator, passedProps: Object)} inToolFn
+ * - callback function, invoked upon initialization of the tools.
+ * @param {Object} inOptions - options, to be used as default ones.
  */
-redrawNs.registerTool = function (_name, _toolFn, _options) {
-  redrawNs.tools[_name] = {
-    address: _name,
-    toolFn: _toolFn,
-    options: _options
+RedrawNs.registerTool = (inName, inToolFn, inOptions) => {
+  RedrawNs.tools[inName] = {
+    address: inName,
+    toolFn: inToolFn,
+    options: inOptions
   };
 
   // buttonClass is an attribute that applies to all tools
-  redrawNs.tools[_name].options.buttonClass = redrawNs.tools[_name].options.buttonClass ||  '';
+  RedrawNs.tools[inName].options.buttonClass = RedrawNs.tools[inName].options.buttonClass || '';
 };
 
-(new Browser())
-.appendToWindow('redraw', redrawNs);
+Browser.appendToWindow('redraw', RedrawNs);
 

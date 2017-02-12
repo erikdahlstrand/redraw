@@ -1,18 +1,17 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
-import PixelateTool from './pixelate-tool.js';
+import CONST from '../../canvas-const';
+import Browser from '../../browser-api';
+import PixelateTool from './pixelate-tool';
 
 /**
  * Default Pixelate options.
  */
-var defaultToolProps = {
+const defaultToolProps = {
   label: 'Pixelate',
   activeColor: CONST.DEFAULT_ACTIVE_COLOR,
   activeOpacity: 0.3,
   blocksize: 8
 };
 
-(new Browser())
-.getFromWindow('redraw')
+Browser.getFromWindow('redraw')
   .registerTool(CONST.TOOL.PIXELATE, PixelateTool, defaultToolProps);
 

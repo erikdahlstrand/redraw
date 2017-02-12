@@ -1,11 +1,11 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
-import ArrowTool from './arrow-tool.js';
+import CONST from '../../canvas-const';
+import Browser from '../../browser-api';
+import ArrowTool from './arrow-tool';
 
 /**
  * Default Arrow options.
  */
-var defaultToolProps = {
+const defaultToolProps = {
   label: 'Arrow',
   color: CONST.DEFAULT_COLOR,
   activeColor: CONST.DEFAULT_ACTIVE_COLOR,
@@ -13,7 +13,6 @@ var defaultToolProps = {
   lineWidth: 4
 };
 
-(new Browser())
-.getFromWindow('redraw')
+Browser.getFromWindow('redraw')
   .registerTool(CONST.TOOL.ARROW, ArrowTool, defaultToolProps);
 

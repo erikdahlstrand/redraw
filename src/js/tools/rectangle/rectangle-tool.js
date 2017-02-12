@@ -1,8 +1,7 @@
-import CONST from '../../canvas-const.js';
-import Browser from '../../browser-api.js';
+import CONST from '../../canvas-const';
 
 /** used during drag n drop */
-var rect;
+let rect;
 
 /**
  * A tool to paint rectangles.
@@ -15,12 +14,12 @@ export default class RectangleTool {
    * @param {EventAggregator} eventAggregator - Event mediator.
    */
   constructor(canvasWrapper, eventAggregator, toolOptions) {
-    var currWidth;
-    var currHeight;
-    var startY;
-    var startX;
-    var _this = this;
-    let canvas = canvasWrapper.canvas;
+    let currWidth;
+    let currHeight;
+    let startY;
+    let startX;
+    const _this = this;
+    const canvas = canvasWrapper.canvas;
 
     eventAggregator.subscribeTo(CONST.TOOL.RECTANGLE, 'RectangleTool', attachRectangleListener);
 
@@ -34,23 +33,12 @@ export default class RectangleTool {
       canvasWrapper.enableSelection(true);
     }
 
-    function detachRectangleListener() {
-      canvas.off('mouse:down', mouseDown);
-      canvas.off('mouse:move', drawRectangle);
-      canvas.off('mouse:up', drawRectangleDone);
-
-      rect = undefined;
-      eventAggregator.unsubscribeTo('keydown', 'RectangleTool');
-    }
-
     function drawRectangle(options) {
-
-      let pointer = canvas.getPointer(options.e);
-
+      const pointer = canvas.getPointer(options.e);
       let top;
       let left;
-      let width = pointer.x - startX;
-      let height = pointer.y - startY;
+      const width = pointer.x - startX;
+      const height = pointer.y - startY;
       currHeight = Math.abs(height);
       currWidth = Math.abs(width);
 
@@ -67,18 +55,17 @@ export default class RectangleTool {
       }
 
       rect.set({
-        top: top,
-        left: left,
+        top,
+        left,
         width: currWidth,
         height: currHeight
       });
 
       rect.setCoords();
       canvas.renderAll();
-
     }
 
-    function drawRectangleDone(options) {
+    const drawRectangleDone = () => {
       canvas.off('mouse:move', drawRectangle);
       canvas.off('mouse:up', drawRectangleDone);
 
@@ -93,11 +80,21 @@ export default class RectangleTool {
         opacity: toolOptions.opacity
       });
       canvas.renderAll();
+    };
+
+    function detachRectangleListener() {
+      canvas.off('mouse:down', mouseDown);
+      canvas.off('mouse:move', drawRectangle);
+      canvas.off('mouse:up', drawRectangleDone);
+
+      rect = undefined;
+      eventAggregator.unsubscribeTo('keydown', 'RectangleTool');
     }
 
     function mouseDown(options) {
-      let pointer = canvas.getPointer(options.e);
-      currWidth = currHeight = 0;
+      const pointer = canvas.getPointer(options.e);
+      currWidth = 0;
+      currHeight = 0;
 
       startY = pointer.y;
       startX = pointer.x;
@@ -130,8 +127,8 @@ export default class RectangleTool {
         return;
       }
 
-      eventAggregator.subscribeTo('keydown', 'RectangleTool', function (topic, sender, keyCode) {
-        if (keyCode === 27) {
+      eventAggregator.subscribeTo('keydown', 'RectangleTool', (resetTopic, resetSender, resetKeyCode) => {
+        if (resetKeyCode === 27) {
           done();
         }
       }, _this);

@@ -3,10 +3,10 @@ import PixelateTool from './pixelate-tool';
 describe('Pixelate tool', () => {
   let subscribeToSpy;
   beforeEach(() => {
-    let fabric = {};
-    subscribeToSpy = sinon.spy();
+    const fabric = {};
+    subscribeToSpy = jasmine.createSpy();
 
-    let eventAggregator = {
+    const eventAggregator = {
       subscribeTo: subscribeToSpy
     };
 
@@ -16,15 +16,11 @@ describe('Pixelate tool', () => {
   });
 
   it('should register for tool activation event', () => {
-    expect(subscribeToSpy.calledOnce)
-      .to.equal(true);
-    expect(subscribeToSpy.args[0][0])
-      .to.equal('pixelate');
-    expect(subscribeToSpy.args[0][1])
-      .to.equal('PixelateTool');
-    expect(subscribeToSpy.args[0][2])
-      .to.be.a('function');
+    expect(subscribeToSpy.calls.count())
+      .toEqual(1);
+    expect(subscribeToSpy.calls.argsFor(0)[0])
+      .toEqual('pixelate');
+    expect(subscribeToSpy.calls.argsFor(0)[1])
+      .toEqual('PixelateTool');
   });
-
 });
-
