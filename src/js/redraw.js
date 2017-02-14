@@ -241,4 +241,3 @@ RedrawNs.registerTool = (inName, inToolFn, inOptions) => {
 };
 
 Browser.appendToWindow('redraw', RedrawNs);
-
