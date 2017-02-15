@@ -1,6 +1,6 @@
 {
-  "name": "Redraw",
-  "version": "0.0.1",
+  "name": "redraw-js",
+  "version": "0.8.0",
   "description": "Redraw is a JavaScript library which provides basic image annotation tools in your browser",
   "main": "dist/redraw.js",
   "scripts": {

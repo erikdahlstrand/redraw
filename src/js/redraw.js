@@ -220,6 +220,37 @@ class Redraw {
   }
 }
 
+const Instance = {};
+
+export default class RedrawService {
+
+  /**
+   * @return {RedrawService}
+   */
+  static getInstance() {
+    if (!Instance.redraw) {
+      Instance.authService = new RedrawService();
+    }
+    return Instance.authService;
+  }
+
+  registerTool(inName, inToolFn, inOptions) {
+    if (!this.tools) {
+      this.tools = [];
+    }
+
+    this.tools[inName] = {
+      address: inName,
+      toolFn: inToolFn,
+      options: inOptions
+    };
+
+    // buttonClass is an attribute that applies to all tools
+    this.tools[inName].options.buttonClass = RedrawNs.tools[inName].options.buttonClass || '';
+  }
+}
+
+
 RedrawNs.Annotation = Redraw;
 /**
  * Used by tools to register themselves to be available for usage.

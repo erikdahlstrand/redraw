@@ -5,34 +5,25 @@
 ### Install dependencies (OS X)
 
 ```Shell
+npm i
 brew install pkg-config cairo libpng jpeg giflib
 ```
 
 ### Run tests
-
 ```Shell
 npm test
+npm tdd
+npm eslint
 ```
 
-### Watch
+### Development mode
 ```Shell
-gulp watch (or)
-
-webpack-dev-server
+npm dev
 ```
 
 ### Build
 ```Shell
-gulp build (or)
-
-webpack --progress --colors
+npm build
 ```
 
 ## Technology
-
-### Development
-* https://github.com/babel/generator-babel-boilerplate
-
-### Settings
-* [Configuring ESLint](http://eslint.org/docs/user-guide/configuring.html)
-* [Sublime Linter User Settings](http://bl.ocks.org/bretdavidson/3189814)
