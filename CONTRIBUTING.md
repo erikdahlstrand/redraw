@@ -6,24 +6,25 @@
 
 ```Shell
 npm i
+```
+### The following can help to avoid error messages, during installation
+```Shell
 brew install pkg-config cairo libpng jpeg giflib
 ```
 
 ### Run tests
 ```Shell
-npm test
-npm tdd
-npm eslint
+npm run test
+npm run tdd
+npm run eslint
 ```
 
 ### Development mode
 ```Shell
-npm dev
+npm run dev
 ```
 
 ### Build
 ```Shell
-npm build
+npm run build
 ```
-
-## Technology
